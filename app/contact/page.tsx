@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
+import type { Metadata } from 'next';
+import { Badge } from '@/components/ui/badge';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   MapPin,
   Phone,
@@ -19,129 +19,121 @@ import {
   Facebook,
   Linkedin,
   Youtube,
-} from "lucide-react";
-import { AnimatedSection } from "@/components/animated-section";
-import { ContactForm } from "@/components/contact-form";
-import { OfficeMap } from "@/components/office-map";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { AnimatedSection } from '@/components/animated-section';
+import { ContactForm } from '@/components/contact-form';
+import { OfficeMap } from '@/components/office-map';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: "Liên hệ - Katec | Tư vấn miễn phí giải pháp công nghệ",
+  title: 'Liên hệ - Katec | Tư vấn miễn phí giải pháp công nghệ',
   description:
-    "Liên hệ với Katec để được tư vấn miễn phí về các giải pháp công nghệ thông tin. Văn phòng tại TP.HCM, Hà Nội và Đà Nẵng.",
-  keywords: "liên hệ Katec, tư vấn IT, văn phòng công nghệ, hỗ trợ khách hàng",
+    'Liên hệ với Katec để được tư vấn miễn phí về các giải pháp công nghệ thông tin. Văn phòng tại TP.HCM, Hà Nội và Đà Nẵng.',
+  keywords: 'liên hệ Katec, tư vấn IT, văn phòng công nghệ, hỗ trợ khách hàng',
 };
 
 export default function ContactPage() {
   const offices = [
     {
-      city: "TP. Hồ Chí Minh",
-      address: "123 Đường Nguyễn Huệ, Quận 1, TP.HCM",
-      phone: "+84 28 1234 5678",
-      email: "hcm@Katec.com",
-      hours: "8:00 - 18:00 (T2-T6)",
+      city: 'TP. Cần Thơ',
+      address: 'Số 189, Phan Huy Chú, An Khánh, Ninh Kiều, TP.Cần Thơ',
+      phone: '+84 889 88 1010',
+      email: 'katec.cantho@gmail.com',
+      hours: '8:00 - 18:00 (T2-T7)',
       isMain: true,
-      coordinates: { lat: 10.7769, lng: 106.7009 },
+      coordinates: { lat: 10.0410184, lng: 105.7539256 },
     },
     {
-      city: "Hà Nội",
-      address: "456 Phố Hoàn Kiếm, Quận Hoàn Kiếm, Hà Nội",
-      phone: "+84 24 1234 5678",
-      email: "hanoi@Katec.com",
-      hours: "8:00 - 18:00 (T2-T6)",
+      city: 'TP. Đà Nẵng.',
+      address:
+        'KS Phương Nam - thôn Túy Loan Đông 2, Hòa Phong, Hòa Vang, TP. Đà Nẵng.',
+      phone: '+84 934 777 245',
+      email: 'katec.danang@gmail.com',
+      hours: '8:00 - 18:00 (T2-T6)',
       isMain: false,
       coordinates: { lat: 21.0285, lng: 105.8542 },
-    },
-    {
-      city: "Đà Nẵng",
-      address: "789 Đường Bạch Đằng, Quận Hải Châu, Đà Nẵng",
-      phone: "+84 236 1234 567",
-      email: "danang@Katec.com",
-      hours: "8:00 - 18:00 (T2-T6)",
-      isMain: false,
-      coordinates: { lat: 16.0544, lng: 108.2022 },
     },
   ];
 
   const contactMethods = [
     {
       icon: <Phone className="h-6 w-6" />,
-      title: "Hotline 24/7",
-      description: "Hỗ trợ khẩn cấp và tư vấn nhanh",
-      contact: "1900 1234",
-      action: "Gọi ngay",
-      color: "bg-green-100 text-green-600",
+      title: 'Hotline 24/7',
+      description: 'Hỗ trợ khẩn cấp và tư vấn nhanh',
+      contact: '0889 88 1010',
+      action: 'Gọi ngay',
+      color: 'bg-green-100 text-green-600',
     },
     {
       icon: <Mail className="h-6 w-6" />,
-      title: "Email hỗ trợ",
-      description: "Gửi yêu cầu chi tiết qua email",
-      contact: "support@Katec.com",
-      action: "Gửi email",
-      color: "bg-blue-100 text-blue-600",
+      title: 'Email hỗ trợ',
+      description: 'Gửi yêu cầu chi tiết qua email',
+      contact: 'katec.cantho@gmail.com',
+      action: 'Gửi email',
+      color: 'bg-blue-100 text-blue-600',
     },
     {
       icon: <MessageSquare className="h-6 w-6" />,
-      title: "Live Chat",
-      description: "Trò chuyện trực tiếp với chuyên gia",
-      contact: "Trực tuyến 8:00-22:00",
-      action: "Bắt đầu chat",
-      color: "bg-purple-100 text-purple-600",
+      title: 'Live Chat',
+      description: 'Trò chuyện trực tiếp với chuyên gia',
+      contact: 'Trực tuyến 8:00 - 17:30',
+      action: 'Bắt đầu chat',
+      color: 'bg-purple-100 text-purple-600',
     },
     {
       icon: <Users className="h-6 w-6" />,
-      title: "Đặt lịch hẹn",
-      description: "Gặp mặt trực tiếp tại văn phòng",
-      contact: "Linh hoạt theo lịch",
-      action: "Đặt lịch",
-      color: "bg-orange-100 text-orange-600",
+      title: 'Đặt lịch hẹn',
+      description: 'Gặp mặt trực tiếp tại văn phòng',
+      contact: 'Linh hoạt theo lịch',
+      action: 'Đặt lịch',
+      color: 'bg-orange-100 text-orange-600',
     },
   ];
 
   const supportTeams = [
     {
-      department: "Tư vấn bán hàng",
-      description: "Tư vấn giải pháp và báo giá",
-      phone: "+84 28 1234 5678",
-      email: "sales@Katec.com",
-      hours: "8:00 - 20:00 (T2-CN)",
+      department: 'Tư vấn bán hàng',
+      description: 'Tư vấn giải pháp và báo giá',
+      phone: '+84 28 1234 5678',
+      email: 'sales@Katec.com',
+      hours: '8:00 - 20:00 (T2-CN)',
     },
     {
-      department: "Hỗ trợ kỹ thuật",
-      description: "Hỗ trợ sản phẩm và dịch vụ",
-      phone: "+84 28 1234 5679",
-      email: "support@Katec.com",
-      hours: "24/7",
+      department: 'Hỗ trợ kỹ thuật',
+      description: 'Hỗ trợ sản phẩm và dịch vụ',
+      phone: '+84 889 88 1010',
+      email: ' katec.cantho@gmail.com',
+      hours: '24/7',
     },
     {
-      department: "Đối tác & Hợp tác",
-      description: "Hợp tác kinh doanh và đối tác",
-      phone: "+84 28 1234 5680",
-      email: "partner@Katec.com",
-      hours: "8:00 - 18:00 (T2-T6)",
+      department: 'Đối tác & Hợp tác',
+      description: 'Hợp tác kinh doanh và đối tác',
+      phone: '+84 28 1234 5680',
+      email: 'partner@Katec.com',
+      hours: '8:00 - 18:00 (T2-T6)',
     },
   ];
 
   const faqs = [
     {
-      question: "Thời gian triển khai dự án thường là bao lâu?",
+      question: 'Thời gian triển khai dự án thường là bao lâu?',
       answer:
-        "Tùy thuộc vào quy mô dự án, thời gian triển khai từ 2-12 tuần. Chúng tôi sẽ đưa ra timeline chi tiết sau khi phân tích yêu cầu.",
+        'Tùy thuộc vào quy mô dự án, thời gian triển khai từ 2-12 tuần. Chúng tôi sẽ đưa ra timeline chi tiết sau khi phân tích yêu cầu.',
     },
     {
-      question: "Katec có hỗ trợ sau khi bàn giao không?",
+      question: 'Katec có hỗ trợ sau khi bàn giao không?',
       answer:
-        "Có, chúng tôi cung cấp gói bảo hành và hỗ trợ từ 6-24 tháng tùy theo sản phẩm, bao gồm cả đào tạo sử dụng.",
+        'Có, chúng tôi cung cấp gói bảo hành và hỗ trợ từ 6-24 tháng tùy theo sản phẩm, bao gồm cả đào tạo sử dụng.',
     },
     {
-      question: "Chi phí dự án được tính như thế nào?",
+      question: 'Chi phí dự án được tính như thế nào?',
       answer:
-        "Chi phí được tính dựa trên phạm vi công việc, công nghệ sử dụng và thời gian triển khai. Chúng tôi sẽ báo giá chi tiết sau khi tư vấn.",
+        'Chi phí được tính dựa trên phạm vi công việc, công nghệ sử dụng và thời gian triển khai. Chúng tôi sẽ báo giá chi tiết sau khi tư vấn.',
     },
     {
-      question: "Katec có làm việc với khách hàng ở tỉnh không?",
+      question: 'Katec có làm việc với khách hàng ở tỉnh không?',
       answer:
-        "Có, chúng tôi phục vụ khách hàng trên toàn quốc. Có thể làm việc remote hoặc cử team đến tại chỗ khi cần thiết.",
+        'Có, chúng tôi phục vụ khách hàng trên toàn quốc. Có thể làm việc remote hoặc cử team đến tại chỗ khi cần thiết.',
     },
   ];
 
@@ -157,7 +149,7 @@ export default function ContactPage() {
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Sẵn sàng hỗ trợ
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {" "}
+                {' '}
                 24/7
               </span>
             </h1>
@@ -225,24 +217,79 @@ export default function ContactPage() {
         </div>
       </AnimatedSection>
 
-      {/* Contact Form & Map */}
+      {/* Contact Form & Map - ENHANCED SECTION */}
       <section className="py-20 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <AnimatedSection>
-              <div className="bg-white rounded-lg p-8 shadow-lg">
-                <Badge variant="outline" className="mb-4">
-                  Gửi yêu cầu
-                </Badge>
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                  Để lại thông tin liên hệ
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Điền form bên dưới và chúng tôi sẽ liên hệ với bạn trong vòng
-                  24 giờ để tư vấn chi tiết.
-                </p>
-                <ContactForm />
+            {/* Enhanced Contact Form */}
+            <AnimatedSection delay={4000}>
+              <div className="relative overflow-hidden">
+                {/* Animated background gradients */}
+                <div
+                  className="absolute inset-0  bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 animate-pulse "
+                  style={{ animationDelay: '1s', padding: '1rem' }}
+                ></div>
+                <div
+                  className="absolute inset-0 bg-gradient-to-tr from-cyan-500/30 via-blue-500/30 to-purple-500/30 "
+                  style={{ animationDelay: '1s', borderRadius: '16px' }}
+                ></div>
+
+                {/* Floating particles */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <div
+                    className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-bounce"
+                    style={{ animationDelay: '0s' }}
+                  ></div>
+                  <div
+                    className="absolute top-3/4 left-3/4 w-1 h-1 bg-white/40 rounded-full animate-bounce"
+                    style={{ animationDelay: '0.5s' }}
+                  ></div>
+                  <div
+                    className="absolute top-1/2 left-1/2 w-3 h-3 bg-white/20 rounded-full animate-bounce"
+                    style={{ animationDelay: '1s' }}
+                  ></div>
+                  <div
+                    className="absolute top-1/3 right-1/4 w-2 h-2 bg-white/25 rounded-full animate-bounce"
+                    style={{ animationDelay: '1.5s' }}
+                  ></div>
+                </div>
+
+                {/* Glassmorphism container */}
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform  transition-all duration-500 ">
+                  {/* Glowing border effect */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-20 blur-sm"></div>
+
+                  <div className="relative z-10">
+                    <Badge
+                      variant="outline"
+                      className="mb-6 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/80 transition-all duration-300 animate-gentle-pulse"
+                    >
+                      ✨ Gửi yêu cầu
+                    </Badge>
+
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent animate-pulse">
+                      Để lại thông tin liên hệ
+                    </h2>
+
+                    <p className="text-white/80 mb-8 text-lg leading-relaxed backdrop-blur-sm">
+                      Điền form bên dưới và chúng tôi sẽ liên hệ với bạn trong
+                      vòng
+                      <span className="text-yellow-300 font-semibold animate-pulse">
+                        {' '}
+                        24 giờ{' '}
+                      </span>
+                      để tư vấn chi tiết.
+                    </p>
+
+                    <div className="transform hover:scale-102 transition-transform duration-300">
+                      <ContactForm />
+                    </div>
+                  </div>
+
+                  {/* Corner decorations */}
+                  <div className="absolute top-4 right-4 w-16 h-16 border-t-2 border-r-2 border-white/30 rounded-tr-2xl"></div>
+                  <div className="absolute bottom-4 left-4 w-16 h-16 border-b-2 border-l-2 border-white/30 rounded-bl-2xl"></div>
+                </div>
               </div>
             </AnimatedSection>
 
@@ -251,7 +298,7 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div>
                   <Badge variant="outline" className="mb-4">
-                    Vị trí văn phòng
+                    🗺️ Vị trí văn phòng
                   </Badge>
                   <h2 className="text-2xl md:text-3xl font-bold mb-4">
                     Tìm chúng tôi tại
@@ -279,16 +326,16 @@ export default function ContactPage() {
               Hệ thống văn phòng toàn quốc
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Chúng tôi có mặt tại 3 thành phố lớn để phục vụ khách hàng tốt
+              Chúng tôi có mặt tại 2 thành phố lớn để phục vụ khách hàng tốt
               nhất
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {offices.map((office, index) => (
               <AnimatedSection key={index} delay={index * 100}>
                 <Card
                   className={`hover:shadow-xl transition-all duration-300 h-full ${
-                    office.isMain ? "ring-2 ring-blue-200" : ""
+                    office.isMain ? 'ring-2 ring-blue-200' : ''
                   }`}
                 >
                   {office.isMain && (
@@ -463,11 +510,13 @@ export default function ContactPage() {
               <div className="space-y-3">
                 <div className="flex items-center">
                   <Phone className="h-4 w-4 mr-3" />
-                  <span className="font-medium">Hotline 24/7: 1900 1234</span>
+                  <span className="font-medium">
+                    Hotline 24/7: 0889 88 1010
+                  </span>
                 </div>
                 <div className="flex items-center">
                   <Mail className="h-4 w-4 mr-3" />
-                  <span className="font-medium">emergency@Katec.com</span>
+                  <span className="font-medium">katec.cantho@gmail.com</span>
                 </div>
                 <div className="flex items-center">
                   <Globe className="h-4 w-4 mr-3" />
