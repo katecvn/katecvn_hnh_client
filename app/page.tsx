@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import {
   Code,
@@ -9,6 +11,13 @@ import {
   Shield,
   Cpu,
   Cloud,
+  Briefcase,
+  School,
+  ShieldCheck,
+  ShoppingCart,
+  Server,
+  Video,
+  Printer,
   Lock,
 } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
@@ -25,17 +34,137 @@ import {
   TechGrid,
   CircuitBoard,
 } from "@/components/tech-blue-animations";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function HomePage() {
+  const [showBackgrounds, setShowBackgrounds] = useState(false);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+
+  useEffect(() => {
+    // Delay loading background elements
+    const timer1 = setTimeout(() => {
+      setShowBackgrounds(true);
+    }, 800);
+
+    // Delay enabling animations
+    const timer2 = setTimeout(() => {
+      setIsInitialRender(false);
+    }, 1200);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Enhanced Hero Section */}
+
       <EnhancedHero />
       {/* Enhanced Stats Section */}
+
+      {/* Enhanced Services Section */}
+      <section className="py-20 bg-gradient-to-br from-tech-blue-50 to-white relative overflow-hidden">
+        {showBackgrounds && <CircuitBoard />}
+
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <HolographicText>
+              Giải pháp công nghệ toàn diện cho doanh nghiệp & tổ chức
+            </HolographicText>
+          </h2>
+          <p className="text-tech-blue-700 max-w-3xl mx-auto">
+            Chúng tôi cung cấp đa dạng dịch vụ công nghệ từ thiết kế website
+            chuyên nghiệp đến phát triển hệ thống quản lý dành riêng cho doanh
+            nghiệp, tổ chức, trường học và đài truyền hình.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 container px-4 md:px-6 relative z-1">
+          <EnhancedCard
+            title="Thiết kế Website"
+            description="Tạo dựng website hiện đại, tối ưu SEO và tương thích thiết bị di động"
+            features={[
+              "Website doanh nghiệp",
+              "Landing Page",
+              "E-commerce",
+              "Responsive UI",
+            ]}
+            icon={<Globe className="h-6 w-6" />}
+          />
+          <EnhancedCard
+            title="Hệ thống quản lý doanh nghiệp"
+            description="Tối ưu quy trình nội bộ, quản lý nhân sự, khách hàng, tài chính"
+            features={[
+              "CRM",
+              "ERP",
+              "Báo cáo tự động",
+              "Phân quyền người dùng",
+            ]}
+            icon={<Briefcase className="h-6 w-6" />}
+          />
+          <EnhancedCard
+            title="Giải pháp quản lý cho đài truyền hình"
+            description="Triển khai hệ thống hỗ trợ quản lý nội dung, hợp đồng bản quyền và xử lý yêu cầu liên quan đến chương trình"
+            features={[
+              "Quản lý chương trình và lịch phát sóng",
+              "Tự động hóa quy trình sản xuất và phân phối",
+              "Bảo mật thông tin và dữ liệu bản quyền",
+            ]}
+            icon={<ShieldCheck className="h-6 w-6" />}
+          />
+
+          <EnhancedCard
+            title="Quản lý trường học & mầm non"
+            description="Giải pháp số hóa trường học: điểm danh, học phí, sổ liên lạc điện tử"
+            features={[
+              "Hệ thống mầm non",
+              "Trường tư thục",
+              "Ứng dụng phụ huynh",
+            ]}
+            icon={<School className="h-6 w-6" />}
+          />
+          <EnhancedCard
+            title="Thương mại điện tử"
+            description="Xây dựng nền tảng bán hàng trực tuyến, tích hợp thanh toán và vận chuyển"
+            features={["Giỏ hàng", "Thanh toán online", "Quản lý tồn kho"]}
+            icon={<ShoppingCart className="h-6 w-6" />}
+          />
+          <EnhancedCard
+            title="Hosting & Hạ tầng"
+            description="Cung cấp hosting tốc độ cao, bảo mật và hỗ trợ kỹ thuật 24/7"
+            features={["Hosting SSD", "Domain", "Sao lưu dữ liệu"]}
+            icon={<Server className="h-6 w-6" />}
+          />
+          <EnhancedCard
+            title="Quản lý bán hàng qua livestream"
+            description="Hỗ trợ chốt đơn, theo dõi đơn hàng và tương tác với khách hàng trong suốt buổi livestream"
+            features={[
+              "Lên lịch và quản lý phiên livestream",
+              "Tích hợp đa nền tảng (Facebook, TikTok...)",
+              "Tự động chốt đơn và phản hồi người xem",
+            ]}
+            icon={<Video className="h-6 w-6" />}
+          />
+
+          <EnhancedCard
+            title="Giải pháp in ấn"
+            description="Kết nối và điều phối máy in, quản lý số lượng và chi phí in hiệu quả"
+            features={[
+              "Theo dõi máy in",
+              "Báo cáo in ấn",
+              "Tích hợp hệ thống nội bộ",
+            ]}
+            icon={<Printer className="h-6 w-6" />}
+          />
+        </div>
+      </section>
       <section className="py-20 bg-gradient-to-r from-tech-blue-50 via-white to-cyber-blue/10 relative">
-        <TechGrid />
+        {showBackgrounds && <TechGrid />}
         <div className="container px-4 md:px-6 relative z-10">
-          <Reveal direction="up">
+          <Reveal direction="up" skipAnimation={isInitialRender}>
             <div className="text-center mb-12">
               <Badge
                 variant="outline"
@@ -52,144 +181,31 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <StatsCard
-              value="500+"
-              label="AI Projects"
+              value="300+"
+              label="Dự án Web & Hệ thống"
               icon={<Cpu className="h-8 w-8" />}
-              trend={12}
+              // trend={15}
               delay={100}
             />
             <StatsCard
-              value="200+"
-              label="Cloud Solutions"
-              icon={<Cloud className="h-8 w-8" />}
-              trend={25}
+              value="120+"
+              label="Khách hàng Doanh nghiệp"
+              icon={<Briefcase className="h-8 w-8" />}
+              // trend={22}
               delay={200}
             />
             <StatsCard
-              value="50+"
-              label="Tech Experts"
-              icon={<Code className="h-8 w-8" />}
-              trend={8}
+              value="60+"
+              label="Hệ thống Mầm non"
+              icon={<School className="h-8 w-8" />}
+              // trend={10}
               delay={300}
             />
             <StatsCard
-              value="99.9%"
-              label="Security Level"
-              icon={<Lock className="h-8 w-8" />}
+              value="24/7"
+              label="Hỗ trợ & Giám sát"
+              icon={<ShieldCheck className="h-8 w-8" />}
               delay={400}
-            />
-          </div>
-        </div>
-      </section>
-      {/* Enhanced Services Section */}
-      <section className="py-20 bg-gradient-to-br from-tech-blue-50 to-white relative overflow-hidden">
-        <CircuitBoard />
-
-        <div className="container px-4 md:px-6 relative z-10">
-          <Reveal direction="up">
-            <div className="text-center mb-16">
-              <Badge
-                variant="outline"
-                className="mb-4 border-tech-blue-500 text-tech-blue-600 animate-tech-pulse"
-              >
-                <Zap className="h-4 w-4 mr-2" />
-                Tech Solutions
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <HolographicText>
-                  Giải pháp công nghệ AI toàn diện
-                </HolographicText>
-              </h2>
-              <p className="text-tech-blue-700 max-w-2xl mx-auto">
-                Từ AI & Machine Learning đến Cloud Computing, chúng tôi cung cấp
-                đầy đủ các dịch vụ công nghệ hiện đại
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <EnhancedCard
-              title="AI & Machine Learning"
-              description="Phát triển các giải pháp AI thông minh với deep learning và neural networks"
-              icon={<Cpu className="h-6 w-6" />}
-              color="bg-tech-blue-100"
-              delay={100}
-              badge="Hot"
-              features={[
-                "Deep Learning",
-                "Computer Vision",
-                "NLP Processing",
-                "Predictive Analytics",
-              ]}
-            />
-            <EnhancedCard
-              title="Cloud Computing"
-              description="Triển khai và quản lý hạ tầng cloud với độ tin cậy và bảo mật cao"
-              icon={<Cloud className="h-6 w-6" />}
-              color="bg-cyber-blue/20"
-              delay={200}
-              badge="Trending"
-              features={[
-                "AWS/Azure/GCP",
-                "Kubernetes",
-                "Microservices",
-                "DevOps",
-              ]}
-            />
-            <EnhancedCard
-              title="Blockchain Technology"
-              description="Xây dựng các ứng dụng blockchain và smart contracts an toàn"
-              icon={<Database className="h-6 w-6" />}
-              color="bg-electric-blue/20"
-              delay={300}
-              features={[
-                "Smart Contracts",
-                "DeFi Solutions",
-                "NFT Platforms",
-                "Crypto Wallets",
-              ]}
-            />
-            <EnhancedCard
-              title="IoT Solutions"
-              description="Phát triển hệ thống IoT thông minh cho Industry 4.0"
-              icon={<Globe className="h-6 w-6" />}
-              color="bg-neon-blue/20"
-              delay={400}
-              badge="Innovation"
-              features={[
-                "Sensor Networks",
-                "Edge Computing",
-                "Real-time Analytics",
-                "Industrial IoT",
-              ]}
-            />
-            <EnhancedCard
-              title="Cybersecurity"
-              description="Bảo vệ hệ thống với các giải pháp bảo mật tiên tiến và AI"
-              icon={<Shield className="h-6 w-6" />}
-              color="bg-steel-blue/20"
-              delay={500}
-              badge="Critical"
-              features={[
-                "AI Security",
-                "Threat Detection",
-                "Zero Trust",
-                "Compliance",
-              ]}
-            />
-            <EnhancedCard
-              title="Quantum Computing"
-              description="Nghiên cứu và ứng dụng công nghệ quantum cho tương lai"
-              icon={<Zap className="h-6 w-6" />}
-              color="bg-tech-blue-200"
-              delay={600}
-              badge="Future"
-              features={[
-                "Quantum Algorithms",
-                "Cryptography",
-                "Optimization",
-                "Research",
-              ]}
             />
           </div>
         </div>
@@ -197,134 +213,194 @@ export default function HomePage() {
       {/* Enhanced Featured Products */}
       <section className="py-20 bg-white relative">
         <div className="container px-4 md:px-6">
-          <Reveal direction="up">
+          <Reveal direction="up" skipAnimation={isInitialRender}>
             <div className="text-center mb-16">
               <Badge
                 variant="outline"
                 className="mb-4 border-tech-blue-500 text-tech-blue-600"
               >
                 <Award className="h-4 w-4 mr-2" />
-                Tech Products
+                Sản phẩm công nghệ
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <HolographicText>Sản phẩm công nghệ hàng đầu</HolographicText>
+                <HolographicText>Giải pháp công nghệ toàn diện</HolographicText>
               </h2>
               <p className="text-tech-blue-700 max-w-2xl mx-auto">
-                Khám phá các sản phẩm AI và Cloud được phát triển bởi đội ngũ
-                chuyên gia của chúng tôi
+                Phần mềm quản lý chuyên nghiệp cho doanh nghiệp, giáo dục và
+                thương mại điện tử
               </p>
             </div>
           </Reveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <TechProductCard
-              title="AI ERP System"
-              description="Hệ thống ERP thông minh với AI tích hợp cho quản lý doanh nghiệp"
-              image="/placeholder.svg?height=200&width=400&query=AI ERP dashboard"
-              badge="AI"
-              badgeColor="bg-tech-blue-600"
+              title="Kafood - Quản lý suất ăn"
+              description="Hệ thống quản lý suất ăn định lượng thông minh với báo cáo chi tiết và theo dõi dinh dưỡng tự động"
+              image="/placeholder.svg?height=200&width=400&query=Food management dashboard"
+              badge="Food Tech"
+              badgeColor="bg-green-600"
               delay={100}
             />
+
             <TechProductCard
-              title="Cloud CRM Platform"
-              description="Nền tảng CRM cloud với analytics và automation thông minh"
-              image="/placeholder.svg?height=200&width=400&query=Cloud CRM interface"
-              badge="Cloud"
-              badgeColor="bg-cyber-blue"
+              title="EduKids - Quản lý mầm non"
+              description="Phần mềm quản lý trường mầm non toàn diện với theo dõi học sinh, báo cáo phụ huynh và quản lý tài chính"
+              image="/placeholder.svg?height=200&width=400&query=Kindergarten management system"
+              badge="Education"
+              badgeColor="bg-purple-600"
               delay={200}
             />
+
             <TechProductCard
-              title="Quantum Analytics"
-              description="Nền tảng phân tích dữ liệu với quantum computing và AI"
-              image="/placeholder.svg?height=200&width=400&query=Quantum analytics dashboard"
-              badge="Quantum"
-              badgeColor="bg-electric-blue"
+              title="Smart Analytics"
+              description="Hệ thống báo cáo và phân tích dữ liệu thông minh với dashboard trực quan và insights tự động"
+              image="/placeholder.svg?height=200&width=400&query=Analytics dashboard reports"
+              badge="Analytics"
+              badgeColor="bg-tech-blue-600"
               delay={300}
+            />
+
+            <TechProductCard
+              title="WebDesign Pro"
+              description="Dịch vụ thiết kế website chuyên nghiệp với giao diện hiện đại, tối ưu SEO và mobile-responsive"
+              image="/placeholder.svg?height=200&width=400&query=Modern website design"
+              badge="Design"
+              badgeColor="bg-orange-600"
+              delay={400}
+            />
+
+            <TechProductCard
+              title="TPOS Livestream"
+              description="Hệ thống POS thông minh hỗ trợ chốt đơn livestream, quản lý inventory và thanh toán đa kênh"
+              image="/placeholder.svg?height=200&width=400&query=POS livestream system"
+              badge="E-commerce"
+              badgeColor="bg-red-600"
+              delay={500}
+            />
+
+            <TechProductCard
+              title="Business Suite"
+              description="Bộ giải pháp tổng thể cho doanh nghiệp với CRM, ERP và tools quản lý tích hợp hoàn chỉnh"
+              image="/placeholder.svg?height=200&width=400&query=Business management suite"
+              badge="Enterprise"
+              badgeColor="bg-cyber-blue"
+              delay={600}
             />
           </div>
         </div>
       </section>
       {/* Enhanced Why Choose Us */}
       <section className="py-20 bg-gradient-to-br from-tech-blue-50 to-cyber-blue/10 relative overflow-hidden">
-        <TechGrid />
+        {showBackgrounds && <TechGrid />}
 
         <div className="container px-4 md:px-6 relative z-10">
-          <Reveal direction="up">
+          <Reveal direction="up" skipAnimation={isInitialRender}>
             <div className="text-center mb-16">
               <Badge
                 variant="outline"
                 className="mb-4 border-tech-blue-500 text-tech-blue-600"
               >
                 <Shield className="h-4 w-4 mr-2" />
-                Why Choose Us
+                Đối tác của chúng tôi
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                <HolographicText>
-                  Đối tác công nghệ AI đáng tin cậy
-                </HolographicText>
+                <HolographicText>Đối tác tiêu biểu</HolographicText>
               </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto mb-4">
+                Chúng tôi tự hào là đối tác công nghệ tin cậy của các tập đoàn
+                và tổ chức hàng đầu Việt Nam
+              </p>
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard
-              title="AI Excellence"
-              description="Chuyên môn sâu về AI và machine learning với đội ngũ PhD"
-              icon={<Cpu className="h-8 w-8" />}
-              features={[
-                "PhD Team",
-                "Research Lab",
-                "AI Patents",
-                "Published Papers",
-              ]}
-              delay={100}
-            />
-            <FeatureCard
-              title="Cloud Native"
-              description="Kiến trúc cloud-native với scalability và reliability cao"
-              icon={<Cloud className="h-8 w-8" />}
-              features={[
-                "Microservices",
-                "Auto-scaling",
-                "99.99% Uptime",
-                "Global CDN",
-              ]}
-              delay={200}
-            />
-            <FeatureCard
-              title="Security First"
-              description="Bảo mật cấp enterprise với encryption và zero-trust"
-              icon={<Shield className="h-8 w-8" />}
-              features={[
-                "Zero Trust",
-                "End-to-end Encryption",
-                "SOC 2 Compliance",
-                "24/7 Monitoring",
-              ]}
-              delay={300}
-            />
-            <FeatureCard
-              title="Innovation Lab"
-              description="Nghiên cứu và phát triển công nghệ tương lai"
-              icon={<Zap className="h-8 w-8" />}
-              features={[
-                "R&D Lab",
-                "Quantum Research",
-                "Blockchain",
-                "Edge Computing",
-              ]}
-              delay={400}
-            />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+            <Reveal direction="up" delay={100}>
+              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
+                <div className="relative w-full h-16">
+                  <Image
+                    src="/placeholder.svg?height=80&width=160&query=Viettel logo"
+                    alt="Viettel"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal direction="up" delay={200}>
+              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
+                <div className="relative w-full h-16">
+                  <Image
+                    src="/placeholder.svg?height=80&width=160&query=TMT Group logo"
+                    alt="TMT Group"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal direction="up" delay={300}>
+              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
+                <div className="relative w-full h-16">
+                  <Image
+                    src="/placeholder.svg?height=80&width=160&query=PosApp logo"
+                    alt="PosApp"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal direction="up" delay={400}>
+              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
+                <div className="relative w-full h-16">
+                  <Image
+                    src="/placeholder.svg?height=80&width=160&query=VietinBank logo"
+                    alt="VietinBank"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal direction="up" delay={500}>
+              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
+                <div className="relative w-full h-16">
+                  <Image
+                    src="/placeholder.svg?height=80&width=160&query=VBI insurance logo"
+                    alt="VBI"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal direction="up" delay={600}>
+              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
+                <div className="relative w-full h-16">
+                  <Image
+                    src="/placeholder.svg?height=80&width=160&query=HDBank logo"
+                    alt="HDBank"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
       {/* Enhanced Contact Section */}
       <section className="py-20 bg-gradient-to-r from-navy-tech via-tech-blue-900 to-tech-blue-800 text-white relative overflow-hidden">
-        <CircuitBoard />
+        {showBackgrounds && <CircuitBoard />}
 
         <div className="container px-4 md:px-6 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <Reveal direction="left">
+            <Reveal direction="left" skipAnimation={isInitialRender}>
               <div>
                 <Badge
                   variant="outline"
@@ -364,7 +440,7 @@ export default function HomePage() {
               </div>
             </Reveal>
 
-            <Reveal direction="right">
+            <Reveal direction="right" skipAnimation={isInitialRender}>
               <div className="glass-tech rounded-lg p-8 border border-tech-blue-400/20">
                 <ContactForm />
               </div>

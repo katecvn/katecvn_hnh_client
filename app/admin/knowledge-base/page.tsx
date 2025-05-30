@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function KnowledgeBaseAdminPage() {
-  return <KnowledgeBaseAdmin />;
+  return      <KnowledgeBaseAdmin />;
 }

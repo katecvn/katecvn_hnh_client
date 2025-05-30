@@ -233,6 +233,7 @@ interface RevealProps {
   direction?: "up" | "down" | "left" | "right";
   delay?: number;
   className?: string;
+  skipAnimation?: boolean;
 }
 
 export function Reveal({
@@ -240,11 +241,32 @@ export function Reveal({
   direction = "up",
   delay = 0,
   className,
+  skipAnimation = false,
 }: RevealProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // Handle initial page load - force visibility for first render
   useEffect(() => {
+    // Wait a bit after initial render to start animations
+    const timer = setTimeout(() => {
+      setIsInitialized(true);
+    }, 50);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    // Skip if we're forcing visibility for performance
+    if (skipAnimation) {
+      setIsVisible(true);
+      return;
+    }
+
+    // Only observe if initialized
+    if (!isInitialized) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -259,7 +281,7 @@ export function Reveal({
     }
 
     return () => observer.disconnect();
-  }, [delay]);
+  }, [delay, skipAnimation, isInitialized]);
 
   const getInitialTransform = () => {
     switch (direction) {
@@ -275,6 +297,11 @@ export function Reveal({
         return "translateY(50px)";
     }
   };
+
+  // Skip animation for initial page load to improve performance
+  if (skipAnimation || !isInitialized) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <div
