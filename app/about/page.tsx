@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from 'next';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+} from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import {
   ArrowRight,
   Users,
@@ -22,208 +22,207 @@ import {
   Code,
   Database,
   Smartphone,
-  Linkedin,
+  Facebook,
   Mail,
-} from "lucide-react";
-import Image from "next/image";
-import { AnimatedSection } from "@/components/animated-section";
+} from 'lucide-react';
+import Image from 'next/image';
+import { AnimatedSection } from '@/components/animated-section';
 
 export const metadata: Metadata = {
-  title: "Về chúng tôi - Katec | Đội ngũ chuyên gia công nghệ hàng đầu",
+  title: 'Về chúng tôi - Katec | Đội ngũ chuyên gia công nghệ hàng đầu',
   description:
-    "Tìm hiểu về Katec - công ty công nghệ thông tin hàng đầu Việt Nam với đội ngũ chuyên gia giàu kinh nghiệm và cam kết mang lại giá trị cho khách hàng.",
+    'Tìm hiểu về Katec - công ty công nghệ thông tin hàng đầu Việt Nam với đội ngũ chuyên gia giàu kinh nghiệm và cam kết mang lại giá trị cho khách hàng.',
   keywords:
-    "về Katec, đội ngũ IT, chuyên gia công nghệ, công ty phần mềm Việt Nam, giá trị cốt lõi",
+    'về Katec, đội ngũ IT, chuyên gia công nghệ, công ty phần mềm Việt Nam, giá trị cốt lõi',
 };
 
 export default function AboutPage() {
   const coreValues = [
     {
       icon: <Lightbulb className="h-8 w-8" />,
-      title: "Đổi mới sáng tạo",
+      title: 'Đổi mới sáng tạo',
       description:
-        "Luôn tìm kiếm và áp dụng những công nghệ tiên tiến nhất để tạo ra giải pháp tối ưu cho khách hàng.",
-      color: "bg-yellow-100 text-yellow-600",
+        'Luôn tìm kiếm và áp dụng những công nghệ tiên tiến nhất để tạo ra giải pháp tối ưu cho khách hàng.',
+      color: 'bg-yellow-100 text-yellow-600',
     },
     {
       icon: <Heart className="h-8 w-8" />,
-      title: "Tận tâm phục vụ",
+      title: 'Tận tâm phục vụ',
       description:
-        "Đặt lợi ích và sự hài lòng của khách hàng lên hàng đầu trong mọi hoạt động kinh doanh.",
-      color: "bg-red-100 text-red-600",
+        'Đặt lợi ích và sự hài lòng của khách hàng lên hàng đầu trong mọi hoạt động kinh doanh.',
+      color: 'bg-red-100 text-red-600',
     },
     {
       icon: <Shield className="h-8 w-8" />,
-      title: "Chất lượng đảm bảo",
+      title: 'Chất lượng đảm bảo',
       description:
-        "Cam kết cung cấp sản phẩm và dịch vụ chất lượng cao, tuân thủ các tiêu chuẩn quốc tế.",
-      color: "bg-green-100 text-green-600",
+        'Cam kết cung cấp sản phẩm và dịch vụ chất lượng cao, tuân thủ các tiêu chuẩn quốc tế.',
+      color: 'bg-green-100 text-green-600',
     },
     {
       icon: <Users className="h-8 w-8" />,
-      title: "Hợp tác bền vững",
+      title: 'Hợp tác bền vững',
       description:
-        "Xây dựng mối quan hệ đối tác lâu dài dựa trên sự tin tưởng và cùng phát triển.",
-      color: "bg-blue-100 text-blue-600",
+        'Xây dựng mối quan hệ đối tác lâu dài dựa trên sự tin tưởng và cùng phát triển.',
+      color: 'bg-blue-100 text-blue-600',
     },
     {
       icon: <Target className="h-8 w-8" />,
-      title: "Hiệu quả tối ưu",
+      title: 'Hiệu quả tối ưu',
       description:
-        "Tối ưu hóa quy trình và nguồn lực để mang lại hiệu quả cao nhất cho mọi dự án.",
-      color: "bg-purple-100 text-purple-600",
+        'Tối ưu hóa quy trình và nguồn lực để mang lại hiệu quả cao nhất cho mọi dự án.',
+      color: 'bg-purple-100 text-purple-600',
     },
     {
       icon: <Globe className="h-8 w-8" />,
-      title: "Tầm nhìn toàn cầu",
+      title: 'Tầm nhìn toàn cầu',
       description:
-        "Hướng tới việc trở thành đối tác công nghệ hàng đầu không chỉ tại Việt Nam mà còn khu vực.",
-      color: "bg-indigo-100 text-indigo-600",
+        'Hướng tới việc trở thành đối tác công nghệ hàng đầu không chỉ tại Việt Nam mà còn khu vực.',
+      color: 'bg-indigo-100 text-indigo-600',
     },
   ];
 
   const milestones = [
     {
-      year: "2019",
-      title: "Thành lập Katec",
+      year: '2019',
+      title: 'Thành lập Katec',
       description:
-        "Khởi đầu với 5 thành viên và tầm nhìn trở thành công ty công nghệ hàng đầu Việt Nam.",
+        'Khởi đầu với 5 thành viên và tầm nhìn trở thành công ty công nghệ hàng đầu Việt Nam.',
     },
     {
-      year: "2020",
-      title: "Dự án đầu tiên",
+      year: '2020',
+      title: 'Dự án đầu tiên',
       description:
-        "Triển khai thành công hệ thống ERP cho khách hàng doanh nghiệp đầu tiên.",
+        'Triển khai thành công hệ thống ERP cho khách hàng doanh nghiệp đầu tiên.',
     },
     {
-      year: "2021",
-      title: "Mở rộng đội ngũ",
+      year: '2021',
+      title: 'Mở rộng đội ngũ',
       description:
-        "Phát triển đội ngũ lên 25 chuyên gia và mở rộng dịch vụ sang AI & Machine Learning.",
+        'Phát triển đội ngũ lên 25 chuyên gia và mở rộng dịch vụ sang AI & Machine Learning.',
     },
     {
-      year: "2022",
-      title: "Giải thưởng công nghệ",
+      year: '2022',
+      title: 'Giải thưởng công nghệ',
       description:
         "Nhận giải thưởng 'Sản phẩm công nghệ xuất sắc' từ Hiệp hội Phần mềm Việt Nam.",
     },
     {
-      year: "2023",
-      title: "Mở rộng thị trường",
+      year: '2023',
+      title: 'Mở rộng thị trường',
       description:
-        "Phục vụ hơn 200 khách hàng và mở rộng sang thị trường Đông Nam Á.",
+        'Phục vụ hơn 200 khách hàng và mở rộng sang thị trường Đông Nam Á.',
     },
     {
-      year: "2024",
-      title: "Đổi mới AI",
+      year: '2024',
+      title: 'Đổi mới AI',
       description:
-        "Ra mắt nền tảng AI Analytics và đạt mốc 500+ dự án hoàn thành thành công.",
+        'Ra mắt nền tảng AI Analytics và đạt mốc 500+ dự án hoàn thành thành công.',
     },
   ];
 
   const teamMembers = [
     {
-      name: "Nguyễn Văn Minh",
-      position: "CEO & Founder",
-      bio: "15+ năm kinh nghiệm trong lĩnh vực công nghệ thông tin. Cựu kỹ sư tại Google và Microsoft.",
-      image:
-        "/placeholder.svg?height=300&width=300&query=professional CEO portrait",
-      linkedin: "#",
-      email: "minh@Katec.com",
-      specialties: ["Chiến lược công nghệ", "Quản lý dự án", "AI & ML"],
+      name: 'Trương Hoàng Khải',
+      position: 'Chủ tịch HĐQT & CEO',
+      bio: '15+ năm kinh nghiệm trong lĩnh vực công nghệ thông tin. Cựu Giám đốc Bưu điện Ô Môn.',
+      image: '/khai.png?height=300&width=300&query=professional CEO portrait',
+      linkedin: '#',
+      email: 'khaith.katec@gmail.com',
+      specialties: ['Chiến lược công nghệ', 'Quản lý dự án', 'AI & ML'],
     },
     {
-      name: "Trần Thị Hương",
-      position: "CTO",
-      bio: "Chuyên gia về kiến trúc hệ thống và cloud computing. Thạc sĩ Khoa học Máy tính từ Stanford.",
+      name: 'Văn Hoàng Lũy',
+      position: 'CTO',
+      bio: 'Chuyên gia về kiến trúc hệ thống và cloud computing. Thạc sĩ Khoa học Máy tính từ Stanford.',
       image:
-        "/placeholder.svg?height=300&width=300&query=professional CTO portrait female",
-      linkedin: "#",
-      email: "huong@Katec.com",
-      specialties: ["Cloud Architecture", "DevOps", "System Design"],
+        '/placeholder.svg?height=300&width=300&query=professional CTO portrait female',
+      linkedin: '#',
+      email: 'luyvh.katec@gmail.com',
+      specialties: ['Cloud Architecture', 'DevOps', 'System Design'],
     },
     {
-      name: "Lê Hoàng Nam",
-      position: "Head of Development",
-      bio: "10+ năm kinh nghiệm phát triển phần mềm. Chuyên gia về React, Node.js và microservices.",
+      name: 'Nguyễn Thanh Bình',
+      position: 'Head of Development',
+      bio: '10+ năm kinh nghiệm phát triển phần mềm. Chuyên gia về React, Node.js và microservices.',
       image:
-        "/placeholder.svg?height=300&width=300&query=professional developer portrait",
-      linkedin: "#",
-      email: "nam@Katec.com",
-      specialties: ["Full-stack Development", "React", "Node.js"],
+        '/placeholder.svg?height=300&width=300&query=professional developer portrait',
+      linkedin: '#',
+      email: 'binhnt.katec@gmail.com',
+      specialties: ['Full-stack Development', 'React', 'Node.js'],
     },
     {
-      name: "Phạm Thị Lan",
-      position: "Head of AI Research",
-      bio: "Tiến sĩ AI từ MIT. Chuyên gia về machine learning và natural language processing.",
+      name: 'Nguyễn Trọng Nghĩa',
+      position: 'Head of AI Research',
+      bio: 'Tiến sĩ AI từ MIT. Chuyên gia về machine learning và natural language processing.',
       image:
-        "/placeholder.svg?height=300&width=300&query=professional AI researcher portrait female",
-      linkedin: "#",
-      email: "lan@Katec.com",
-      specialties: ["Machine Learning", "NLP", "Computer Vision"],
+        '/placeholder.svg?height=300&width=300&query=professional AI researcher portrait female',
+      linkedin: '#',
+      email: 'lan@Katec.com',
+      specialties: ['Machine Learning', 'NLP', 'Computer Vision'],
     },
     {
-      name: "Vũ Đức Thành",
-      position: "Head of Security",
-      bio: "Chuyên gia bảo mật với 12+ năm kinh nghiệm. Certified Ethical Hacker và CISSP.",
+      name: 'Trần Thu Vân',
+      position: 'Head of Security',
+      bio: 'Chuyên gia bảo mật với 12+ năm kinh nghiệm. Certified Ethical Hacker và CISSP.',
       image:
-        "/placeholder.svg?height=300&width=300&query=professional security expert portrait",
-      linkedin: "#",
-      email: "thanh@Katec.com",
-      specialties: ["Cybersecurity", "Penetration Testing", "Compliance"],
+        '/placeholder.svg?height=300&width=300&query=professional security expert portrait',
+      linkedin: '#',
+      email: 'thanh@Katec.com',
+      specialties: ['Cybersecurity', 'Penetration Testing', 'Compliance'],
     },
     {
-      name: "Đỗ Thị Mai",
-      position: "Head of Design",
-      bio: "UX/UI Designer với 8+ năm kinh nghiệm. Chuyên gia về design thinking và user research.",
+      name: 'Nguyễn Hữu Danh',
+      position: 'Head of Design',
+      bio: 'UX/UI Designer với 8+ năm kinh nghiệm. Chuyên gia về design thinking và user research.',
       image:
-        "/placeholder.svg?height=300&width=300&query=professional UX designer portrait female",
-      linkedin: "#",
-      email: "mai@Katec.com",
-      specialties: ["UX/UI Design", "Design Systems", "User Research"],
+        '/placeholder.svg?height=300&width=300&query=professional UX designer portrait female',
+      linkedin: '#',
+      email: 'mai@Katec.com',
+      specialties: ['UX/UI Design', 'Design Systems', 'User Research'],
     },
   ];
 
   const stats = [
     {
-      label: "Năm kinh nghiệm",
-      value: "5+",
+      label: 'Năm kinh nghiệm',
+      value: '5+',
       icon: <Award className="h-6 w-6" />,
     },
     {
-      label: "Dự án hoàn thành",
-      value: "500+",
+      label: 'Dự án hoàn thành',
+      value: '500+',
       icon: <Target className="h-6 w-6" />,
     },
     {
-      label: "Khách hàng hài lòng",
-      value: "200+",
+      label: 'Khách hàng hài lòng',
+      value: '200+',
       icon: <Users className="h-6 w-6" />,
     },
     {
-      label: "Chuyên gia IT",
-      value: "50+",
+      label: 'Chuyên gia IT',
+      value: '50+',
       icon: <Code className="h-6 w-6" />,
     },
     {
-      label: "Tỷ lệ thành công",
-      value: "98%",
+      label: 'Tỷ lệ thành công',
+      value: '98%',
       icon: <TrendingUp className="h-6 w-6" />,
     },
     {
-      label: "Hỗ trợ 24/7",
-      value: "365",
+      label: 'Hỗ trợ 24/7',
+      value: '365',
       icon: <Shield className="h-6 w-6" />,
     },
   ];
 
   const technologies = [
-    { name: "React/Next.js", level: 95 },
-    { name: "Node.js", level: 90 },
-    { name: "Python/AI", level: 88 },
-    { name: "Cloud (AWS/Azure)", level: 92 },
-    { name: "Mobile (React Native)", level: 85 },
-    { name: "DevOps", level: 87 },
+    { name: 'React/Next.js', level: 95 },
+    { name: 'Node.js', level: 90 },
+    { name: 'Python/AI', level: 88 },
+    { name: 'Cloud (AWS/Azure)', level: 92 },
+    { name: 'Mobile (Flutter)', level: 85 },
+    { name: 'DevOps', level: 87 },
   ];
 
   return (
@@ -238,7 +237,7 @@ export default function AboutPage() {
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Đối tác công nghệ
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {" "}
+                {' '}
                 đáng tin cậy
               </span>
             </h1>
@@ -324,7 +323,7 @@ export default function AboutPage() {
             </div>
             <div className="relative">
               <Image
-                src="/placeholder.svg?height=500&width=600&query=modern office team working"
+                src="/imageURL.jpg?height=700&width=600&query=modern office team working"
                 alt="Katec Office"
                 width={600}
                 height={500}
@@ -403,12 +402,12 @@ export default function AboutPage() {
                   key={index}
                   delay={index * 150}
                   className={`relative flex items-center mb-12 ${
-                    index % 2 === 0 ? "justify-start" : "justify-end"
+                    index % 2 === 0 ? 'justify-start' : 'justify-end'
                   }`}
                 >
                   <div
                     className={`w-full max-w-md ${
-                      index % 2 === 0 ? "pr-8" : "pl-8"
+                      index % 2 === 0 ? 'pr-8' : 'pl-8'
                     }`}
                   >
                     <Card className="group hover:shadow-xl transition-all duration-300">
@@ -521,7 +520,7 @@ export default function AboutPage() {
                 <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
                   <div className="relative">
                     <Image
-                      src={member.image || "/placeholder.svg"}
+                      src={member.image || '/placeholder.svg'}
                       alt={member.name}
                       width={300}
                       height={300}
@@ -535,8 +534,8 @@ export default function AboutPage() {
                           variant="secondary"
                           className="flex-1"
                         >
-                          <Linkedin className="h-4 w-4 mr-2" />
-                          LinkedIn
+                          <Facebook className="h-4 w-4 mr-2" />
+                          FaceBook
                         </Button>
                         <Button size="sm" variant="secondary">
                           <Mail className="h-4 w-4" />

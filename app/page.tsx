@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 import {
   Code,
   Database,
@@ -19,24 +19,24 @@ import {
   Video,
   Printer,
   Lock,
-} from "lucide-react";
-import { ContactForm } from "@/components/contact-form";
-import { EnhancedHero } from "@/components/enhanced-hero";
+} from 'lucide-react';
+import { ContactForm } from '@/components/contact-form';
+import { EnhancedHero } from '@/components/enhanced-hero';
 import {
   EnhancedCard,
   StatsCard,
   FeatureCard,
   TechProductCard,
-} from "@/components/enhanced-cards";
-import { Reveal } from "@/components/enhanced-animations";
+} from '@/components/enhanced-cards';
+import { Reveal } from '@/components/enhanced-animations';
 import {
   HolographicText,
   TechGrid,
   CircuitBoard,
-} from "@/components/tech-blue-animations";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import api from "@/utils/axios";
+} from '@/components/tech-blue-animations';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import api from '@/utils/axios';
 
 export default function HomePage() {
   const [showBackgrounds, setShowBackgrounds] = useState(false);
@@ -71,7 +71,7 @@ export default function HomePage() {
   }, []);
 
   const getRandomColor = () => {
-    const colors = ["blue", "purple", "green", "orange", "red", "slate"];
+    const colors = ['blue', 'purple', 'green', 'orange', 'red', 'slate'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
   const fetchProducts = async (page = 1, limit = 10, categoryId = null) => {
@@ -80,7 +80,7 @@ export default function HomePage() {
       setError(null);
 
       let url = `/product/public/shows?page=${page}&limit=${limit}`;
-      if (categoryId && categoryId !== "all") {
+      if (categoryId && categoryId !== 'all') {
         url += `&category_id=${categoryId}`;
       }
 
@@ -88,31 +88,31 @@ export default function HomePage() {
       const { data } = response.data;
 
       // Transform API data to match component structure
-      const transformedProducts = data.products.map((product:any) => ({
+      const transformedProducts = data.products.map((product: any) => ({
         id: product.id,
         name: product.name,
-        category: product.category?.name || "Sản phẩm",
-        slug:product.slug,
+        category: product.category?.name || 'Sản phẩm',
+        slug: product.slug,
         description: product.content
-          ? product.content.replace(/<[^>]*>/g, "").substring(0, 150) + "..."
-          : "Mô tả sản phẩm",
+          ? product.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
+          : 'Mô tả sản phẩm',
         features: [
           `SKU: ${product.sku}`,
           `Đơn vị: ${product.unit}`,
           product.brand?.name
             ? `Thương hiệu: ${product.brand.name}`
-            : "Sản phẩm chất lượng",
-          product.isFeatured ? "Sản phẩm nổi bật" : "Giải pháp chuyên nghiệp",
+            : 'Sản phẩm chất lượng',
+          product.isFeatured ? 'Sản phẩm nổi bật' : 'Giải pháp chuyên nghiệp',
         ],
         price: product.salePrice
-          ? `${parseInt(product.salePrice).toLocaleString("vi-VN")} VNĐ`
-          : "Liên hệ để biết giá",
+          ? `${parseInt(product.salePrice).toLocaleString('vi-VN')} VNĐ`
+          : 'Liên hệ để biết giá',
         originalPrice: product.originalPrice,
         image: product.imagesUrl
           ? JSON.parse(JSON.parse(product.imagesUrl))[0] ||
-            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop"
-          : "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
-        badge: product.isFeatured ? "Nổi bật" : "",
+            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop'
+          : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop',
+        badge: product.isFeatured ? 'Nổi bật' : '',
         color: getRandomColor(),
         slug: product.slug,
         stock: product.stock,
@@ -125,11 +125,11 @@ export default function HomePage() {
         currentPage: data.currentPage || 1,
       });
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error('Error fetching products:', error);
       const message =
         error.response?.data?.message ||
         error.message ||
-        "Không thể tải danh sách sản phẩm";
+        'Không thể tải danh sách sản phẩm';
       setError(message);
     } finally {
       setLoading(false);
@@ -164,10 +164,10 @@ export default function HomePage() {
             title="Thiết kế Website"
             description="Tạo dựng website hiện đại, tối ưu SEO và tương thích thiết bị di động"
             features={[
-              "Website doanh nghiệp",
-              "Landing Page",
-              "E-commerce",
-              "Responsive UI",
+              'Website doanh nghiệp',
+              'Landing Page',
+              'E-commerce',
+              'Responsive UI',
             ]}
             icon={<Globe className="h-6 w-6" />}
           />
@@ -175,10 +175,10 @@ export default function HomePage() {
             title="Hệ thống quản lý doanh nghiệp"
             description="Tối ưu quy trình nội bộ, quản lý nhân sự, khách hàng, tài chính"
             features={[
-              "CRM",
-              "ERP",
-              "Báo cáo tự động",
-              "Phân quyền người dùng",
+              'CRM',
+              'ERP',
+              'Báo cáo tự động',
+              'Phân quyền người dùng',
             ]}
             icon={<Briefcase className="h-6 w-6" />}
           />
@@ -186,9 +186,9 @@ export default function HomePage() {
             title="Giải pháp quản lý cho đài truyền hình"
             description="Triển khai hệ thống hỗ trợ quản lý nội dung, hợp đồng bản quyền và xử lý yêu cầu liên quan đến chương trình"
             features={[
-              "Quản lý chương trình và lịch phát sóng",
-              "Tự động hóa quy trình sản xuất và phân phối",
-              "Bảo mật thông tin và dữ liệu bản quyền",
+              'Quản lý chương trình và lịch phát sóng',
+              'Tự động hóa quy trình sản xuất và phân phối',
+              'Bảo mật thông tin và dữ liệu bản quyền',
             ]}
             icon={<ShieldCheck className="h-6 w-6" />}
           />
@@ -197,31 +197,31 @@ export default function HomePage() {
             title="Quản lý trường học & mầm non"
             description="Giải pháp số hóa trường học: điểm danh, học phí, sổ liên lạc điện tử"
             features={[
-              "Hệ thống mầm non",
-              "Trường tư thục",
-              "Ứng dụng phụ huynh",
+              'Hệ thống mầm non',
+              'Trường tư thục',
+              'Ứng dụng phụ huynh',
             ]}
             icon={<School className="h-6 w-6" />}
           />
           <EnhancedCard
             title="Thương mại điện tử"
             description="Xây dựng nền tảng bán hàng trực tuyến, tích hợp thanh toán và vận chuyển"
-            features={["Giỏ hàng", "Thanh toán online", "Quản lý tồn kho"]}
+            features={['Giỏ hàng', 'Thanh toán online', 'Quản lý tồn kho']}
             icon={<ShoppingCart className="h-6 w-6" />}
           />
           <EnhancedCard
             title="Hosting & Hạ tầng"
             description="Cung cấp hosting tốc độ cao, bảo mật và hỗ trợ kỹ thuật 24/7"
-            features={["Hosting SSD", "Domain", "Sao lưu dữ liệu"]}
+            features={['Hosting SSD', 'Domain', 'Sao lưu dữ liệu']}
             icon={<Server className="h-6 w-6" />}
           />
           <EnhancedCard
             title="Quản lý bán hàng qua livestream"
             description="Hỗ trợ chốt đơn, theo dõi đơn hàng và tương tác với khách hàng trong suốt buổi livestream"
             features={[
-              "Lên lịch và quản lý phiên livestream",
-              "Tích hợp đa nền tảng (Facebook, TikTok...)",
-              "Tự động chốt đơn và phản hồi người xem",
+              'Lên lịch và quản lý phiên livestream',
+              'Tích hợp đa nền tảng (Facebook, TikTok...)',
+              'Tự động chốt đơn và phản hồi người xem',
             ]}
             icon={<Video className="h-6 w-6" />}
           />
@@ -230,9 +230,9 @@ export default function HomePage() {
             title="Giải pháp in ấn"
             description="Kết nối và điều phối máy in, quản lý số lượng và chi phí in hiệu quả"
             features={[
-              "Theo dõi máy in",
-              "Báo cáo in ấn",
-              "Tích hợp hệ thống nội bộ",
+              'Theo dõi máy in',
+              'Báo cáo in ấn',
+              'Tích hợp hệ thống nội bộ',
             ]}
             icon={<Printer className="h-6 w-6" />}
           />
@@ -310,24 +310,21 @@ export default function HomePage() {
           </Reveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-          {products?.map((product: any, index: number) => {
-            const nameC = product?.category?.name || null;
-            return (
-              <TechProductCard
-                key={product.id || index}
-                title={product.name}
-                description={product.description}
-                image={product.image}
-                badge={product?.category}
-                badgeColor="bg-green-600"
-                delay={index * 100}
-                link={product.slug}
-              />
-            );
-          })}
-          
-          
+            {products?.map((product: any, index: number) => {
+              const nameC = product?.category?.name || null;
+              return (
+                <TechProductCard
+                  key={product.id || index}
+                  title={product.name}
+                  description={product.description}
+                  image={product.image}
+                  badge={product?.category}
+                  badgeColor="bg-green-600"
+                  delay={index * 100}
+                  link={product.slug}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -462,9 +459,9 @@ export default function HomePage() {
                 </p>
                 <div className="space-y-4">
                   {[
-                    "Tư vấn AI & Cloud Strategy miễn phí",
-                    "Thiết kế kiến trúc hệ thống tối ưu",
-                    "Triển khai và monitoring 24/7",
+                    'Tư vấn AI & Cloud Strategy miễn phí',
+                    'Thiết kế kiến trúc hệ thống tối ưu',
+                    'Triển khai và monitoring 24/7',
                   ].map((step, index) => (
                     <div
                       key={index}
