@@ -366,10 +366,9 @@ export function CyberButton({
     <button
       onClick={onClick}
       className={cn(
-        "relative px-6 py-3 rounded-lg font-semibold transition-all duration-300",
-        "hover-lift animate-tech-pulse",
+        "relative px-6 py-3 rounded-lg font-semibold transition-all duration-500 ease-in-out",
         "before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent",
-        "before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700",
+        "before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700 before:ease-in-out",
         variants[variant],
         className
       )}

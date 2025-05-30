@@ -230,6 +230,7 @@ interface TechProductCardProps {
   badge: string;
   badgeColor: string;
   delay?: number;
+  link: string;
 }
 
 export function TechProductCard({
@@ -239,6 +240,7 @@ export function TechProductCard({
   badge,
   badgeColor,
   delay = 0,
+  link,
 }: TechProductCardProps) {
   return (
     <Reveal direction="up" delay={delay}>
@@ -263,22 +265,23 @@ export function TechProductCard({
         </div>
 
         <CardHeader>
-          <CardTitle className="text-xl group-hover:text-tech-blue-600 transition-colors">
+          <CardTitle className="text-xl group-hover:text-tech-blue-600 transition-colors line-clamp-2">
             <HolographicText>{title}</HolographicText>
           </CardTitle>
           <CardDescription className="text-base text-tech-blue-700">
             {description}
           </CardDescription>
         </CardHeader>
-
         <CardContent>
-          <CyberButton
-            variant="outline"
-            className="w-full text-tech-blue-600 border-tech-blue-500 hover:bg-tech-blue-500 hover:text-white"
-          >
-            Tìm hiểu thêm
-            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-          </CyberButton>
+          <a href={link} target="_blank" rel="noopener noreferrer">
+            <CyberButton
+              variant="outline"
+              className="w-full text-tech-blue-600 border-tech-blue-500 hover:bg-tech-blue-500 hover:text-white"
+            >
+              Tìm hiểu thêm
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </CyberButton>
+          </a>
         </CardContent>
       </NeonBorder>
     </Reveal>
