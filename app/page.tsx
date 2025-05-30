@@ -36,10 +36,22 @@ import {
 } from "@/components/tech-blue-animations";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import api from "@/utils/axios";
 
 export default function HomePage() {
   const [showBackgrounds, setShowBackgrounds] = useState(false);
   const [isInitialRender, setIsInitialRender] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+  });
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     // Delay loading background elements
@@ -58,6 +70,71 @@ export default function HomePage() {
     };
   }, []);
 
+  const getRandomColor = () => {
+    const colors = ["blue", "purple", "green", "orange", "red", "slate"];
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
+  const fetchProducts = async (page = 1, limit = 10, categoryId = null) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      let url = `/product/public/shows?page=${page}&limit=${limit}`;
+      if (categoryId && categoryId !== "all") {
+        url += `&category_id=${categoryId}`;
+      }
+
+      const response = await api.get(url);
+      const { data } = response.data;
+
+      // Transform API data to match component structure
+      const transformedProducts = data.products.map((product:any) => ({
+        id: product.id,
+        name: product.name,
+        category: product.category?.name || "Sản phẩm",
+        slug:product.slug,
+        description: product.content
+          ? product.content.replace(/<[^>]*>/g, "").substring(0, 150) + "..."
+          : "Mô tả sản phẩm",
+        features: [
+          `SKU: ${product.sku}`,
+          `Đơn vị: ${product.unit}`,
+          product.brand?.name
+            ? `Thương hiệu: ${product.brand.name}`
+            : "Sản phẩm chất lượng",
+          product.isFeatured ? "Sản phẩm nổi bật" : "Giải pháp chuyên nghiệp",
+        ],
+        price: product.salePrice
+          ? `${parseInt(product.salePrice).toLocaleString("vi-VN")} VNĐ`
+          : "Liên hệ để biết giá",
+        originalPrice: product.originalPrice,
+        image: product.imagesUrl
+          ? JSON.parse(JSON.parse(product.imagesUrl))[0] ||
+            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop"
+          : "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
+        badge: product.isFeatured ? "Nổi bật" : "",
+        color: getRandomColor(),
+        slug: product.slug,
+        stock: product.stock,
+      }));
+
+      setProducts(transformedProducts);
+      setPagination({
+        totalItems: data.totalItems || 0,
+        totalPages: data.totalPages || 1,
+        currentPage: data.currentPage || 1,
+      });
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Không thể tải danh sách sản phẩm";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen">
       {/* Enhanced Hero Section */}
@@ -233,59 +310,24 @@ export default function HomePage() {
           </Reveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <TechProductCard
-              title="Kafood - Quản lý suất ăn"
-              description="Hệ thống quản lý suất ăn định lượng thông minh với báo cáo chi tiết và theo dõi dinh dưỡng tự động"
-              image="/placeholder.svg?height=200&width=400&query=Food management dashboard"
-              badge="Food Tech"
-              badgeColor="bg-green-600"
-              delay={100}
-            />
-
-            <TechProductCard
-              title="EduKids - Quản lý mầm non"
-              description="Phần mềm quản lý trường mầm non toàn diện với theo dõi học sinh, báo cáo phụ huynh và quản lý tài chính"
-              image="/placeholder.svg?height=200&width=400&query=Kindergarten management system"
-              badge="Education"
-              badgeColor="bg-purple-600"
-              delay={200}
-            />
-
-            <TechProductCard
-              title="Smart Analytics"
-              description="Hệ thống báo cáo và phân tích dữ liệu thông minh với dashboard trực quan và insights tự động"
-              image="/placeholder.svg?height=200&width=400&query=Analytics dashboard reports"
-              badge="Analytics"
-              badgeColor="bg-tech-blue-600"
-              delay={300}
-            />
-
-            <TechProductCard
-              title="WebDesign Pro"
-              description="Dịch vụ thiết kế website chuyên nghiệp với giao diện hiện đại, tối ưu SEO và mobile-responsive"
-              image="/placeholder.svg?height=200&width=400&query=Modern website design"
-              badge="Design"
-              badgeColor="bg-orange-600"
-              delay={400}
-            />
-
-            <TechProductCard
-              title="TPOS Livestream"
-              description="Hệ thống POS thông minh hỗ trợ chốt đơn livestream, quản lý inventory và thanh toán đa kênh"
-              image="/placeholder.svg?height=200&width=400&query=POS livestream system"
-              badge="E-commerce"
-              badgeColor="bg-red-600"
-              delay={500}
-            />
-
-            <TechProductCard
-              title="Business Suite"
-              description="Bộ giải pháp tổng thể cho doanh nghiệp với CRM, ERP và tools quản lý tích hợp hoàn chỉnh"
-              image="/placeholder.svg?height=200&width=400&query=Business management suite"
-              badge="Enterprise"
-              badgeColor="bg-cyber-blue"
-              delay={600}
-            />
+        
+          {products?.map((product: any, index: number) => {
+            const nameC = product?.category?.name || null;
+            return (
+              <TechProductCard
+                key={product.id || index}
+                title={product.name}
+                description={product.description}
+                image={product.image}
+                badge={product?.category}
+                badgeColor="bg-green-600"
+                delay={index * 100}
+                link={product.slug}
+              />
+            );
+          })}
+          
+          
           </div>
         </div>
       </section>
