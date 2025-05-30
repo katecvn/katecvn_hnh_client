@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import type React from "react";
-import { useState, useId } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+import type React from 'react';
+import { useState, useId } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Send, CheckCircle, Upload, X } from "lucide-react";
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Send, CheckCircle, Upload, X } from 'lucide-react';
 
 // Generate a stable request code that won't change between server and client render
 const generateRequestCode = () => {
   // Using a fixed timestamp ensures the same code on server and client
-  return "TC123456";
+  return 'TC123456';
 };
 
 export function ContactForm() {
@@ -160,130 +160,8 @@ export function ContactForm() {
       </div>
 
       {/* Project Information */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Thông tin dự án</h3>
-        <div className="space-y-2">
-          <Label>Dịch vụ quan tâm *</Label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {[
-              "Phát triển phần mềm",
-              "Hệ thống ERP",
-              "Hệ thống CRM",
-              "Ứng dụng di động",
-              "AI & Machine Learning",
-              "Chuyển đổi số",
-              "Bảo mật thông tin",
-              "Tư vấn IT",
-            ].map((service) => (
-              <div key={service} className="flex items-center space-x-2">
-                <Checkbox id={service} />
-                <Label htmlFor={service} className="text-sm">
-                  {service}
-                </Label>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Ngân sách dự kiến</Label>
-          <RadioGroup defaultValue="">
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="under-100m" id="under-100m" />
-              <Label htmlFor="under-100m">Dưới 100 triệu VNĐ</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="100m-500m" id="100m-500m" />
-              <Label htmlFor="100m-500m">100 - 500 triệu VNĐ</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="500m-1b" id="500m-1b" />
-              <Label htmlFor="500m-1b">500 triệu - 1 tỷ VNĐ</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="over-1b" id="over-1b" />
-              <Label htmlFor="over-1b">Trên 1 tỷ VNĐ</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="discuss" id="discuss" />
-              <Label htmlFor="discuss">Thảo luận sau</Label>
-            </div>
-          </RadioGroup>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="timeline">Thời gian mong muốn triển khai</Label>
-          <Select>
-            <SelectTrigger>
-              <SelectValue placeholder="Chọn thời gian" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="asap">Càng sớm càng tốt</SelectItem>
-              <SelectItem value="1-3months">1-3 tháng</SelectItem>
-              <SelectItem value="3-6months">3-6 tháng</SelectItem>
-              <SelectItem value="6-12months">6-12 tháng</SelectItem>
-              <SelectItem value="over-1year">Trên 1 năm</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="description">Mô tả chi tiết dự án *</Label>
-          <Textarea
-            id="description"
-            required
-            rows={5}
-            placeholder="Vui lòng mô tả chi tiết về dự án, yêu cầu cụ thể, mục tiêu mong muốn đạt được..."
-          />
-        </div>
-      </div>
 
       {/* File Upload */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Tài liệu đính kèm (tùy chọn)</h3>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-          <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-600 mb-2">Kéo thả file hoặc click để chọn</p>
-          <p className="text-sm text-gray-500 mb-4">
-            Hỗ trợ: PDF, DOC, DOCX, XLS, XLSX (tối đa 10MB)
-          </p>
-          <input
-            type="file"
-            multiple
-            accept=".pdf,.doc,.docx,.xls,.xlsx"
-            onChange={handleFileUpload}
-            className="hidden"
-            id="file-upload"
-          />
-          <Label htmlFor="file-upload">
-            <Button type="button" variant="outline" asChild>
-              <span>Chọn file</span>
-            </Button>
-          </Label>
-        </div>
-
-        {attachedFiles.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-sm font-medium">File đã chọn:</p>
-            {attachedFiles.map((file, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between bg-gray-50 p-2 rounded"
-              >
-                <span className="text-sm">{file.name}</span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeFile(index)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
 
       {/* Contact Preferences */}
       <div className="space-y-4">
@@ -292,10 +170,10 @@ export function ContactForm() {
           <Label>Thời gian thuận tiện để liên hệ</Label>
           <div className="grid grid-cols-2 gap-3">
             {[
-              "8:00 - 12:00",
-              "13:00 - 17:00",
-              "18:00 - 20:00",
-              "Cuối tuần",
+              '8:00 - 12:00',
+              '13:00 - 17:00',
+              '18:00 - 20:00',
+              'Cuối tuần',
             ].map((time) => (
               <div key={time} className="flex items-center space-x-2">
                 <Checkbox id={time} />
@@ -331,14 +209,14 @@ export function ContactForm() {
         <div className="flex items-start space-x-2">
           <Checkbox id="terms" required />
           <Label htmlFor="terms" className="text-sm">
-            Tôi đồng ý với{" "}
+            Tôi đồng ý với{' '}
             <a href="/privacy" className="text-blue-600 hover:underline">
               Chính sách bảo mật
-            </a>{" "}
-            và{" "}
+            </a>{' '}
+            và{' '}
             <a href="/terms" className="text-blue-600 hover:underline">
               Điều khoản sử dụng
-            </a>{" "}
+            </a>{' '}
             của Katec *
           </Label>
         </div>
@@ -357,7 +235,7 @@ export function ContactForm() {
           size="lg"
         >
           {isLoading ? (
-            "Đang gửi..."
+            'Đang gửi...'
           ) : (
             <>
               Gửi yêu cầu tư vấn
