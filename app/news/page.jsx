@@ -17,6 +17,8 @@ import { useEffect, useState } from 'react';
 import api from '@/utils/axios';
 import { handleError } from '@/utils/handle-error';
 import { toast } from 'sonner';
+import NewsCard from './EnhancedArticleCard';
+import DynamicNewsGrid from './DynamicNewsGrid';
 
 export default function NewsPage() {
   const [posts, setPosts] = useState([]);
@@ -347,77 +349,7 @@ export default function NewsPage() {
                 </div>
               ) : (
                 <>
-                  <div className="grid md:grid-cols-2 gap-8">
-                    {(posts && posts.length > 0
-                      ? posts.slice(1) // Skip first post since it's featured
-                      : newsList.slice(0, 10)
-                    ).map((article, index) => (
-                      <AnimatedSection key={article.id} delay={index * 100}>
-                        <Card className="group hover:shadow-xl transition-all duration-300 h-full">
-                          <div className="relative overflow-hidden">
-                            <Image
-                              src={
-                                article.thumbnail || // API field
-                                article.image || // fallback field
-                                '/placeholder.svg'
-                              }
-                              alt={article.title}
-                              width={400}
-                              height={200}
-                              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute top-4 left-4">
-                              <Badge className="bg-white/90 text-gray-900">
-                                {article.topics?.[0]?.name || // API field - first topic name
-                                  article.category || // fallback field
-                                  'Tin tức'}
-                              </Badge>
-                            </div>
-                          </div>
-                          <CardHeader>
-                            <CardTitle className="line-clamp-2 group-hover:text-blue-600 transition-colors">
-                              {article.title}
-                            </CardTitle>
-                            <CardDescription className="line-clamp-3">
-                              {article.short_description || // API field
-                                article.excerpt || // fallback field
-                                article.description || // fallback field
-                                'Không có mô tả'}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="mt-auto">
-                            <div className="flex items-center text-sm text-gray-500 mb-4">
-                              <Calendar className="h-4 w-4 mr-2" />
-                              <span className="mr-4">
-                                {article.published_at // API field
-                                  ? new Date(
-                                      article.published_at
-                                    ).toLocaleDateString('vi-VN')
-                                  : article.date || // fallback field
-                                    'N/A'}
-                              </span>
-                              <User className="h-4 w-4 mr-2" />
-                              <span className="mr-4">
-                                {article.author?.full_name || // API field
-                                  article.author || // fallback field
-                                  'Admin'}
-                              </span>
-                              <span>{article.readTime || '5 phút đọc'}</span>
-                            </div>
-                            <Link href={`/news/${article.slug || article.id}`}>
-                              <Button
-                                variant="outline"
-                                className="w-full group-hover:bg-blue-600 group-hover:text-white transition-colors"
-                              >
-                                Đọc thêm
-                                <ArrowRight className="ml-2 h-4 w-4" />
-                              </Button>
-                            </Link>
-                          </CardContent>
-                        </Card>
-                      </AnimatedSection>
-                    ))}
-                  </div>
+                  <DynamicNewsGrid posts={posts} />
 
                   {/* Pagination */}
                   <AnimatedSection className="mt-12 flex justify-center">
