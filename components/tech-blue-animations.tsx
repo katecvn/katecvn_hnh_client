@@ -36,12 +36,23 @@ export function MatrixRain() {
 
     // Matrix rain characters
     const chars = "Katec";
-    const fontSize = 14;
+    const fontSize = 16;
+    const lineHeight = 30;
     const columns = Math.floor(canvas.width / fontSize);
     const drops: number[] = Array(columns).fill(1);
 
     // Animation loop
-    const draw = () => {
+    let lastTime = 0;
+    const animationSpeed = 150; // milliseconds delay between frames
+
+    const draw = (currentTime: number) => {
+      if (currentTime - lastTime < animationSpeed) {
+        requestAnimationFrame(draw);
+        return;
+      }
+
+      lastTime = currentTime;
+
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -50,12 +61,12 @@ export function MatrixRain() {
 
       for (let i = 0; i < drops.length; i++) {
         const text = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        ctx.fillText(text, i * fontSize, drops[i] * lineHeight);
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (drops[i] * lineHeight > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
-        drops[i]++;
+        drops[i] += 0.4; // Chậm hơn: từ 1 xuống 0.5
       }
 
       requestAnimationFrame(draw);
@@ -174,19 +185,18 @@ export function HolographicText({ children, className }: HolographicTextProps) {
   return (
     <span
       className={cn(
-        "relative inline-block text-transparent bg-gradient-to-r from-tech-blue-400 via-cyber-blue to-electric-blue bg-clip-text",
+        "relative inline-block text-transparent bg-gradient-to-r from-cyan-100 via-blue-100 to-purple-100 bg-clip-text",
         "animate-hologram",
         className
       )}
     >
       {children}
-      <span className="absolute inset-0 bg-gradient-to-r from-tech-blue-400 via-cyber-blue to-electric-blue bg-clip-text text-transparent animate-neon-flicker opacity-50">
+      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-50 to-blue-50 bg-clip-text text-transparent animate-neon-flicker opacity-90">
         {children}
       </span>
     </span>
   );
 }
-
 // Neon Border Effect
 interface NeonBorderProps {
   children: React.ReactNode;

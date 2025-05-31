@@ -175,7 +175,7 @@ export function EnhancedHero() {
                   color: "text-electric-blue",
                 },
                 {
-                  number: "50+",
+                  number: "500+",
                   label: "Trường mầm non sử dụng hệ thống",
                   icon: <Cpu className="h-5 w-5 md:h-6 md:w-6" />,
                   color: "text-neon-blue",
