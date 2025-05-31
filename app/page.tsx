@@ -421,7 +421,7 @@ export default function HomePage() {
               </p>
             </div>
           </Reveal>
-          {console.log(news,'mews')}
+          {console.log(news, "mews")}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {news?.map((post, index) => (
               <TechProductCard
@@ -442,7 +442,7 @@ export default function HomePage() {
         </div>
       </section>
       {/* Enhanced Contact Section */}
-      <section className="py-20 bg-gradient-to-r from-navy-tech via-tech-blue-900 to-tech-blue-800 text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-r from-navy-tech via-tech-blue-900 to-tech-blue-800 text-white relative overflow-hidden" id="contact">
         {showBackgrounds && <CircuitBoard />}
 
         <div className="container px-4 md:px-6 relative z-10">
@@ -454,22 +454,23 @@ export default function HomePage() {
                   className="mb-4 border-tech-blue-400/30 text-tech-blue-100 animate-tech-pulse"
                 >
                   <Zap className="h-4 w-4 mr-2" />
-                  Contact Our AI Team
+                  Đối tác công nghệ của bạn
                 </Badge>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
                   <HolographicText>
-                    Sẵn sàng xây dựng tương lai AI?
+                    Sẵn sàng nâng cấp doanh nghiệp bằng công nghệ?
                   </HolographicText>
                 </h2>
                 <p className="text-tech-blue-100 mb-8 text-lg leading-relaxed">
-                  Hãy để chúng tôi giúp bạn chuyển đổi ý tưởng thành hiện thực
-                  với các giải pháp AI và Cloud tiên tiến.
+                  Dù bạn đang cần giải pháp AI, nền tảng Cloud, hay một website
+                  ấn tượng – đội ngũ của chúng tôi sẽ đồng hành từ ý tưởng đến
+                  triển khai.
                 </p>
                 <div className="space-y-4">
                   {[
-                    "Tư vấn AI & Cloud Strategy miễn phí",
-                    "Thiết kế kiến trúc hệ thống tối ưu",
-                    "Triển khai và monitoring 24/7",
+                    "Thiết kế giao diện UI/UX hiện đại, chuẩn SEO",
+                    "Xây dựng website & hệ thống web app tùy biến",
+                    "Triển khai giải pháp AI, Cloud & giám sát vận hành",
                   ].map((step, index) => (
                     <div
                       key={index}
