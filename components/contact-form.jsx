@@ -164,7 +164,7 @@ export function ContactForm() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       {/* Error Message */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start space-x-3">
@@ -177,12 +177,13 @@ export function ContactForm() {
       )}
 
       {/* Personal Information */}
-      <div className="space-y-4">
+      <div className="space-y-4 ">
         <h3 className="text-lg font-semibold">Thông tin cá nhân</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="firstName">Họ *</Label>
             <Input
+              style={{ color: '#000' }}
               id="firstName"
               required
               placeholder="Nhập họ"
@@ -193,6 +194,7 @@ export function ContactForm() {
           <div className="space-y-2">
             <Label htmlFor="lastName">Tên *</Label>
             <Input
+              style={{ color: '#000' }}
               id="lastName"
               required
               placeholder="Nhập tên"
@@ -206,6 +208,7 @@ export function ContactForm() {
           <div className="space-y-2">
             <Label htmlFor="phone">Số điện thoại *</Label>
             <Input
+              style={{ color: '#000' }}
               id="phone"
               type="tel"
               required
@@ -217,6 +220,7 @@ export function ContactForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
+              style={{ color: '#000' }}
               id="email"
               type="email"
               placeholder="email@example.com"
@@ -233,6 +237,7 @@ export function ContactForm() {
         <div className="space-y-2">
           <Label htmlFor="subject">Chủ đề *</Label>
           <Input
+            style={{ color: '#000' }}
             id="subject"
             required
             placeholder="Nhập chủ đề (tối thiểu 3 ký tự)"
@@ -263,6 +268,7 @@ export function ContactForm() {
           <div className="space-y-2">
             <Label htmlFor="company">Tên công ty</Label>
             <Input
+              style={{ color: '#000' }}
               id="company"
               placeholder="Tên công ty/tổ chức"
               value={formData.company}
@@ -272,6 +278,7 @@ export function ContactForm() {
           <div className="space-y-2">
             <Label htmlFor="position">Chức vụ</Label>
             <Input
+              style={{ color: '#000' }}
               id="position"
               placeholder="Chức vụ của bạn"
               value={formData.position}
