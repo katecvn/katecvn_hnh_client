@@ -106,8 +106,13 @@ export function EnhancedCard({
 
             <CyberButton
               variant="outline"
-              className="w-full mt-4 text-tech-blue-600 border-tech-blue-500 hover:bg-tech-blue-500 hover:text-white"
-              onClick={onClick}
+              className="w-full mt-4 text-tech-blue-600 border-tech-blue-500 hover:bg-tech-blue-500 hover:text-white group"
+              onClick={() => {
+                const productSection = document.getElementById("products");
+                if (productSection) {
+                  productSection.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
             >
               Tìm hiểu thêm
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -248,22 +253,34 @@ export function TechProductCard({
         color="blue"
         className="group overflow-hidden transition-all duration-500 hover-lift bg-white"
       >
-        <div className="relative overflow-hidden">
-          <div className="w-full h-48 bg-gradient-to-br from-tech-blue-100 to-cyber-blue/20 flex items-center justify-center">
-            <div className="text-6xl opacity-20">
+        {/* Product Image */}
+        <div className="relative w-full h-48 overflow-hidden">
+          {image ? (
+            <img
+              src={image}
+              alt={title}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-tech-blue-100 to-cyber-blue/20 flex items-center justify-center text-6xl opacity-20">
               {badge === "AI" && <Database />}
               {badge === "ERP" && <Code2 />}
               {badge === "CRM" && <Shield />}
             </div>
-          </div>
+          )}
+
+          {/* Overlay hover effect */}
+          <div className="absolute inset-0 bg-gradient-to-t from-tech-blue-900/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+          {/* Badge */}
           <div className="absolute top-4 left-4">
             <Badge className={cn("animate-tech-pulse", badgeColor)}>
               {badge}
             </Badge>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-tech-blue-900/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
+        {/* Card Content */}
         <CardHeader>
           <CardTitle className="text-xl group-hover:text-tech-blue-600 transition-colors line-clamp-2">
             <HolographicText>{title}</HolographicText>
@@ -272,6 +289,7 @@ export function TechProductCard({
             {description}
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <a href={link} target="_blank" rel="noopener noreferrer">
             <CyberButton

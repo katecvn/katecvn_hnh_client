@@ -29,7 +29,7 @@ function isOpenAIAvailable(): boolean {
   );
 }
 
-const SYSTEM_PROMPT = `Bạn là TechBot, trợ lý AI chuyên nghiệp của Katec - công ty công nghệ thông tin hàng đầu Việt Nam.
+const SYSTEM_PROMPT = `Bạn là KatecBot, trợ lý AI chuyên nghiệp của Katec - công ty công nghệ thông tin hàng đầu Việt Nam.
 
 HƯỚNG DẪN SỬ DỤNG KNOWLEDGE BASE:
 - Bạn sẽ được cung cấp thông tin từ knowledge base để trả lời chính xác

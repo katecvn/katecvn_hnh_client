@@ -176,7 +176,7 @@ export function ChatWidget() {
         const greetingMessage: Message = {
           id: `${idPrefix}-greeting-${generateStableId()}`,
           content:
-            "Xin chào! Tôi là TechBot, trợ lý AI của Katec được hỗ trợ bởi Knowledge Base toàn diện. Tôi có thể cung cấp thông tin chính xác về sản phẩm, dịch vụ và chính sách của chúng tôi. Bạn quan tâm đến điều gì?",
+            "Xin chào! Tôi là KatecBot, trợ lý AI của Katec được hỗ trợ bởi Knowledge Base toàn diện. Tôi có thể cung cấp thông tin chính xác về sản phẩm, dịch vụ và chính sách của chúng tôi. Bạn quan tâm đến điều gì?",
           sender: "bot",
           timestamp: new Date(),
           type: "quick-reply",
@@ -547,7 +547,7 @@ export function ChatWidget() {
                           )}
                           <span className="text-xs font-medium">
                             {message.sender === "bot"
-                              ? "TechBot AI"
+                              ? "KatecBot AI"
                               : message.agentInfo?.name || "Chuyên viên"}
                           </span>
                         </div>

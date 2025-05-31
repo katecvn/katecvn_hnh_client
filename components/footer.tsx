@@ -1,160 +1,199 @@
-import Link from "next/link"
-import { Code2, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Youtube } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+"use client";
+
+import Link from "next/link";
+import {
+  Code2,
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Youtube,
+  Clock,
+  MessageCircle
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
+import api from "@/utils/axios";
 
 export function Footer() {
+  const [companyInfo, setCompanyInfo] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchCompanyInfo = async () => {
+      try {
+        const response = await api.get(
+          "/page-section/public/shows?sectionType=infoCompany"
+        );
+        const { data } = response.data;
+        if (data && data.length > 0) {
+          setCompanyInfo(data[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching company info:", error);
+      }
+    };
+
+    fetchCompanyInfo();
+  }, []);
+
+  const getContentValue = (key: string) => {
+    return (
+      companyInfo?.content?.find((item: any) => item.key === key)?.value || ""
+    );
+  };
+
+  const getContentUrl = (key: string) => {
+    return (
+      companyInfo?.content?.find((item: any) => item.key === key)?.url || ""
+    );
+  };
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 lg:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <Code2 className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold">Katec</span>
+              <span className="text-xl font-bold">
+                {getContentValue("name")}
+              </span>
             </div>
-            <p className="text-gray-300 text-sm">
-              Đối tác công nghệ đáng tin cậy, cung cấp giải pháp IT tiên tiến cho doanh nghiệp Việt Nam.
-            </p>
-            <div className="flex space-x-4">
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                <Facebook className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                <Twitter className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                <Linkedin className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
-                <Youtube className="h-4 w-4" />
-              </Button>
+            <div className="space-y-3 text-sm text-gray-300">
+              <div className="flex items-start space-x-2">
+                <MapPin className="h-4 w-4 text-blue-400 mt-1" />
+                <span>{getContentValue("address")}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Phone className="h-4 w-4 text-blue-400" />
+                <a
+                  href={`tel:${getContentValue("number_phone")}`}
+                  className="hover:text-white"
+                >
+                  {getContentValue("number_phone")}
+                </a>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Phone className="h-4 w-4 text-blue-400" />
+                <span>{getContentValue("fax")}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mail className="h-4 w-4 text-blue-400" />
+                <a
+                  href={`mailto:${getContentValue("email")}`}
+                  className="hover:text-white"
+                >
+                  {getContentValue("email")}
+                </a>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Clock className="h-4 w-4 text-blue-400" />
+                <span>{getContentValue("working_fulltime")}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Clock className="h-4 w-4 text-blue-400" />
+                <span>{getContentValue("working_parttime")}</span>
+              </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Liên kết nhanh</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                <Link href="/about" className="text-gray-300 hover:text-white text-sm transition-colors">
+                <Link href="/about" className="hover:text-white">
                   Về chúng tôi
                 </Link>
               </li>
+
               <li>
-                <Link href="/services" className="text-gray-300 hover:text-white text-sm transition-colors">
-                  Dịch vụ
-                </Link>
-              </li>
-              <li>
-                <Link href="/products" className="text-gray-300 hover:text-white text-sm transition-colors">
+                <Link href="/products" className="hover:text-white">
                   Sản phẩm
                 </Link>
               </li>
               <li>
-                <Link href="/news" className="text-gray-300 hover:text-white text-sm transition-colors">
+                <Link href="/news" className="hover:text-white">
                   Tin tức
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-gray-300 hover:text-white text-sm transition-colors">
+                <Link href="/careers" className="hover:text-white">
                   Tuyển dụng
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Customer Guidance */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Dịch vụ</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-semibold">Hướng dẫn khách hàng</h3>
+            <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                <Link
-                  href="/services/software-development"
-                  className="text-gray-300 hover:text-white text-sm transition-colors"
-                >
-                  Phát triển phần mềm
+                <Link href="/privacy" className="hover:text-white">
+                  Chính sách bảo mật thông tin
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/services/digital-transformation"
-                  className="text-gray-300 hover:text-white text-sm transition-colors"
-                >
-                  Chuyển đổi số
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/mobile-app" className="text-gray-300 hover:text-white text-sm transition-colors">
-                  Ứng dụng di động
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/consulting" className="text-gray-300 hover:text-white text-sm transition-colors">
-                  Tư vấn IT
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/security" className="text-gray-300 hover:text-white text-sm transition-colors">
-                  Bảo mật thông tin
+                <Link href="/terms" className="hover:text-white">
+                  Điều khoản sử dụng
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Social Media */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Liên hệ</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <MapPin className="h-4 w-4 text-blue-400" />
-                <span className="text-gray-300 text-sm">123 Đường ABC, Quận 1, TP.HCM</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="h-4 w-4 text-blue-400" />
-                <span className="text-gray-300 text-sm">+84 123 456 789</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Mail className="h-4 w-4 text-blue-400" />
-                <span className="text-gray-300 text-sm">info@Katec.com</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Đăng ký nhận tin</h4>
-              <div className="flex space-x-2">
-                <Input
-                  type="email"
-                  placeholder="Email của bạn"
-                  className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
-                />
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                  Đăng ký
+            <h3 className="text-lg font-semibold">Kết nối với chúng tôi</h3>
+            <div className="flex space-x-3">
+              {getContentUrl("facebook") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-300 hover:text-white"
+                  asChild
+                >
+                  <Link href={getContentUrl("facebook")} target="_blank">
+                    <Facebook className="h-4 w-4" />
+                  </Link>
                 </Button>
-              </div>
+              )}
+              {getContentUrl("messenger") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-300 hover:text-white"
+                  asChild
+                >
+                  <Link href={getContentUrl("messenger")} target="_blank">
+                    <MessageCircle className="h-4 w-4" />
+                  </Link>
+                </Button>
+              )}
+              {getContentUrl("youtube") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-300 hover:text-white"
+                  asChild
+                >
+                  <Link href={getContentUrl("youtube")} target="_blank">
+                    <Youtube className="h-4 w-4" />
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">© 2024 Katec. Tất cả quyền được bảo lưu.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Chính sách bảo mật
-              </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Điều khoản sử dụng
-              </Link>
-              <Link href="/sitemap" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Sơ đồ trang web
-              </Link>
-            </div>
-          </div>
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+          © {new Date().getFullYear()} {getContentValue("name")}. Tất cả các
+          quyền được bảo lưu.
         </div>
       </div>
     </footer>
-  )
+  );
 }

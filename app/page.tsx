@@ -19,7 +19,9 @@ import {
   Video,
   Printer,
   Lock,
+  Newspaper,
 } from "lucide-react";
+// import { ContactForm } from "@/components/contact-form";
 import { ContactForm } from "@/components/contact-form";
 import { EnhancedHero } from "@/components/enhanced-hero";
 import {
@@ -44,13 +46,18 @@ export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [partners, setPartners] = useState([]);
+  const [news, setNews] = useState([]);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
   });
+
   useEffect(() => {
     fetchProducts();
+    fetchPartners();
+    fetchNews();
   }, []);
 
   useEffect(() => {
@@ -88,11 +95,11 @@ export default function HomePage() {
       const { data } = response.data;
 
       // Transform API data to match component structure
-      const transformedProducts = data.products.map((product:any) => ({
+      const transformedProducts = data.products.map((product: any) => ({
         id: product.id,
         name: product.name,
         category: product.category?.name || "Sản phẩm",
-        slug:product.slug,
+        slug: product.slug,
         description: product.content
           ? product.content.replace(/<[^>]*>/g, "").substring(0, 150) + "..."
           : "Mô tả sản phẩm",
@@ -114,7 +121,7 @@ export default function HomePage() {
           : "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
         badge: product.isFeatured ? "Nổi bật" : "",
         color: getRandomColor(),
-        slug: product.slug,
+
         stock: product.stock,
       }));
 
@@ -135,6 +142,31 @@ export default function HomePage() {
       setLoading(false);
     }
   };
+
+  const fetchPartners = async () => {
+    try {
+      const response = await api.get(
+        "/page-section/public/shows?sectionType=partner"
+      );
+      const { data } = response.data;
+      setPartners(data || []);
+    } catch (error) {
+      console.error("Error fetching partners:", error);
+    }
+  };
+
+  const fetchNews = async (page = 1, limit = 3) => {
+    try {
+      const response = await api.get(
+        `/post/public/shows?page=${page}&limit=${limit}`
+      );
+      const { data } = response.data;
+      setNews(data?.posts || []);
+    } catch (error) {
+      console.error("Error fetching news:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Enhanced Hero Section */}
@@ -288,7 +320,7 @@ export default function HomePage() {
         </div>
       </section>
       {/* Enhanced Featured Products */}
-      <section className="py-20 bg-white relative">
+      <section className="py-20 bg-white relative" id="products">
         <div className="container px-4 md:px-6">
           <Reveal direction="up" skipAnimation={isInitialRender}>
             <div className="text-center mb-16">
@@ -310,24 +342,21 @@ export default function HomePage() {
           </Reveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-          {products?.map((product: any, index: number) => {
-            const nameC = product?.category?.name || null;
-            return (
-              <TechProductCard
-                key={product.id || index}
-                title={product.name}
-                description={product.description}
-                image={product.image}
-                badge={product?.category}
-                badgeColor="bg-green-600"
-                delay={index * 100}
-                link={product.slug}
-              />
-            );
-          })}
-          
-          
+            {products?.map((product: any, index: number) => {
+              const nameC = product?.category?.name || null;
+              return (
+                <TechProductCard
+                  key={product.id || index}
+                  title={product.name}
+                  description={product.description}
+                  image={product.image}
+                  badge={product?.category}
+                  badgeColor="bg-green-600"
+                  delay={index * 100}
+                  link={product.slug}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -354,85 +383,61 @@ export default function HomePage() {
               </p>
             </div>
           </Reveal>
-
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            <Reveal direction="up" delay={100}>
-              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
-                <div className="relative w-full h-16">
-                  <Image
-                    src="/placeholder.svg?height=80&width=160&query=Viettel logo"
-                    alt="Viettel"
-                    fill
-                    className="object-contain"
-                  />
+            {partners?.map((partner, index) => (
+              <Reveal direction="up" delay={index * 100} key={partner.id}>
+                <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
+                  <div className="relative w-full h-16">
+                    <Image
+                      src={partner?.content[0]?.imageUrl || "/placeholder.svg"}
+                      alt={partner?.content[0]?.title || `Partner ${index + 1}`}
+                      layout="fill"
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
-              </div>
-            </Reveal>
-
-            <Reveal direction="up" delay={200}>
-              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
-                <div className="relative w-full h-16">
-                  <Image
-                    src="/placeholder.svg?height=80&width=160&query=TMT Group logo"
-                    alt="TMT Group"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal direction="up" delay={300}>
-              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
-                <div className="relative w-full h-16">
-                  <Image
-                    src="/placeholder.svg?height=80&width=160&query=PosApp logo"
-                    alt="PosApp"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal direction="up" delay={400}>
-              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
-                <div className="relative w-full h-16">
-                  <Image
-                    src="/placeholder.svg?height=80&width=160&query=VietinBank logo"
-                    alt="VietinBank"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal direction="up" delay={500}>
-              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
-                <div className="relative w-full h-16">
-                  <Image
-                    src="/placeholder.svg?height=80&width=160&query=VBI insurance logo"
-                    alt="VBI"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal direction="up" delay={600}>
-              <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
-                <div className="relative w-full h-16">
-                  <Image
-                    src="/placeholder.svg?height=80&width=160&query=HDBank logo"
-                    alt="HDBank"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-            </Reveal>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+      {/* News Section */}
+      <section className="py-20 bg-white relative">
+        <div className="container px-4 md:px-6">
+          <Reveal direction="up" skipAnimation={isInitialRender}>
+            <div className="text-center mb-16">
+              <Badge
+                variant="outline"
+                className="mb-4 border-tech-blue-500 text-tech-blue-600"
+              >
+                <Newspaper className="h-4 w-4 mr-2" />
+                Tin tức & Sự kiện
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <HolographicText>Tin tức công nghệ mới nhất</HolographicText>
+              </h2>
+              <p className="text-tech-blue-700 max-w-2xl mx-auto">
+                Cập nhật những tin tức, xu hướng công nghệ mới nhất trong ngành
+              </p>
+            </div>
+          </Reveal>
+          {console.log(news,'mews')}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {news?.map((post, index) => (
+              <TechProductCard
+                key={post.id || index}
+                title={post.title}
+                description={
+                  post.short_description ||
+                  post.short_description?.substring(0, 150) + "..."
+                }
+                image={post.thumbnail || "/placeholder.svg"}
+                badge={post.topics[0]?.name || "Tin tức"}
+                badgeColor="bg-blue-600"
+                delay={index * 100}
+                link={`/news/${post.slug}`}
+              />
+            ))}
           </div>
         </div>
       </section>

@@ -54,7 +54,6 @@ export function EnhancedHero() {
   }, []);
 
   return (
-
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-navy-tech via-tech-blue-900 to-tech-blue-800">
       {showBackgrounds && <MatrixRain />}
       {showBackgrounds && <CircuitBoard />}
@@ -128,14 +127,30 @@ export function EnhancedHero() {
                 variant="primary"
                 className="group px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold w-full sm:w-auto"
               >
-                <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-bounce text-white" />
-                Khám phá
-                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform text-white" />
+                <div
+                  className="flex items-center cursor-pointer group"
+                  onClick={() => {
+                    const section = document.getElementById("products");
+                    if (section) {
+                      section.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                >
+                  <Rocket className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-bounce text-white" />
+                  Khám phá
+                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform text-white" />
+                </div>
               </CyberButton>
 
               <CyberButton
                 variant="outline"
                 className="group px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold glass-tech w-full sm:w-auto"
+                onClick={() => {
+                  const contactSection = document.getElementById("contact");
+                  if (contactSection) {
+                    contactSection.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
               >
                 <div className="mr-2 w-2 h-2 bg-neon-blue rounded-full animate-pulse" />
                 Tư vấn miễn phí
