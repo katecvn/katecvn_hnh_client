@@ -97,13 +97,17 @@ export default function ContactPage() {
       phone: '+84 28 1234 5678',
       email: 'sales@Katec.com',
       hours: '8:00 - 20:00 (T2-CN)',
+      gradientClass:
+        'bg-gradient-to-br from-teal-400 via-blue-200 to-purple-300',
     },
     {
       department: 'Hỗ trợ kỹ thuật',
       description: 'Hỗ trợ sản phẩm và dịch vụ',
       phone: '+84 889 88 1010',
-      email: ' katec.cantho@gmail.com',
+      email: 'katec.cantho@gmail.com',
       hours: '24/7',
+      gradientClass:
+        'bg-gradient-to-br from-emerald-400 via-teal-200 to-blue-300',
     },
     {
       department: 'Đối tác & Hợp tác',
@@ -111,9 +115,10 @@ export default function ContactPage() {
       phone: '+84 28 1234 5680',
       email: 'partner@Katec.com',
       hours: '8:00 - 18:00 (T2-T6)',
+      gradientClass:
+        'bg-gradient-to-br from-blue-500 via-indigo-200 to-purple-400',
     },
   ];
-
   const faqs = [
     {
       question: 'Thời gian triển khai dự án thường là bao lâu?',
@@ -137,6 +142,14 @@ export default function ContactPage() {
     },
   ];
 
+  const colorSchemes = [
+    'shadow-blue-200/50 hover:shadow-blue-300/60 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200',
+    'shadow-emerald-200/50 hover:shadow-emerald-300/60 bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200',
+    'shadow-purple-200/50 hover:shadow-purple-300/60 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200',
+    'shadow-orange-200/50 hover:shadow-orange-300/60 bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200',
+    'shadow-pink-200/50 hover:shadow-pink-300/60 bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200',
+    'shadow-indigo-200/50 hover:shadow-indigo-300/60 bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200',
+  ];
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
@@ -160,7 +173,7 @@ export default function ContactPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="bg-green-600 hover:bg-green-700">
                 <Phone className="mr-2 h-4 w-4" />
-                Gọi ngay: 1900 1234
+                Gọi ngay: 0889 881 010
               </Button>
               <Button size="lg" variant="outline">
                 <MessageSquare className="mr-2 h-4 w-4" />
@@ -397,26 +410,35 @@ export default function ContactPage() {
           <div className="grid md:grid-cols-3 gap-8">
             {supportTeams.map((team, index) => (
               <AnimatedSection key={index} delay={index * 100}>
-                <Card className="hover:shadow-lg transition-shadow h-full">
-                  <CardHeader>
-                    <CardTitle className="text-lg">{team.department}</CardTitle>
-                    <CardDescription>{team.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-center space-x-3">
-                      <Phone className="h-4 w-4 text-blue-600" />
-                      <span className="font-medium">{team.phone}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Mail className="h-4 w-4 text-blue-600" />
-                      <span className="font-medium">{team.email}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Clock className="h-4 w-4 text-blue-600" />
-                      <span className="text-gray-600">{team.hours}</span>
-                    </div>
-                  </CardContent>
-                </Card>
+                {' '}
+                <div
+                  className={`p-1 rounded-lg ${team.gradientClass} hover:shadow-xl transition-all duration-300 group`}
+                >
+                  <Card
+                    className={` h-full shadow-lg hover:shadow-xl transition-shadow duration-300 `}
+                  >
+                    <CardHeader>
+                      <CardTitle className="text-lg">
+                        {team.department}
+                      </CardTitle>
+                      <CardDescription>{team.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <div className="flex items-center space-x-3">
+                        <Phone className="h-4 w-4 text-blue-600" />
+                        <span className="font-medium">{team.phone}</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Mail className="h-4 w-4 text-blue-600" />
+                        <span className="font-medium">{team.email}</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <Clock className="h-4 w-4 text-blue-600" />
+                        <span className="text-gray-600">{team.hours}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </AnimatedSection>
             ))}
           </div>
@@ -440,7 +462,13 @@ export default function ContactPage() {
           <div className="max-w-3xl mx-auto space-y-6">
             {faqs.map((faq, index) => (
               <AnimatedSection key={index} delay={index * 100}>
-                <Card className="hover:shadow-lg transition-shadow">
+                <Card
+                  className={`
+      shadow-lg transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1
+      ${colorSchemes[index % colorSchemes.length]}
+      border
+    `}
+                >
                   <CardHeader>
                     <CardTitle className="text-lg text-left">
                       {faq.question}

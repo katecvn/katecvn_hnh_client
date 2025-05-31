@@ -1,24 +1,24 @@
-"use client";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+'use client';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ArrowRight, Calendar, User, Search, TrendingUp } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { AnimatedSection } from "@/components/animated-section";
-import { useEffect, useState } from "react";
-import api from "@/utils/axios";
-import { handleError } from "@/utils/handle-error";
-import { toast } from "sonner";
-import NewsCard from "./EnhancedArticleCard";
-import DynamicNewsGrid from "./DynamicNewsGrid";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { ArrowRight, Calendar, User, Search, TrendingUp } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { AnimatedSection } from '@/components/animated-section';
+import { useEffect, useState } from 'react';
+import api from '@/utils/axios';
+import { handleError } from '@/utils/handle-error';
+import { toast } from 'sonner';
+import NewsCard from './EnhancedArticleCard';
+import DynamicNewsGrid from './DynamicNewsGrid';
 
 export default function NewsPage() {
   const [posts, setPosts] = useState([]);
@@ -26,7 +26,7 @@ export default function NewsPage() {
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [pagination, setPagination] = useState({
     totalItems: 0,
     totalPages: 1,
@@ -39,7 +39,7 @@ export default function NewsPage() {
       setError(null);
 
       let url = `/post/public/shows?page=${page}&limit=${limit}`;
-      if (topicId && topicId !== "all") {
+      if (topicId && topicId !== 'all') {
         url += `&topic_id=${topicId}`;
       }
 
@@ -54,7 +54,7 @@ export default function NewsPage() {
     } catch (error) {
       const message = handleError(error);
       setError(message);
-      toast.error("Không thể tải danh sách bài viết");
+      toast.error('Không thể tải danh sách bài viết');
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,7 @@ export default function NewsPage() {
       // Fetch topics and all posts in parallel
       const [topicsResponse, postsResponse] = await Promise.all([
         api.get(`/topic/public/shows?page=${page}&limit=${limit}`),
-        api.get("/post/public/shows?page=1&limit=1000"), // Fetch a large number to get all posts
+        api.get('/post/public/shows?page=1&limit=1000'), // Fetch a large number to get all posts
       ]);
 
       const topics = topicsResponse.data.data.topics || [];
@@ -94,8 +94,8 @@ export default function NewsPage() {
       // Create categories array with "Tất cả" option first
       const categoriesWithAll = [
         {
-          id: "all",
-          name: "Tất cả",
+          id: 'all',
+          name: 'Tất cả',
           post_count: totalPostsCount,
         },
         ...categoriesWithCounts,
@@ -104,8 +104,8 @@ export default function NewsPage() {
       setCategories(categoriesWithAll);
     } catch (error) {
       const message = handleError(error);
-      toast.error("Không thể tải danh mục");
-      console.error("Error fetching categories:", error);
+      toast.error('Không thể tải danh mục');
+      console.error('Error fetching categories:', error);
     } finally {
       setCategoriesLoading(false);
     }
@@ -131,34 +131,32 @@ export default function NewsPage() {
         excerpt:
           firstPost.short_description ||
           firstPost.description ||
-          "Không có mô tả",
-        image: firstPost.thumbnail || "/placeholder.svg",
-        category: firstPost.topics?.[0]?.name || "Tin tức",
+          'Không có mô tả',
+        image: firstPost.thumbnail || '/placeholder.svg',
+        category: firstPost.topics?.[0]?.name || 'Tin tức',
         date: firstPost.published_at
-          ? new Date(firstPost.published_at).toLocaleDateString("vi-VN")
-          : "N/A",
-        author: firstPost.author?.full_name || "Admin",
-        readTime: "8 phút đọc",
+          ? new Date(firstPost.published_at).toLocaleDateString('vi-VN')
+          : 'N/A',
+        author: firstPost.author?.full_name || 'Admin',
+        readTime: '8 phút đọc',
         slug: firstPost.slug || firstPost.id,
       };
     }
 
     // Fallback featured news
     return {
-      title: "Xu hướng AI và Machine Learning sẽ thống trị năm 2024",
+      title: 'Xu hướng AI và Machine Learning sẽ thống trị năm 2024',
       excerpt:
-        "Phân tích sâu về những xu hướng công nghệ AI mới nhất và tác động đến doanh nghiệp Việt Nam trong năm 2024...",
+        'Phân tích sâu về những xu hướng công nghệ AI mới nhất và tác động đến doanh nghiệp Việt Nam trong năm 2024...',
       image:
-        "/AI-la-gi.jpeg?height=400&width=800&query=AI technology trends 2024 futuristic",
-      category: "Công nghệ",
-      date: "15/12/2024",
-      author: "Nguyễn Văn A",
-      readTime: "8 phút đọc",
-      slug: "#",
+        '/AI-la-gi.jpeg?height=400&width=800&query=AI technology trends 2024 futuristic',
+      category: 'Công nghệ',
+      date: '15/12/2024',
+      author: 'Nguyễn Văn A',
+      readTime: '8 phút đọc',
+      slug: '#',
     };
   };
-
- 
 
   useEffect(() => {
     getPost(1, 4); // Load first page with 10 items
@@ -167,21 +165,31 @@ export default function NewsPage() {
 
   // Update "Tất cả" category count when pagination changes
   useEffect(() => {
-    if (categories.length > 0 && selectedCategory === "all") {
+    if (categories.length > 0 && selectedCategory === 'all') {
       setCategories((prev) =>
         prev.map((cat) =>
-          cat.id === "all" ? { ...cat, post_count: pagination.totalItems } : cat
+          cat.id === 'all' ? { ...cat, post_count: pagination.totalItems } : cat
         )
       );
     }
   }, [pagination.totalItems, selectedCategory]);
   const featuredNews = getFeaturedNews();
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="container px-4 md:px-6">
+      <section className="relative py-20 bg-gradient-to-br from-blue-50 to-purple-50 overflow-hidden">
+        {/* Lớp hiệu ứng bong bóng */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <div className="bubble bubble-1" />
+          <div className="bubble bubble-2" />
+          <div className="bubble bubble-3" />
+          <div className="bubble bubble-4" />
+          <div className="bubble bubble-5" />
+        </div>
+
+        <div className="container relative z-10 px-4 md:px-6">
           <AnimatedSection className="text-center max-w-3xl mx-auto">
             <Badge variant="outline" className="mb-4">
               Tin tức & Insights
@@ -189,7 +197,7 @@ export default function NewsPage() {
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Cập nhật
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {" "}
+                {' '}
                 công nghệ mới nhất
               </span>
             </h1>
@@ -198,9 +206,9 @@ export default function NewsPage() {
               insights từ các chuyên gia hàng đầu
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input placeholder="Tìm kiếm bài viết..." className="pl-10" />
+              <div className="relative flex-1 ">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 m-1" />
+                <Input placeholder=" Tìm kiếm bài viết..." className="pl-10" />
               </div>
               <Button>Tìm kiếm</Button>
             </div>
@@ -212,44 +220,95 @@ export default function NewsPage() {
       <section className="py-20">
         <div className="container px-4 md:px-6">
           <AnimatedSection>
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <div className="grid md:grid-cols-2 gap-0">
-                <div className="relative">
-                  <Image
-                    src={featuredNews.image || "/placeholder.svg"}
-                    alt={featuredNews.title}
-                    width={800}
-                    height={400}
-                    className="w-full h-64 md:h-full object-cover"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <Badge className="bg-blue-600">Nổi bật</Badge>
+            <div
+              className="group relative h-full cursor-pointer hover:shadow-xl"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              {/* Enhanced Floating Background Glow */}
+              <div
+                className={`absolute -inset-2 rounded-3xl blur-2xl transition-all duration-700 transform
+        ${isHovered ? 'opacity-30 scale-110' : 'opacity-0 scale-95'} -z-20`}
+                style={{
+                  background: 'linear-gradient(135deg, #3B82F6, #06B6D4)',
+                }}
+              />
+
+              {/* Original Card with enhanced hover effects */}
+              <Card className="overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] relative z-10">
+                <div className="grid md:grid-cols-2 gap-0">
+                  <div className="relative overflow-hidden">
+                    <Image
+                      src={featuredNews.image || '/placeholder.svg'}
+                      alt={featuredNews.title}
+                      width={800}
+                      height={600}
+                      className={`w-full md:h-full object-cover transition-transform duration-700 
+              ${isHovered ? 'scale-110' : 'scale-100'}`}
+                    />
+                    <div className="absolute top-4 left-4">
+                      <Badge className="bg-blue-600 transition-all duration-300 hover:bg-blue-700">
+                        Nổi bật
+                      </Badge>
+                    </div>
+
+                    {/* Overlay gradient on hover */}
+                    <div
+                      className={`absolute inset-0 transition-opacity duration-500 
+              ${isHovered ? 'opacity-20' : 'opacity-0'}`}
+                      style={{
+                        background: 'linear-gradient(135deg, #3B82F6, #06B6D4)',
+                      }}
+                    />
                   </div>
-                </div>
-                <div className="p-8 flex flex-col justify-center">
-                  <Badge variant="outline" className="w-fit mb-4">
-                    {featuredNews.category}
-                  </Badge>
-                  <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                    {featuredNews.title}
-                  </h2>
-                  <p className="text-gray-600 mb-6">{featuredNews.excerpt}</p>
-                  <div className="flex items-center text-sm text-gray-500 mb-6">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    <span className="mr-4">{featuredNews.date}</span>
-                    <User className="h-4 w-4 mr-2" />
-                    <span className="mr-4">{featuredNews.author}</span>
-                    <span>{featuredNews.readTime}</span>
-                  </div>
-                  <Link href={`/news/${featuredNews.slug}`}>
-                    <Button className="w-fit">
+
+                  <div className="p-8 flex flex-col justify-center relative">
+                    <Badge
+                      variant="outline"
+                      className={`w-fit mb-4 transition-all duration-300 
+              ${isHovered ? 'border-blue-500 text-blue-600' : ''}`}
+                    >
+                      {featuredNews.category}
+                    </Badge>
+
+                    <h2
+                      className={`text-2xl md:text-3xl font-bold mb-4 transition-colors duration-300
+            ${isHovered ? 'text-blue-600' : ''}`}
+                    >
+                      {featuredNews.title}
+                    </h2>
+
+                    <p className="text-gray-600 mb-6 transition-colors duration-300">
+                      {featuredNews.excerpt}
+                    </p>
+
+                    <div className="flex items-center text-sm text-gray-500 mb-6 transition-colors duration-300">
+                      <Calendar className="h-4 w-4 mr-2" />
+                      <span className="mr-4">{featuredNews.date}</span>
+                      <User className="h-4 w-4 mr-2" />
+                      <span className="mr-4">{featuredNews.author}</span>
+                      <span>{featuredNews.readTime}</span>
+                    </div>
+
+                    <Button
+                      className={`w-fit transition-all duration-300 transform
+              ${isHovered ? 'translate-x-2 shadow-lg' : ''}`}
+                      style={{
+                        background: isHovered
+                          ? 'linear-gradient(135deg, #3B82F6, #06B6D4)'
+                          : undefined,
+                      }}
+                    >
                       Đọc bài viết
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <ArrowRight
+                        className={`ml-2 h-4 w-4 transition-transform duration-300 
+              ${isHovered ? 'translate-x-1' : ''}`}
+                      />
                     </Button>
-                  </Link>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </div>
           </AnimatedSection>
         </div>
       </section>
@@ -258,11 +317,10 @@ export default function NewsPage() {
       <section className="py-20 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col md:flex-row gap-8">
-
             {/* Sidebar - 4/12 columns */}
-            <div className="md:w-1/3 flex-shrink-0">
+            <div className="md:w-1/3 flex-shrink-0 ">
               <AnimatedSection>
-                <Card>
+                <Card className="mb-3">
                   <CardHeader>
                     <CardTitle className="flex items-center">
                       <TrendingUp className="h-5 w-5 mr-2" />
@@ -280,8 +338,8 @@ export default function NewsPage() {
                           key={category.id}
                           className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
                             selectedCategory === category.id
-                              ? "bg-blue-100 text-blue-700"
-                              : "hover:bg-gray-100"
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'hover:bg-gray-100'
                           }`}
                           onClick={() => handleCategoryChange(category.id)}
                         >
@@ -371,13 +429,13 @@ export default function NewsPage() {
                               key={pageNum}
                               variant={
                                 pagination.currentPage === pageNum
-                                  ? "default"
-                                  : "outline"
+                                  ? 'default'
+                                  : 'outline'
                               }
                               className={
                                 pagination.currentPage === pageNum
-                                  ? "bg-blue-600"
-                                  : ""
+                                  ? 'bg-blue-600'
+                                  : ''
                               }
                               onClick={() => handlePageChange(pageNum)}
                             >
@@ -416,16 +474,16 @@ export default function NewsPage() {
                     </div>
 
                     <div className="mt-4 text-sm text-gray-600 text-center">
-                      Hiển thị{" "}
+                      Hiển thị{' '}
                       {Math.min(
                         (pagination.currentPage - 1) * 10 + 1,
                         pagination.totalItems
-                      )}{" "}
-                      -{" "}
+                      )}{' '}
+                      -{' '}
                       {Math.min(
                         pagination.currentPage * 10,
                         pagination.totalItems
-                      )}{" "}
+                      )}{' '}
                       của {pagination.totalItems} bài viết
                     </div>
                   </AnimatedSection>

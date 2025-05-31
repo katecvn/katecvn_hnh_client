@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { AnimatedSection } from '@/components/animated-section';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Về chúng tôi - Katec | Đội ngũ chuyên gia công nghệ hàng đầu',
@@ -124,62 +125,83 @@ export default function AboutPage() {
   const teamMembers = [
     {
       name: 'Trương Hoàng Khải',
-      position: 'Chủ tịch HĐQT & CEO',
-      bio: '15+ năm kinh nghiệm trong lĩnh vực công nghệ thông tin. Cựu Giám đốc Bưu điện Ô Môn.',
+      position: 'Chủ tịch HĐQT & Giám đốc',
+      bio: 'Người sáng lập và điều hành KATEC. Với hơn 15 năm kinh nghiệm trong lĩnh vực công nghệ và quản trị doanh nghiệp, và là người định hướng chiến lược toàn diện cho công ty.',
       image: '/khai.png?height=300&width=300&query=professional CEO portrait',
       linkedin: '#',
       email: 'khaith.katec@gmail.com',
-      specialties: ['Chiến lược công nghệ', 'Quản lý dự án', 'AI & ML'],
+      specialties: [
+        'Lãnh đạo chiến lược',
+        'Quản trị doanh nghiệp',
+        'Định hướng phát triển công nghệ',
+      ],
     },
     {
       name: 'Văn Hoàng Lũy',
-      position: 'CTO',
-      bio: 'Chuyên gia về kiến trúc hệ thống và cloud computing. Thạc sĩ Khoa học Máy tính từ Stanford.',
+      position: 'Phó Giám đốc ',
+      bio: 'Chuyên gia kiến trúc hệ thống với hơn 12 năm kinh nghiệm. Anh Lũy là người định hình nền tảng công nghệ cốt lõi tại KATEC, luôn theo đuổi sự ổn định, bảo mật và khả năng mở rộng.',
       image:
-        '/placeholder.svg?height=300&width=300&query=professional CTO portrait female',
+        '/luy.jpg?height=300&width=300&query=professional CTO portrait male',
       linkedin: '#',
       email: 'luyvh.katec@gmail.com',
-      specialties: ['Cloud Architecture', 'DevOps', 'System Design'],
+      specialties: [
+        'Kiến trúc hệ thống',
+        'Cloud Computing',
+        'DevOps',
+        'Công nghệ AI',
+      ],
     },
     {
       name: 'Nguyễn Thanh Bình',
-      position: 'Head of Development',
-      bio: '10+ năm kinh nghiệm phát triển phần mềm. Chuyên gia về React, Node.js và microservices.',
+      position: 'Trưởng phòng Kinh doanh',
+      bio: 'Dẫn dắt bộ phận kinh doanh với tư duy kỹ thuật sắc bén. Anh Bình kết hợp giữa kỹ năng phát triển phần mềm và chiến lược bán hàng để thúc đẩy tăng trưởng.',
       image:
-        '/placeholder.svg?height=300&width=300&query=professional developer portrait',
+        '/binh.jpg?height=300&width=300&query=professional business lead portrait',
       linkedin: '#',
       email: 'binhnt.katec@gmail.com',
-      specialties: ['Full-stack Development', 'React', 'Node.js'],
+      specialties: [
+        'Chiến lược kinh doanh',
+        'Tư vấn giải pháp',
+        'Chuyển đổi số',
+      ],
     },
     {
       name: 'Nguyễn Trọng Nghĩa',
-      position: 'Head of AI Research',
-      bio: 'Tiến sĩ AI từ MIT. Chuyên gia về machine learning và natural language processing.',
+      position: 'Trưởng phòng Lập trình',
+      bio: 'Dẫn dắt đội ngũ lập trình viên tại KATEC. Anh Nghĩa là chuyên gia trong việc xây dựng hệ thống phần mềm hiện đại, đặc biệt là trong môi trường phát triển linh hoạt và microservices.',
       image:
-        '/placeholder.svg?height=300&width=300&query=professional AI researcher portrait female',
+        '/nghia.jpg?height=300&width=300&query=professional developer portrait',
       linkedin: '#',
-      email: 'lan@Katec.com',
-      specialties: ['Machine Learning', 'NLP', 'Computer Vision'],
+      email: 'nghia@katec.com',
+      specialties: [
+        'Phát triển phần mềm',
+        'React & Node.js',
+        'Kiến trúc Microservices',
+      ],
     },
     {
       name: 'Trần Thu Vân',
-      position: 'Head of Security',
-      bio: 'Chuyên gia bảo mật với 12+ năm kinh nghiệm. Certified Ethical Hacker và CISSP.',
+      position: 'Trưởng phòng Nhân sự',
+      bio: 'Với sự nhạy bén trong việc xây dựng văn hoá doanh nghiệp và phát triển con người, chị Vân quản lý toàn bộ hoạt động tuyển dụng, đào tạo và phúc lợi tại KATEC.',
       image:
-        '/placeholder.svg?height=300&width=300&query=professional security expert portrait',
+        '/van.jpg?height=300&width=300&query=professional HR manager portrait',
       linkedin: '#',
-      email: 'thanh@Katec.com',
-      specialties: ['Cybersecurity', 'Penetration Testing', 'Compliance'],
+      email: 'van@katec.com',
+      specialties: [
+        'Quản trị nhân sự',
+        'Văn hóa doanh nghiệp',
+        'Phát triển tổ chức',
+      ],
     },
     {
-      name: 'Nguyễn Hữu Danh',
-      position: 'Head of Design',
-      bio: 'UX/UI Designer với 8+ năm kinh nghiệm. Chuyên gia về design thinking và user research.',
+      name: 'Nguyễn Thị Tiên',
+      position: 'Nhân viên Kinh doanh lâu năm',
+      bio: 'Chị Tiên là một trong những nhân sự gắn bó lâu dài nhất với KATEC. Với sự hiểu biết sâu rộng về sản phẩm và khách hàng, anh đóng vai trò quan trọng trong việc duy trì và mở rộng mạng lưới khách hàng.',
       image:
-        '/placeholder.svg?height=300&width=300&query=professional UX designer portrait female',
+        '/tien.jpg?height=300&width=300&query=professional business staff portrait',
       linkedin: '#',
-      email: 'mai@Katec.com',
-      specialties: ['UX/UI Design', 'Design Systems', 'User Research'],
+      email: 'danh@katec.com',
+      specialties: ['Chăm sóc khách hàng', 'Bán hàng B2B', 'Tư vấn sản phẩm'],
     },
   ];
 
@@ -662,9 +684,11 @@ export default function AboutPage() {
             và tạo ra những sản phẩm công nghệ đột phá
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg">
-              Xem vị trí tuyển dụng
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button asChild size="lg">
+              <Link href="/careers" className="flex items-center">
+                Xem vị trí tuyển dụng
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             <Button size="lg" variant="outline">
               Liên hệ hợp tác
