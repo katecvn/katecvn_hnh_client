@@ -281,7 +281,7 @@ export default function HeroSection() {
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Đối tác công nghệ
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {' '}
+              <br />
               đáng tin cậy
             </span>
           </h1>

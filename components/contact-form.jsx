@@ -141,8 +141,6 @@ export function ContactForm() {
     setAttachedFiles((prev) => [...prev, ...files]);
   };
 
-  console.log('FormData:', formData);
-
   if (isSubmitted) {
     return (
       <div className="text-center py-12">
@@ -177,8 +175,8 @@ export function ContactForm() {
       )}
 
       {/* Personal Information */}
-      <div className="space-y-4 ">
-        <h3 className="text-lg font-semibold">Thông tin cá nhân</h3>
+      <div className="space-y-4 text-white">
+        <h3 className="text-lg text-white font-semibold">Thông tin cá nhân</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="firstName">Họ *</Label>

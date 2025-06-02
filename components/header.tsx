@@ -66,18 +66,25 @@ export function Header() {
               </div>*/}
 
               {/* Enhanced Text Logo */}
-              <div className="relative group">
+              <div className="relative group flex justify-center md:justify-start">
                 <span
                   className={cn(
                     'text-3xl font-black tracking-tight relative transition-all duration-500',
-
                     'group-hover:from-sky-300 group-hover:via-purple-400 group-hover:to-blue-500',
                     isScrolled ? 'opacity-90 scale-95' : 'opacity-100 scale-100'
                   )}
                 >
                   <img
                     src={`${isScrolled ? '/logo.png' : '/logo-white.png'}`}
-                    className="w-full h-8"
+                    alt="Logo"
+                    className="w-auto h-8 object-contain md:w-full"
+                    style={{
+                      maxWidth: '100%',
+                      height: '32px',
+                      display: 'block',
+                    }}
+                    loading="eager"
+                    decoding="sync"
                   />
                   {/* Underline accent */}
                   <div

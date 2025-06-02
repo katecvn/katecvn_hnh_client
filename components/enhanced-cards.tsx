@@ -71,7 +71,7 @@ export function EnhancedCard({
 
           <div
             className={cn(
-              'w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all duration-300',
+              'w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all ',
               'group-hover:scale-110 group-hover:rotate-3 animate-cyber-glow',
               color
             )}
@@ -144,7 +144,7 @@ export function StatsCard({
     <Reveal direction="up" delay={delay}>
       <div className="text-center group hover-lift glass-tech rounded-lg p-6">
         <div className="relative inline-block mb-4">
-          <div className="w-16 h-16 bg-gradient-to-r from-tech-blue-100 to-cyber-blue/20 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300 animate-tech-pulse">
+          <div className="w-16 h-16 bg-gradient-to-r from-tech-blue-100 to-cyber-blue/20 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform  animate-tech-pulse">
             <div className="text-tech-blue-600 group-hover:animate-bounce">
               {icon}
             </div>

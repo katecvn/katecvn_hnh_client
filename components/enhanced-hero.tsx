@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight,
   Cpu,
@@ -10,7 +10,7 @@ import {
   Database,
   Code2,
   Shield,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   MatrixRain,
   CircuitBoard,
@@ -21,16 +21,17 @@ import {
   FloatingTechElements,
   TechGrid,
   ScanningLine,
-} from "./tech-blue-animations";
-import { Reveal } from "./enhanced-animations";
-import { useState, useEffect } from "react";
+  HolographicTextWhite,
+} from './tech-blue-animations';
+import { Reveal } from './enhanced-animations';
+import { useState, useEffect } from 'react';
 
 export function EnhancedHero() {
   const typewriterTexts = [
-    "Thiết kế Website chuyên nghiệp",
-    "Giải pháp công nghệ cho doanh nghiệp",
-    "Hệ thống quản lý trường mầm non",
-    "Phần mềm hỗ trợ Livestream hiệu quả",
+    'Thiết kế Website chuyên nghiệp',
+    'Giải pháp công nghệ cho doanh nghiệp',
+    'Hệ thống quản lý trường mầm non',
+    'Phần mềm hỗ trợ Livestream hiệu quả',
   ];
 
   const [isInitialRender, setIsInitialRender] = useState(true);
@@ -112,7 +113,7 @@ export function EnhancedHero() {
 
           <Reveal direction="up" delay={100} skipAnimation={isInitialRender}>
             <p className="text-lg sm:text-xl md:text-2xl text-tech-blue-100 max-w-3xl mx-auto leading-relaxed">
-              Từ{" "}
+              Từ{' '}
               <span className="text-cyber-blue font-semibold animate-neon-flicker">
                 website, hệ thống quản lý đến phần mềm livestream
               </span>
@@ -130,9 +131,9 @@ export function EnhancedHero() {
                 <div
                   className="flex items-center cursor-pointer group"
                   onClick={() => {
-                    const section = document.getElementById("products");
+                    const section = document.getElementById('products');
                     if (section) {
-                      section.scrollIntoView({ behavior: "smooth" });
+                      section.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
                 >
@@ -146,9 +147,9 @@ export function EnhancedHero() {
                 variant="outline"
                 className="group px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold glass-tech w-full sm:w-auto"
                 onClick={() => {
-                  const contactSection = document.getElementById("contact");
+                  const contactSection = document.getElementById('contact');
                   if (contactSection) {
-                    contactSection.scrollIntoView({ behavior: "smooth" });
+                    contactSection.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
               >
@@ -163,28 +164,28 @@ export function EnhancedHero() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-12 md:mt-16 pt-6 md:pt-8 border-t border-tech-blue-400/20">
               {[
                 {
-                  number: "300+",
-                  label: "Website đã triển khai",
+                  number: '300+',
+                  label: 'Website đã triển khai',
                   icon: <Code2 className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: "text-cyber-blue",
+                  color: 'text-cyber-blue',
                 },
                 {
-                  number: "100+",
-                  label: "Khách hàng doanh nghiệp & tổ chức",
+                  number: '100+',
+                  label: 'Khách hàng doanh nghiệp & tổ chức',
                   icon: <Database className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: "text-electric-blue",
+                  color: 'text-electric-blue',
                 },
                 {
-                  number: "500+",
-                  label: "Trường mầm non sử dụng hệ thống",
+                  number: '500+',
+                  label: 'Trường mầm non sử dụng hệ thống',
                   icon: <Cpu className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: "text-neon-blue",
+                  color: 'text-neon-blue',
                 },
                 {
-                  number: "24/7",
-                  label: "Hỗ trợ kỹ thuật & vận hành",
+                  number: '24/7',
+                  label: 'Hỗ trợ kỹ thuật & vận hành',
                   icon: <Shield className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: "text-tech-blue-400",
+                  color: 'text-tech-blue-400',
                 },
               ].map((stat, index) => (
                 <div
@@ -193,12 +194,12 @@ export function EnhancedHero() {
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="flex justify-center mb-2 md:mb-3">
-                    <div className={cn("animate-tech-pulse", stat.color)}>
+                    <div className={cn('animate-tech-pulse', stat.color)}>
                       {stat.icon}
                     </div>
                   </div>
                   <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2 group-hover:scale-110 transition-transform">
-                    <HolographicText>{stat.number}</HolographicText>
+                    <HolographicTextWhite>{stat.number}</HolographicTextWhite>
                   </div>
                   <div className="text-tech-blue-200 text-xs sm:text-sm">
                     {stat.label}
@@ -209,15 +210,15 @@ export function EnhancedHero() {
           </Reveal>
 
           <Reveal direction="up" delay={250} skipAnimation={isInitialRender}>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-8 md:mt-12">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-8 mb-4 md:mb-8 md:mt-12">
               {[
-                "Thiết kế Website & Hệ thống",
-                "Giải pháp phần mềm tùy chỉnh",
-                "Hosting & Hạ tầng Web",
-                "Ứng dụng AI trong doanh nghiệp",
-                "Quản lý trường mầm non",
-                "Phần mềm hỗ trợ Livestream",
-                "Đào tạo & tư vấn công nghệ",
+                'Thiết kế Website & Hệ thống',
+                'Giải pháp phần mềm tùy chỉnh',
+                'Hosting & Hạ tầng Web',
+                'Ứng dụng AI trong doanh nghiệp',
+                'Quản lý trường mầm non',
+                'Phần mềm hỗ trợ Livestream',
+                'Đào tạo & tư vấn công nghệ',
               ].map((tech, index) => (
                 <Badge
                   key={index}

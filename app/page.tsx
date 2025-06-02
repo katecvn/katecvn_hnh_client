@@ -35,6 +35,7 @@ import {
   HolographicText,
   TechGrid,
   CircuitBoard,
+  HolographicTextWhite,
 } from '@/components/tech-blue-animations';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -441,7 +442,7 @@ export default function HomePage() {
               </p>
             </div>
           </Reveal>
-          {console.log(news, 'mews')}
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {news?.map((post, index) => (
               <TechProductCard
@@ -480,9 +481,9 @@ export default function HomePage() {
                   Đối tác công nghệ của bạn
                 </Badge>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  <HolographicText>
+                  <HolographicTextWhite>
                     Sẵn sàng nâng cấp doanh nghiệp bằng công nghệ?
-                  </HolographicText>
+                  </HolographicTextWhite>
                 </h2>
                 <p className="text-tech-blue-100 mb-8 text-lg leading-relaxed">
                   Dù bạn đang cần giải pháp AI, nền tảng Cloud, hay một website

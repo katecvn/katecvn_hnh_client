@@ -181,22 +181,47 @@ interface HolographicTextProps {
   className?: string;
 }
 
-export function HolographicText({ children, className }: HolographicTextProps) {
+export function HolographicTextWhite({
+  children,
+  className,
+}: HolographicTextProps) {
   return (
     <span
       className={cn(
-        'relative inline-block text-transparent bg-gradient-to-r from-cyan-600 via-blue-500 to-purple-600 bg-clip-text',
+        'relative inline-block  bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text',
         'animate-hologram drop-shadow-sm',
         className
       )}
     >
       {children}
       {/* Bright overlay layer */}
-      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-500 to-blue-600 bg-clip-text text-transparent animate-neon-flicker opacity-60">
+      <span className="absolute inset-0 bg-gradient-to-r from-white-200 via-cyan-400 to-blue-400 bg-clip-text  animate-neon-flicker opacity-30">
         {children}
       </span>
       {/* Additional glow layer */}
-      <span className="absolute inset-0 bg-gradient-to-r from-cyan-800 via-blue-700 to-purple-700 bg-clip-text text-transparent animate-pulse opacity-40">
+      <span className="absolute inset-0  bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text  animate-pulse opacity-20">
+        {children}
+      </span>
+    </span>
+  );
+}
+
+export function HolographicText({ children, className }: HolographicTextProps) {
+  return (
+    <span
+      className={cn(
+        'relative inline-block  bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text',
+        'animate-hologram drop-shadow-sm',
+        className
+      )}
+    >
+      {children}
+      {/* Bright overlay layer */}
+      <span className="absolute inset-0 bg-gradient-to-r from-white-200 via-cyan-400 to-blue-400 bg-clip-text text-transparent animate-neon-flicker opacity-30">
+        {children}
+      </span>
+      {/* Additional glow layer */}
+      <span className="absolute inset-0 text-transparent bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text  animate-pulse opacity-20">
         {children}
       </span>
     </span>
@@ -210,18 +235,18 @@ export function HolographicTitle({
   return (
     <span
       className={cn(
-        'relative inline-block text-transparent bg-gradient-to-r from-cyan-600 via-blue-500 to-purple-600 bg-clip-text',
+        'relative inline-block text-transparent bg-gradient-to-r from-cyan-700 via-blue-600 to-purple-700 bg-clip-text',
         'animate-hologram',
         className
       )}
     >
       {children}
       {/* Bright overlay layer */}
-      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-500 to-blue-600 bg-clip-text text-transparent animate-neon-flicker opacity-40">
+      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-700 to-blue-800 bg-clip-text text-transparent animate-neon-flicker opacity-20">
         {children}
       </span>
       {/* Additional glow layer */}
-      <span className="absolute inset-0 bg-gradient-to-r from-cyan-800 via-blue-700 to-purple-700 bg-clip-text text-transparent animate-pulse opacity-30">
+      <span className="absolute inset-0 bg-gradient-to-r from-cyan-800 via-blue-800 to-purple-800 bg-clip-text text-transparent animate-pulse opacity-10">
         {children}
       </span>
     </span>
@@ -241,44 +266,44 @@ export function NeonBorder({
   color = 'blue',
 }: NeonBorderProps) {
   const colorClasses = {
-    blue: 'border-tech-blue-500 shadow-[0_0_5px_rgba(59,130,246,0.4),0_0_10px_rgba(59,130,246,0.3),0_0_15px_rgba(59,130,246,0.2)]',
-    cyan: 'border-cyber-blue shadow-[0_0_5px_rgba(6,182,212,0.4),0_0_10px_rgba(6,182,212,0.3),0_0_15px_rgba(6,182,212,0.2)]',
+    blue: 'border-tech-blue-500 hover:shadow-[0_0_5px_rgba(59,130,246,0.4),0_0_10px_rgba(59,130,246,0.3),0_0_15px_rgba(59,130,246,0.2)]',
+    cyan: 'border-cyber-blue hover:shadow-[0_0_5px_rgba(6,182,212,0.4),0_0_10px_rgba(6,182,212,0.3),0_0_15px_rgba(6,182,212,0.2)]',
     electric:
-      'border-electric-blue shadow-[0_0_5px_rgba(0,191,255,0.4),0_0_10px_rgba(0,191,255,0.3),0_0_15px_rgba(0,191,255,0.2)]',
+      'border-electric-blue hover:shadow-[0_0_5px_rgba(0,191,255,0.4),0_0_10px_rgba(0,191,255,0.3),0_0_15px_rgba(0,191,255,0.2)]',
   };
 
   return (
     <div
       className={cn(
-        'relative border-2 rounded-lg',
+        'relative border-2 rounded-lg transition-all duration-300 ease-in-out',
         colorClasses[color],
-        'animate-cyber-glow [animation-duration:3s]',
+        'hover:animate-cyber-glow [animation-duration:3s]',
         className
       )}
     >
       {children}
 
-      {/* Multiple flashing layers */}
+      {/* Multiple flashing layers - only on hover */}
       <div
-        className="absolute inset-0 border-2 border-white/30 rounded-lg animate-tech-pulse"
+        className="absolute inset-0 border-2 border-white/30 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-tech-pulse"
         style={{ animationDuration: '3s' }}
       />
       <div
-        className="absolute inset-0 border-2 border-white/20 rounded-lg animate-ping"
+        className="absolute inset-0 border-2 border-white/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-ping"
         style={{ animationDuration: '3s' }}
       />
       <div
-        className="absolute inset-0 border-2 border-white/15 rounded-lg animate-bounce"
+        className="absolute inset-0 border-2 border-white/15 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-bounce"
         style={{ animationDuration: '3s' }}
       />
 
-      {/* Additional shadow layers */}
+      {/* Additional shadow layers - only on hover */}
       <div
-        className="absolute inset-0 rounded-lg animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.15)]"
+        className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.15)]"
         style={{ animationDuration: '3s' }}
       />
       <div
-        className="absolute inset-0 rounded-lg animate-ping shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+        className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 animate-ping shadow-[0_0_15px_rgba(255,255,255,0.1)]"
         style={{ animationDuration: '3s' }}
       />
     </div>

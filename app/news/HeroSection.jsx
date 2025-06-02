@@ -284,7 +284,7 @@ const AnimatedHeroSection = () => {
               Cập nhật
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {' '}
-                công nghệ mới nhất
+                công nghệ <br /> mới nhất
               </span>
             </h1>
             <p className="text-xl text-gray-600 mb-8">

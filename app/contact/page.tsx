@@ -213,11 +213,11 @@ export default function ContactPage() {
               <div className="relative overflow-hidden">
                 {/* Animated background gradients */}
                 <div
-                  className="absolute inset-0  bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 animate-pulse "
+                  className="absolute inset-0  bg-gradient-to-br from-blue-700 via-purple-700 to-pink-600 animate-pulse "
                   style={{ animationDelay: '0.5s', padding: '1rem' }}
                 ></div>
                 <div
-                  className="absolute inset-0 bg-gradient-to-tr from-cyan-500/30 via-blue-500/30 to-purple-500/30 "
+                  className="absolute inset-0 bg-gradient-to-tr from-cyan-600/30 via-blue-600/30 to-purple-600/30 "
                   style={{ animationDelay: '0.5s', borderRadius: '16px' }}
                 ></div>
 
@@ -242,33 +242,33 @@ export default function ContactPage() {
                 </div>
 
                 {/* Glassmorphism container */}
-                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform  transition-all duration-500 ">
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-500">
                   {/* Glowing border effect */}
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-20 blur-sm"></div>
 
                   <div className="relative z-10">
                     <Badge
                       variant="outline"
-                      className="mb-6 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/80 transition-all duration-300 animate-gentle-pulse"
+                      className="mb-6 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-300 animate-gentle-pulse"
                     >
                       ✨ Gửi yêu cầu
                     </Badge>
 
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent animate-pulse">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white animate-pulse">
                       Để lại thông tin liên hệ
                     </h2>
 
-                    <p className="text-white/80 mb-8 text-lg leading-relaxed backdrop-blur-sm">
+                    <p className="text-white mb-8 text-lg leading-relaxed backdrop-blur-sm">
                       Điền form bên dưới và chúng tôi sẽ liên hệ với bạn trong
                       vòng
-                      <span className="text-yellow-300 font-semibold animate-pulse">
+                      <span className="text-white font-semibold animate-pulse">
                         {' '}
                         24 giờ{' '}
                       </span>
                       để tư vấn chi tiết.
                     </p>
 
-                    <div className="transform hover:scale-102 transition-transform duration-300">
+                    <div className="transform text-white hover:scale-102 transition-transform duration-300">
                       <ContactForm />
                     </div>
                   </div>
