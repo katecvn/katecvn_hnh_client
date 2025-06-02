@@ -646,7 +646,7 @@ const ContactSection = () => {
             <Badge variant="blue" className="mb-4">
               Liên hệ với chúng tôi
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Sẵn sàng hỗ trợ
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {' '}

@@ -30,6 +30,7 @@ import { AnimatedSection } from '@/components/animated-section';
 import Link from 'next/link';
 import { ButtonScroll } from '@/components/ui/button-scroll';
 import HeroSection from './HeroSection';
+import { HolographicTitle } from '@/components/tech-blue-animations';
 
 export const metadata: Metadata = {
   title: 'Về chúng tôi - Katec | Đội ngũ chuyên gia công nghệ hàng đầu',
@@ -293,7 +294,9 @@ export default function AboutPage() {
                 Câu chuyện của chúng tôi
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Hành trình 5 năm xây dựng và phát triển
+                <HolographicTitle>
+                  Hành trình 5 năm xây dựng và phát triển
+                </HolographicTitle>
               </h2>
               <p className="text-gray-600 mb-6 text-lg">
                 Katec được thành lập vào năm 2019 với tầm nhìn trở thành công ty
@@ -352,7 +355,9 @@ export default function AboutPage() {
               Giá trị cốt lõi
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Những giá trị định hướng hành động
+              <HolographicTitle>
+                Những giá trị định hướng hành động
+              </HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Các giá trị cốt lõi này là nền tảng cho mọi quyết định và hành
@@ -391,7 +396,7 @@ export default function AboutPage() {
               Hành trình phát triển
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Các mốc quan trọng
+              <HolographicTitle>Các mốc quan trọng</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Những cột mốc đánh dấu sự phát triển và thành công của Katec qua
@@ -452,7 +457,9 @@ export default function AboutPage() {
                 Công nghệ chúng tôi sử dụng
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Chuyên môn công nghệ hàng đầu
+                <HolographicTitle>
+                  Chuyên môn công nghệ hàng đầu
+                </HolographicTitle>
               </h2>
               <p className="text-gray-600 mb-8 text-lg">
                 Đội ngũ của chúng tôi thành thạo các công nghệ tiên tiến nhất,
@@ -513,7 +520,7 @@ export default function AboutPage() {
               Đội ngũ lãnh đạo
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Gặp gỡ đội ngũ chuyên gia
+              <HolographicTitle>Gặp gỡ đội ngũ chuyên gia</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Những con người tài năng và đam mê công nghệ, dẫn dắt Katec hướng
@@ -533,21 +540,7 @@ export default function AboutPage() {
                       className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          variant="secondary"
-                          className="flex-1"
-                        >
-                          <Facebook className="h-4 w-4 mr-2" />
-                          FaceBook
-                        </Button>
-                        <Button size="sm" variant="secondary">
-                          <Mail className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
+                    <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   <CardHeader>
                     <CardTitle className="text-xl">{member.name}</CardTitle>
@@ -661,7 +654,9 @@ export default function AboutPage() {
             Gia nhập đội ngũ
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Cùng xây dựng tương lai công nghệ
+            <HolographicTitle>
+              Cùng xây dựng tương lai công nghệ
+            </HolographicTitle>
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Chúng tôi luôn tìm kiếm những tài năng xuất sắc để cùng phát triển

@@ -4,6 +4,7 @@ import { ArrowRight, Users, TrendingUp, Shield, Zap } from 'lucide-react';
 import api from '@/utils/axios';
 import HeroSection from './HeroSection';
 import Link from 'next/link';
+import { HolographicTitle } from '@/components/tech-blue-animations';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -327,8 +328,8 @@ export default function ProductsPage() {
           ) : (
             <>
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold mb-4">
-                  Sản phẩm của chúng tôi
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                  <HolographicTitle>Sản phẩm của chúng tôi</HolographicTitle>
                 </h2>
                 <p className="text-gray-600">
                   {pagination.totalItems} sản phẩm - Trang{' '}
@@ -409,7 +410,15 @@ export default function ProductsPage() {
                             >
                               Chi tiết
                             </Button>
-                            <Button className="flex-1">Liên hệ</Button>
+                            <Button asChild className="flex-1">
+                              {' '}
+                              <Link
+                                href="/contact"
+                                className="flex items-center"
+                              >
+                                Liên hệ
+                              </Link>
+                            </Button>
                           </div>
                         </div>
                       </CardContent>
@@ -465,7 +474,7 @@ export default function ProductsPage() {
               Tính năng nổi bật
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Tại sao chọn sản phẩm Katec?
+              <HolographicTitle>Tại sao chọn sản phẩm Katec?</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Các sản phẩm của chúng tôi được thiết kế với công nghệ tiên tiến
@@ -526,13 +535,6 @@ export default function ProductsPage() {
                 Đặt lịch demo
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-blue-600"
-            >
-              Tải brochure
             </Button>
           </div>
         </div>

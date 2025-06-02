@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { AnimatedSection } from '@/components/animated-section';
 import HeroSection from './HeroSection';
+import { HolographicTitle } from '@/components/tech-blue-animations';
 
 export const metadata: Metadata = {
   title: 'Tuyển dụng - Katec | Cơ hội nghề nghiệp trong lĩnh vực IT',
@@ -182,7 +183,7 @@ export default function CareersPage() {
               Quyền lợi
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Tại sao chọn Katec?
+              <HolographicTitle>Tại sao chọn Katec?</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Chúng tôi cam kết tạo ra môi trường làm việc tốt nhất để bạn có
@@ -221,7 +222,7 @@ export default function CareersPage() {
               Vị trí tuyển dụng
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Cơ hội nghề nghiệp
+              <HolographicTitle>Cơ hội nghề nghiệp</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Khám phá các vị trí đang tuyển dụng và tìm cơ hội phù hợp với bạn

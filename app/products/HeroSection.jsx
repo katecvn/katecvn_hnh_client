@@ -16,7 +16,7 @@ const generateInitialBubbles = () => {
       size: Math.random() * 80 + 30, // 30-110px (larger bubbles)
       left: Math.random() * 100, // 0-100%
       animationDuration: Math.random() * 8 + 6, // 6-14s (faster)
-      delay: Math.random() * 0.01, // 0-3s delay
+      delay: 0, // Removed delay - bubbles start immediately
       color: colors[Math.floor(Math.random() * colors.length)],
       hasLogo: hasLogo,
     });
@@ -37,6 +37,7 @@ const Bubble = ({ size, left, animationDuration, delay, color, hasLogo }) => (
           ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.4))'
           : 'linear-gradient(135deg, rgba(147, 51, 234, 0.5), rgba(126, 34, 206, 0.4))',
       animation: `float ${animationDuration}s infinite linear`,
+      animationDelay: `${delay}s`, // This will now be 0
       bottom: '-50px',
       boxShadow:
         color === 'blue'
@@ -131,11 +132,11 @@ const HeroSection = () => {
         }
 
         .floating-animation:nth-child(2n) {
-          animation-delay: 0s;
+          animation-delay: -2s;
         }
 
         .floating-animation:nth-child(3n) {
-          animation-delay: 0s;
+          animation-delay: -4s;
         }
       `}</style>
 
@@ -165,7 +166,7 @@ const HeroSection = () => {
             <Badge variant="blue" className="mb-4 bg-white/80 backdrop-blur-sm">
               Sản phẩm công nghệ
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-800">
               Giải pháp phần mềm
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {' '}

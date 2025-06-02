@@ -70,20 +70,21 @@ export function Header() {
                 <span
                   className={cn(
                     'text-3xl font-black tracking-tight relative transition-all duration-500',
-                    isScrolled
-                      ? 'bg-gradient-to-r from-blue-900 via-sky-400 to-purple-600 bg-clip-text text-transparent'
-                      : 'text-white',
+
                     'group-hover:from-sky-300 group-hover:via-purple-400 group-hover:to-blue-500',
                     isScrolled ? 'opacity-90 scale-95' : 'opacity-100 scale-100'
                   )}
                 >
-                  Katec
+                  <img
+                    src={`${isScrolled ? '/logo.png' : '/logo-white.png'}`}
+                    className="w-full h-8"
+                  />
                   {/* Underline accent */}
                   <div
                     className={cn(
-                      'absolute -bottom-1 left-0 h-0.5 transition-all duration-500 w-0 group-hover:w-full',
+                      'absolute -bottom-2 left-0 h-1 transition-all duration-500 w-0 group-hover:w-full',
                       isScrolled
-                        ? 'bg-gradient-to-r from-blue-900 via-sky-400 to-purple-600'
+                        ? 'bg-gradient-to-r from-blue-900 via-sky-400 to-cyan-600'
                         : 'bg-white'
                     )}
                   ></div>

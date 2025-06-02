@@ -10,24 +10,33 @@ const FloatingParticles = () => {
   const canvasRef = useRef(null);
   const particlesRef = useRef([]);
   const animationRef = useRef();
+  const startTimeRef = useRef(Date.now());
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
 
-    // Set canvas size
+    // Set canvas size with delay to ensure proper sizing
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
     };
 
-    resizeCanvas();
+    // Initial resize with small delay to ensure DOM is ready
+    setTimeout(() => {
+      resizeCanvas();
+      initializeAnimation();
+    }, 100);
+
     window.addEventListener('resize', resizeCanvas);
 
     // Create particles
-    const createParticles = () => {
+    const createParticles = (canvasWidth, canvasHeight) => {
       const particles = [];
-      const particleCount = 300; // Tăng từ 50 lên 120
+      const particleCount = 300;
 
       // Mảng màu sắc đa dạng hơn
       const colors = [
@@ -45,59 +54,138 @@ const FloatingParticles = () => {
         '#67E8F9', // Cyan 300
       ];
 
+      const centerX = canvasWidth / 2;
+      const centerY = canvasHeight / 2;
+
       for (let i = 0; i < particleCount; i++) {
+        // Tạo vị trí ban đầu theo hình tròn
+        const angle = (i / particleCount) * Math.PI * 2;
+        const radius = 50 + Math.random() * 200; // Bán kính từ 50 đến 250px
+
         particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 5 + 0.5, // Kích thước từ 0.5 đến 5.5
-          speedX: (Math.random() - 0.5) * 2, // Giảm từ 7.5 xuống 4.5 (3 lần tốc độ gốc)
-          speedY: (Math.random() - 0.5) * 2, // Giảm từ 7.5 xuống 4.5
-          opacity: Math.random() * 0.6 + 0.2, // Độ trong suốt từ 0.2 đến 0.8
+          // Vị trí ban đầu theo hình tròn
+          initialX: centerX + Math.cos(angle) * radius,
+          initialY: centerY + Math.sin(angle) * radius,
+          x: centerX + Math.cos(angle) * radius,
+          y: centerY + Math.sin(angle) * radius,
+
+          // Vị trí cuối cùng (ngẫu nhiên)
+          finalX: Math.random() * canvasWidth,
+          finalY: Math.random() * canvasHeight,
+
+          // Thuộc tính cho chuyển động tròn
+          angle: angle,
+          radius: radius,
+          rotationSpeed: 0.02 + Math.random() * 0.03, // Tốc độ quay
+
+          size: Math.random() * 5 + 0.5,
+          speedX: (Math.random() - 0.5) * 2,
+          speedY: (Math.random() - 0.5) * 2,
+          opacity: Math.random() * 0.6 + 0.2,
           color: colors[Math.floor(Math.random() * colors.length)],
-          // Giảm tốc độ pulse xuống 3 lần
-          pulseSpeed: Math.random() * 0.06 + 0.03, // Giảm từ 0.05-0.15 xuống 0.03-0.09
+          pulseSpeed: Math.random() * 0.06 + 0.03,
           pulseOffset: Math.random() * Math.PI * 2,
+
+          // Thời gian delay để particles xuất hiện dần
+          delay: i * 10, // Mỗi particle xuất hiện sau 10ms
+          hasAppeared: false,
         });
       }
 
-      particlesRef.current = particles;
+      return particles;
+    };
+
+    // Initialize animation function
+    const initializeAnimation = () => {
+      if (!canvas.width || !canvas.height) return;
+
+      particlesRef.current = createParticles(canvas.width, canvas.height);
+      startTimeRef.current = Date.now();
+
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      animate();
     };
 
     // Animate particles
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const currentTime = Date.now();
+      const elapsedTime = currentTime - startTimeRef.current;
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
 
       particlesRef.current.forEach((particle, index) => {
-        // Update position
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-
-        // Bounce off edges với hiệu ứng mềm mại
-        if (
-          particle.x <= particle.size ||
-          particle.x >= canvas.width - particle.size
-        ) {
-          particle.speedX *= -0.9; // Tăng hệ số bounce để giữ tốc độ cao hơn
-        }
-        if (
-          particle.y <= particle.size ||
-          particle.y >= canvas.height - particle.size
-        ) {
-          particle.speedY *= -0.9; // Tăng hệ số bounce để giữ tốc độ cao hơn
+        // Kiểm tra xem particle đã đến lúc xuất hiện chưa
+        if (elapsedTime < particle.delay) {
+          return; // Chưa đến lúc xuất hiện
         }
 
-        // Keep particles within bounds
-        particle.x = Math.max(
-          particle.size,
-          Math.min(canvas.width - particle.size, particle.x)
-        );
-        particle.y = Math.max(
-          particle.size,
-          Math.min(canvas.height - particle.size, particle.y)
-        );
+        if (!particle.hasAppeared) {
+          particle.hasAppeared = true;
+        }
+
+        const particleAge = elapsedTime - particle.delay;
+
+        // Giai đoạn 1: Quay tròn (3 giây đầu)
+        if (particleAge < 3000) {
+          // Cập nhật góc quay
+          particle.angle += particle.rotationSpeed;
+
+          // Vị trí theo hình tròn
+          particle.x = centerX + Math.cos(particle.angle) * particle.radius;
+          particle.y = centerY + Math.sin(particle.angle) * particle.radius;
+
+          // Giảm dần bán kính để tạo hiệu ứng spiral
+          particle.radius *= 0.9995;
+        }
+        // Giai đoạn 2: Chuyển tiếp (1 giây)
+        else if (particleAge < 4000) {
+          const transitionProgress = (particleAge - 3000) / 1000; // 0 đến 1
+
+          // Smooth transition từ vị trí tròn đến vị trí ngẫu nhiên
+          const easeProgress = 1 - Math.pow(1 - transitionProgress, 3); // Ease out cubic
+
+          particle.x =
+            particle.x + (particle.finalX - particle.x) * easeProgress * 0.1;
+          particle.y =
+            particle.y + (particle.finalY - particle.y) * easeProgress * 0.1;
+        }
+        // Giai đoạn 3: Chuyển động tự do
+        else {
+          // Chuyển động bình thường
+          particle.x += particle.speedX;
+          particle.y += particle.speedY;
+
+          // Bounce off edges
+          if (
+            particle.x <= particle.size ||
+            particle.x >= canvas.width - particle.size
+          ) {
+            particle.speedX *= -0.9;
+          }
+          if (
+            particle.y <= particle.size ||
+            particle.y >= canvas.height - particle.size
+          ) {
+            particle.speedY *= -0.9;
+          }
+
+          // Keep particles within bounds
+          particle.x = Math.max(
+            particle.size,
+            Math.min(canvas.width - particle.size, particle.x)
+          );
+          particle.y = Math.max(
+            particle.size,
+            Math.min(canvas.height - particle.size, particle.y)
+          );
+        }
 
         // Hiệu ứng nhấp nháy
-        const time = Date.now() * 0.001;
+        const time = currentTime * 0.001;
         const pulseOpacity =
           particle.opacity +
           Math.sin(time * particle.pulseSpeed + particle.pulseOffset) * 0.2;
@@ -112,7 +200,7 @@ const FloatingParticles = () => {
           particle.size
         );
         gradient.addColorStop(0, particle.color);
-        gradient.addColorStop(1, particle.color + '00'); // Trong suốt ở viền
+        gradient.addColorStop(1, particle.color + '00');
 
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
@@ -120,23 +208,22 @@ const FloatingParticles = () => {
         ctx.globalAlpha = Math.max(0.1, Math.min(1, pulseOpacity));
         ctx.fill();
 
-        // Draw connections với điều kiện tối ưu
-        if (index % 3 === 0) {
-          // Chỉ vẽ kết nối cho 1/3 số particles để tối ưu performance
+        // Draw connections (chỉ trong giai đoạn chuyển động tự do)
+        if (particleAge > 4000 && index % 3 === 0) {
           particlesRef.current.forEach((otherParticle, otherIndex) => {
-            if (otherIndex <= index) return; // Tránh vẽ duplicate
+            if (otherIndex <= index || !otherParticle.hasAppeared) return;
+            if (currentTime - startTimeRef.current - otherParticle.delay < 4000)
+              return;
 
             const dx = particle.x - otherParticle.x;
             const dy = particle.y - otherParticle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 120) {
-              // Tăng khoảng cách kết nối
               ctx.beginPath();
               ctx.moveTo(particle.x, particle.y);
               ctx.lineTo(otherParticle.x, otherParticle.y);
 
-              // Gradient cho đường kết nối
               const lineGradient = ctx.createLinearGradient(
                 particle.x,
                 particle.y,
@@ -147,7 +234,7 @@ const FloatingParticles = () => {
               lineGradient.addColorStop(1, otherParticle.color);
 
               ctx.strokeStyle = lineGradient;
-              ctx.globalAlpha = (120 - distance) / 600; // Giảm opacity
+              ctx.globalAlpha = (120 - distance) / 600;
               ctx.lineWidth = 1;
               ctx.stroke();
             }
@@ -157,9 +244,6 @@ const FloatingParticles = () => {
 
       animationRef.current = requestAnimationFrame(animate);
     };
-
-    createParticles();
-    animate();
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
@@ -194,7 +278,7 @@ export default function HeroSection() {
           <Badge variant="blue" className="mb-4 bg-white/80 backdrop-blur-sm">
             Về Katec
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Đối tác công nghệ
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               {' '}

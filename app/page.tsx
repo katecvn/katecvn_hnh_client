@@ -284,12 +284,12 @@ export default function HomePage() {
             <div className="text-center mb-12">
               <Badge
                 variant="outline"
-                className="mb-4 animate-tech-pulse border-tech-blue-500 text-tech-blue-600"
+                className="mb-4 border-tech-blue-500 text-tech-blue-600"
               >
-                <TrendingUp className="h-4 w-4 mr-2" />
+                <Award className="h-4 w-4 mr-2" />
                 Thành tựu công nghệ
               </Badge>
-              <h2 className="text-3xl font-bold mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 <HolographicText>Những con số ấn tượng</HolographicText>
               </h2>
             </div>
@@ -393,13 +393,26 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
             {partners?.map((partner, index) => (
               <Reveal direction="up" delay={index * 100} key={partner.id}>
-                <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
-                  <div className="relative w-full h-16">
+                <div className="bg-white rounded-lg p-1 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32 overflow-hidden">
+                  <div className="relative w-full h-20 group">
                     <Image
                       src={partner?.content[0]?.imageUrl || '/placeholder.svg'}
                       alt={partner?.content[0]?.title || `Partner ${index + 1}`}
-                      layout="fill"
-                      className="object-contain"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-contain group-hover:object-cover group-hover:scale-95 transition-all duration-500 ease-in-out"
+                      style={{
+                        objectPosition: 'center center',
+                        filter: 'contrast(1.1) brightness(1.05)',
+                        background: 'transparent',
+                      }}
+                      priority={index < 6}
+                      quality={90}
+                      onLoad={(e) => {
+                        // Tự động crop phần trắng nếu cần
+                        const img = e.target;
+                        img.style.imageRendering = 'crisp-edges';
+                      }}
                     />
                   </div>
                 </div>

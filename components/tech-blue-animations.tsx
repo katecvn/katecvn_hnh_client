@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 // Matrix Rain Animation
 export function MatrixRain() {
@@ -22,7 +22,7 @@ export function MatrixRain() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     // Set canvas dimensions
@@ -32,10 +32,10 @@ export function MatrixRain() {
     };
 
     setCanvasDimensions();
-    window.addEventListener("resize", setCanvasDimensions);
+    window.addEventListener('resize', setCanvasDimensions);
 
     // Matrix rain characters
-    const chars = "Katec";
+    const chars = 'Katec';
     const fontSize = 16;
     const lineHeight = 30;
     const columns = Math.floor(canvas.width / fontSize);
@@ -53,10 +53,10 @@ export function MatrixRain() {
 
       lastTime = currentTime;
 
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#0ff";
+      ctx.fillStyle = '#0ff';
       ctx.font = `${fontSize}px monospace`;
 
       for (let i = 0; i < drops.length; i++) {
@@ -75,7 +75,7 @@ export function MatrixRain() {
     const animationId = requestAnimationFrame(draw);
 
     return () => {
-      window.removeEventListener("resize", setCanvasDimensions);
+      window.removeEventListener('resize', setCanvasDimensions);
       cancelAnimationFrame(animationId);
     };
   }, [isMounted]);
@@ -165,7 +165,7 @@ export function DataStream() {
           className="absolute h-px bg-gradient-to-r from-transparent via-cyber-blue to-transparent animate-data-stream"
           style={{
             top: stream.top,
-            width: "200px",
+            width: '200px',
             animationDelay: stream.delay,
             animationDuration: stream.duration,
           }}
@@ -185,47 +185,102 @@ export function HolographicText({ children, className }: HolographicTextProps) {
   return (
     <span
       className={cn(
-        "relative inline-block text-transparent bg-gradient-to-r from-cyan-100 via-blue-100 to-purple-100 bg-clip-text",
-        "animate-hologram",
+        'relative inline-block text-transparent bg-gradient-to-r from-cyan-600 via-blue-500 to-purple-600 bg-clip-text',
+        'animate-hologram drop-shadow-sm',
         className
       )}
     >
       {children}
-      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-50 to-blue-50 bg-clip-text text-transparent animate-neon-flicker opacity-90">
+      {/* Bright overlay layer */}
+      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-500 to-blue-600 bg-clip-text text-transparent animate-neon-flicker opacity-60">
+        {children}
+      </span>
+      {/* Additional glow layer */}
+      <span className="absolute inset-0 bg-gradient-to-r from-cyan-800 via-blue-700 to-purple-700 bg-clip-text text-transparent animate-pulse opacity-40">
         {children}
       </span>
     </span>
   );
 }
+
+export function HolographicTitle({
+  children,
+  className,
+}: HolographicTextProps) {
+  return (
+    <span
+      className={cn(
+        'relative inline-block text-transparent bg-gradient-to-r from-cyan-600 via-blue-500 to-purple-600 bg-clip-text',
+        'animate-hologram',
+        className
+      )}
+    >
+      {children}
+      {/* Bright overlay layer */}
+      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-500 to-blue-600 bg-clip-text text-transparent animate-neon-flicker opacity-40">
+        {children}
+      </span>
+      {/* Additional glow layer */}
+      <span className="absolute inset-0 bg-gradient-to-r from-cyan-800 via-blue-700 to-purple-700 bg-clip-text text-transparent animate-pulse opacity-30">
+        {children}
+      </span>
+    </span>
+  );
+}
+
 // Neon Border Effect
 interface NeonBorderProps {
   children: React.ReactNode;
   className?: string;
-  color?: "blue" | "cyan" | "electric";
+  color?: 'blue' | 'cyan' | 'electric';
 }
 
 export function NeonBorder({
   children,
   className,
-  color = "blue",
+  color = 'blue',
 }: NeonBorderProps) {
   const colorClasses = {
-    blue: "border-tech-blue-500 shadow-tech-blue-500",
-    cyan: "border-cyber-blue shadow-cyber-blue",
-    electric: "border-electric-blue shadow-electric-blue",
+    blue: 'border-tech-blue-500 shadow-[0_0_5px_rgba(59,130,246,0.4),0_0_10px_rgba(59,130,246,0.3),0_0_15px_rgba(59,130,246,0.2)]',
+    cyan: 'border-cyber-blue shadow-[0_0_5px_rgba(6,182,212,0.4),0_0_10px_rgba(6,182,212,0.3),0_0_15px_rgba(6,182,212,0.2)]',
+    electric:
+      'border-electric-blue shadow-[0_0_5px_rgba(0,191,255,0.4),0_0_10px_rgba(0,191,255,0.3),0_0_15px_rgba(0,191,255,0.2)]',
   };
 
   return (
     <div
       className={cn(
-        "relative border-2 rounded-lg",
+        'relative border-2 rounded-lg',
         colorClasses[color],
-        "animate-cyber-glow",
+        'animate-cyber-glow [animation-duration:3s]',
         className
       )}
     >
       {children}
-      <div className="absolute inset-0 border-2 border-white/20 rounded-lg animate-tech-pulse" />
+
+      {/* Multiple flashing layers */}
+      <div
+        className="absolute inset-0 border-2 border-white/30 rounded-lg animate-tech-pulse"
+        style={{ animationDuration: '3s' }}
+      />
+      <div
+        className="absolute inset-0 border-2 border-white/20 rounded-lg animate-ping"
+        style={{ animationDuration: '3s' }}
+      />
+      <div
+        className="absolute inset-0 border-2 border-white/15 rounded-lg animate-bounce"
+        style={{ animationDuration: '3s' }}
+      />
+
+      {/* Additional shadow layers */}
+      <div
+        className="absolute inset-0 rounded-lg animate-pulse shadow-[0_0_10px_rgba(255,255,255,0.15)]"
+        style={{ animationDuration: '3s' }}
+      />
+      <div
+        className="absolute inset-0 rounded-lg animate-ping shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+        style={{ animationDuration: '3s' }}
+      />
     </div>
   );
 }
@@ -284,8 +339,8 @@ export function FloatingTechElements() {
         <div
           key={i}
           className={cn(
-            "absolute w-6 h-6 border border-tech-blue-400/30 rounded",
-            "animate-float"
+            'absolute w-6 h-6 border border-tech-blue-400/30 rounded',
+            'animate-float'
           )}
           style={{
             left: element.left,
@@ -314,7 +369,7 @@ export function TechTypewriter({
   speed = 100,
 }: TechTypewriterProps) {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [currentText, setCurrentText] = useState("");
+  const [currentText, setCurrentText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -330,7 +385,7 @@ export function TechTypewriter({
 
         if (!isDeleting && currentText === fullText) {
           setTimeout(() => setIsDeleting(true), 1000);
-        } else if (isDeleting && currentText === "") {
+        } else if (isDeleting && currentText === '') {
           setIsDeleting(false);
           setCurrentTextIndex((prev) => (prev + 1) % texts.length);
         }
@@ -342,7 +397,7 @@ export function TechTypewriter({
   }, [currentText, isDeleting, currentTextIndex, texts, speed]);
 
   return (
-    <span className={cn("neon-glow", className)}>
+    <span className={cn('neon-glow', className)}>
       {currentText}
       <span className="animate-pulse text-cyber-blue">|</span>
     </span>
@@ -353,32 +408,32 @@ export function TechTypewriter({
 interface CyberButtonProps {
   children: React.ReactNode;
   className?: string;
-  variant?: "primary" | "secondary" | "outline";
+  variant?: 'primary' | 'secondary' | 'outline';
   onClick?: () => void;
 }
 
 export function CyberButton({
   children,
   className,
-  variant = "primary",
+  variant = 'primary',
   onClick,
 }: CyberButtonProps) {
   const variants = {
     primary:
-      "bg-gradient-to-r from-tech-blue-600 to-cyber-blue hover:from-tech-blue-700 hover:to-electric-blue text-white",
+      'bg-gradient-to-r from-tech-blue-600 to-cyber-blue hover:from-tech-blue-700 hover:to-electric-blue text-white',
     secondary:
-      "bg-gradient-to-r from-steel-blue to-tech-blue-600 hover:from-tech-blue-600 hover:to-cyber-blue text-white",
+      'bg-gradient-to-r from-steel-blue to-tech-blue-600 hover:from-tech-blue-600 hover:to-cyber-blue text-white',
     outline:
-      "border-2 border-tech-blue-500 text-tech-blue-500 hover:bg-tech-blue-500 hover:text-white",
+      'border-2 border-tech-blue-500 text-tech-blue-500 hover:bg-tech-blue-500 hover:text-white',
   };
 
   return (
     <button
       onClick={onClick}
       className={cn(
-        "relative px-6 py-3 rounded-lg font-semibold transition-all duration-500 ease-in-out",
-        "before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent",
-        "before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700 before:ease-in-out",
+        'relative px-6 py-3 rounded-lg font-semibold transition-all duration-500 ease-in-out',
+        'before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent',
+        'before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700 before:ease-in-out',
         variants[variant],
         className
       )}
@@ -403,7 +458,7 @@ export function TechProgress({
   return (
     <div
       className={cn(
-        "relative w-full h-2 bg-tech-blue-100 rounded-full overflow-hidden",
+        'relative w-full h-2 bg-tech-blue-100 rounded-full overflow-hidden',
         className
       )}
     >

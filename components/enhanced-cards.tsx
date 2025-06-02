@@ -283,7 +283,7 @@ export function TechProductCard({
         {/* Card Content */}
         <CardHeader>
           <CardTitle className="text-xl group-hover:text-tech-blue-600 transition-colors line-clamp-2">
-            <HolographicText>{title}</HolographicText>
+            {title}
           </CardTitle>
           <CardDescription className="text-base text-tech-blue-700">
             {description}

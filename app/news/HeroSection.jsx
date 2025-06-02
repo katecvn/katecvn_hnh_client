@@ -280,7 +280,7 @@ const AnimatedHeroSection = () => {
             <Badge variant="blue" className="mb-4">
               Tin tức & Insights
             </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Cập nhật
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {' '}

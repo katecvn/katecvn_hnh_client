@@ -25,6 +25,7 @@ import { ContactForm } from '@/components/contact-form';
 import { OfficeMap } from '@/components/office-map';
 import { Button } from '@/components/ui/button';
 import HeroSection from './HeroSection';
+import { HolographicTitle } from '@/components/tech-blue-animations';
 
 export const metadata: Metadata = {
   title: 'Liên hệ - Katec | Tư vấn miễn phí giải pháp công nghệ',
@@ -165,7 +166,7 @@ export default function ContactPage() {
               Cách thức liên hệ
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Chọn cách liên hệ phù hợp
+              <HolographicTitle>Chọn cách liên hệ phù hợp</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Chúng tôi cung cấp nhiều kênh liên hệ để bạn có thể dễ dàng tiếp
@@ -284,10 +285,10 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div>
                   <Badge variant="outline" className="mb-4">
-                    🗺️ Vị trí văn phòng
+                    Vị trí văn phòng
                   </Badge>
                   <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                    Tìm chúng tôi tại
+                    <HolographicTitle>Tìm chúng tôi tại</HolographicTitle>
                   </h2>
                   <p className="text-gray-600 mb-6">
                     Với 3 văn phòng tại các thành phố lớn, chúng tôi luôn gần
@@ -309,7 +310,7 @@ export default function ContactPage() {
               Văn phòng
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Hệ thống văn phòng toàn quốc
+              <HolographicTitle>Hệ thống văn phòng toàn quốc</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Chúng tôi có mặt tại 2 thành phố lớn để phục vụ khách hàng tốt
@@ -373,7 +374,9 @@ export default function ContactPage() {
               Đội ngũ hỗ trợ
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Liên hệ trực tiếp theo bộ phận
+              <HolographicTitle>
+                Liên hệ trực tiếp theo bộ phận
+              </HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Mỗi bộ phận có chuyên môn riêng để hỗ trợ bạn một cách hiệu quả
@@ -426,7 +429,7 @@ export default function ContactPage() {
               Câu hỏi thường gặp
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Có thể bạn quan tâm
+              <HolographicTitle>Có thể bạn quan tâm</HolographicTitle>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Một số câu hỏi thường gặp từ khách hàng về dịch vụ của chúng tôi
@@ -454,15 +457,6 @@ export default function ContactPage() {
               </AnimatedSection>
             ))}
           </div>
-          <div className="text-center mt-12">
-            <p className="text-gray-600 mb-4">
-              Không tìm thấy câu trả lời bạn cần?
-            </p>
-            <Button>
-              <MessageSquare className="mr-2 h-4 w-4" />
-              Đặt câu hỏi khác
-            </Button>
-          </div>
         </div>
       </AnimatedSection>
 
@@ -485,17 +479,25 @@ export default function ContactPage() {
                 công nghệ mới nhất và các ưu đãi đặc biệt.
               </p>
               <div className="flex space-x-4">
-                <Button variant="secondary" size="lg">
-                  <Facebook className="h-5 w-5 mr-2" />
-                  Facebook
+                <Button asChild variant="secondary" size="lg">
+                  <a
+                    href="https://www.facebook.com/kateccantho"
+                    className="flex items-center"
+                    target="blank"
+                  >
+                    <Facebook className="h-5 w-5 mr-2" />
+                    Facebook
+                  </a>
                 </Button>
-                <Button variant="secondary" size="lg">
-                  <Linkedin className="h-5 w-5 mr-2" />
-                  LinkedIn
-                </Button>
-                <Button variant="secondary" size="lg">
-                  <Youtube className="h-5 w-5 mr-2" />
-                  YouTube
+                <Button asChild variant="secondary" size="lg">
+                  <a
+                    href="https://www.youtube.com/@congtykatec"
+                    className="flex items-center"
+                    target="blank"
+                  >
+                    <Youtube className="h-5 w-5 mr-2" />
+                    YouTube
+                  </a>
                 </Button>
               </div>
             </div>

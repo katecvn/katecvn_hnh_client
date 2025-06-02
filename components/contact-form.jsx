@@ -121,7 +121,7 @@ export function ContactForm() {
         subject: subject,
         message: formDataString,
       };
-      console.log('payload:', payload);
+
       const response = await api.post('/contact/create', payload);
       const { data } = response.data;
 
