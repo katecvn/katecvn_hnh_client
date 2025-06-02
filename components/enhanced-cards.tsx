@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
 import {
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight,
   Cpu,
@@ -17,14 +17,14 @@ import {
   Database,
   Shield,
   Code2,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Reveal } from "./enhanced-animations";
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Reveal } from './enhanced-animations';
 import {
   NeonBorder,
   HolographicText,
   CyberButton,
-} from "./tech-blue-animations";
+} from './tech-blue-animations';
 
 interface EnhancedCardProps {
   title: string;
@@ -71,8 +71,8 @@ export function EnhancedCard({
 
           <div
             className={cn(
-              "w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all duration-300",
-              "group-hover:scale-110 group-hover:rotate-3 animate-cyber-glow",
+              'w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all duration-300',
+              'group-hover:scale-110 group-hover:rotate-3 animate-cyber-glow',
               color
             )}
           >
@@ -82,7 +82,7 @@ export function EnhancedCard({
           </div>
 
           <CardTitle className="text-xl group-hover:text-tech-blue-600 transition-colors duration-300">
-            <HolographicText>{title}</HolographicText>
+            <h1>{title}</h1>
           </CardTitle>
           <CardDescription className="text-base leading-relaxed text-tech-blue-700">
             {description}
@@ -108,9 +108,9 @@ export function EnhancedCard({
               variant="outline"
               className="w-full mt-4 text-tech-blue-600 border-tech-blue-500 hover:bg-tech-blue-500 hover:text-white group"
               onClick={() => {
-                const productSection = document.getElementById("products");
+                const productSection = document.getElementById('products');
                 if (productSection) {
-                  productSection.scrollIntoView({ behavior: "smooth" });
+                  productSection.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
             >
@@ -263,9 +263,9 @@ export function TechProductCard({
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-tech-blue-100 to-cyber-blue/20 flex items-center justify-center text-6xl opacity-20">
-              {badge === "AI" && <Database />}
-              {badge === "ERP" && <Code2 />}
-              {badge === "CRM" && <Shield />}
+              {badge === 'AI' && <Database />}
+              {badge === 'ERP' && <Code2 />}
+              {badge === 'CRM' && <Shield />}
             </div>
           )}
 
@@ -274,7 +274,7 @@ export function TechProductCard({
 
           {/* Badge */}
           <div className="absolute top-4 left-4">
-            <Badge className={cn("animate-tech-pulse", badgeColor)}>
+            <Badge className={cn('animate-tech-pulse', badgeColor)}>
               {badge}
             </Badge>
           </div>

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
 import {
   Code,
   Database,
@@ -20,25 +20,25 @@ import {
   Printer,
   Lock,
   Newspaper,
-} from "lucide-react";
+} from 'lucide-react';
 // import { ContactForm } from "@/components/contact-form";
-import { ContactForm } from "@/components/contact-form";
-import { EnhancedHero } from "@/components/enhanced-hero";
+import { ContactForm } from '@/components/contact-form';
+import { EnhancedHero } from '@/components/enhanced-hero';
 import {
   EnhancedCard,
   StatsCard,
   FeatureCard,
   TechProductCard,
-} from "@/components/enhanced-cards";
-import { Reveal } from "@/components/enhanced-animations";
+} from '@/components/enhanced-cards';
+import { Reveal } from '@/components/enhanced-animations';
 import {
   HolographicText,
   TechGrid,
   CircuitBoard,
-} from "@/components/tech-blue-animations";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import api from "@/utils/axios";
+} from '@/components/tech-blue-animations';
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import api from '@/utils/axios';
 
 export default function HomePage() {
   const [showBackgrounds, setShowBackgrounds] = useState(false);
@@ -78,7 +78,7 @@ export default function HomePage() {
   }, []);
 
   const getRandomColor = () => {
-    const colors = ["blue", "purple", "green", "orange", "red", "slate"];
+    const colors = ['blue', 'purple', 'green', 'orange', 'red', 'slate'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
   const fetchProducts = async (page = 1, limit = 10, categoryId = null) => {
@@ -87,7 +87,7 @@ export default function HomePage() {
       setError(null);
 
       let url = `/product/public/shows?page=${page}&limit=${limit}`;
-      if (categoryId && categoryId !== "all") {
+      if (categoryId && categoryId !== 'all') {
         url += `&category_id=${categoryId}`;
       }
 
@@ -98,28 +98,28 @@ export default function HomePage() {
       const transformedProducts = data.products.map((product: any) => ({
         id: product.id,
         name: product.name,
-        category: product.category?.name || "Sản phẩm",
+        category: product.category?.name || 'Sản phẩm',
         slug: product.slug,
         description: product.content
-          ? product.content.replace(/<[^>]*>/g, "").substring(0, 150) + "..."
-          : "Mô tả sản phẩm",
+          ? product.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
+          : 'Mô tả sản phẩm',
         features: [
           `SKU: ${product.sku}`,
           `Đơn vị: ${product.unit}`,
           product.brand?.name
             ? `Thương hiệu: ${product.brand.name}`
-            : "Sản phẩm chất lượng",
-          product.isFeatured ? "Sản phẩm nổi bật" : "Giải pháp chuyên nghiệp",
+            : 'Sản phẩm chất lượng',
+          product.isFeatured ? 'Sản phẩm nổi bật' : 'Giải pháp chuyên nghiệp',
         ],
         price: product.salePrice
-          ? `${parseInt(product.salePrice).toLocaleString("vi-VN")} VNĐ`
-          : "Liên hệ để biết giá",
+          ? `${parseInt(product.salePrice).toLocaleString('vi-VN')} VNĐ`
+          : 'Liên hệ để biết giá',
         originalPrice: product.originalPrice,
         image: product.imagesUrl
           ? JSON.parse(JSON.parse(product.imagesUrl))[0] ||
-            "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop"
-          : "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
-        badge: product.isFeatured ? "Nổi bật" : "",
+            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop'
+          : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop',
+        badge: product.isFeatured ? 'Nổi bật' : '',
         color: getRandomColor(),
 
         stock: product.stock,
@@ -132,11 +132,11 @@ export default function HomePage() {
         currentPage: data.currentPage || 1,
       });
     } catch (error) {
-      console.error("Error fetching products:", error);
+      console.error('Error fetching products:', error);
       const message =
         error.response?.data?.message ||
         error.message ||
-        "Không thể tải danh sách sản phẩm";
+        'Không thể tải danh sách sản phẩm';
       setError(message);
     } finally {
       setLoading(false);
@@ -146,12 +146,12 @@ export default function HomePage() {
   const fetchPartners = async () => {
     try {
       const response = await api.get(
-        "/page-section/public/shows?sectionType=partner"
+        '/page-section/public/shows?sectionType=partner'
       );
       const { data } = response.data;
       setPartners(data || []);
     } catch (error) {
-      console.error("Error fetching partners:", error);
+      console.error('Error fetching partners:', error);
     }
   };
 
@@ -163,8 +163,15 @@ export default function HomePage() {
       const { data } = response.data;
       setNews(data?.posts || []);
     } catch (error) {
-      console.error("Error fetching news:", error);
+      console.error('Error fetching news:', error);
     }
+  };
+
+  const getName = (str) => {
+    const words = str.split(' ');
+    const shortName =
+      words.length > 16 ? words.slice(0, 16).join(' ') + '…' : str;
+    return shortName;
   };
 
   return (
@@ -196,10 +203,10 @@ export default function HomePage() {
             title="Thiết kế Website"
             description="Tạo dựng website hiện đại, tối ưu SEO và tương thích thiết bị di động"
             features={[
-              "Website doanh nghiệp",
-              "Landing Page",
-              "E-commerce",
-              "Responsive UI",
+              'Website doanh nghiệp',
+              'Landing Page',
+              'E-commerce',
+              'Responsive UI',
             ]}
             icon={<Globe className="h-6 w-6" />}
           />
@@ -207,10 +214,10 @@ export default function HomePage() {
             title="Hệ thống quản lý doanh nghiệp"
             description="Tối ưu quy trình nội bộ, quản lý nhân sự, khách hàng, tài chính"
             features={[
-              "CRM",
-              "ERP",
-              "Báo cáo tự động",
-              "Phân quyền người dùng",
+              'CRM',
+              'ERP',
+              'Báo cáo tự động',
+              'Phân quyền người dùng',
             ]}
             icon={<Briefcase className="h-6 w-6" />}
           />
@@ -218,9 +225,9 @@ export default function HomePage() {
             title="Giải pháp quản lý cho đài truyền hình"
             description="Triển khai hệ thống hỗ trợ quản lý nội dung, hợp đồng bản quyền và xử lý yêu cầu liên quan đến chương trình"
             features={[
-              "Quản lý chương trình và lịch phát sóng",
-              "Tự động hóa quy trình sản xuất và phân phối",
-              "Bảo mật thông tin và dữ liệu bản quyền",
+              'Quản lý chương trình và lịch phát sóng',
+              'Tự động hóa quy trình sản xuất và phân phối',
+              'Bảo mật thông tin và dữ liệu bản quyền',
             ]}
             icon={<ShieldCheck className="h-6 w-6" />}
           />
@@ -229,31 +236,31 @@ export default function HomePage() {
             title="Quản lý trường học & mầm non"
             description="Giải pháp số hóa trường học: điểm danh, học phí, sổ liên lạc điện tử"
             features={[
-              "Hệ thống mầm non",
-              "Trường tư thục",
-              "Ứng dụng phụ huynh",
+              'Hệ thống mầm non',
+              'Trường tư thục',
+              'Ứng dụng phụ huynh',
             ]}
             icon={<School className="h-6 w-6" />}
           />
           <EnhancedCard
             title="Thương mại điện tử"
             description="Xây dựng nền tảng bán hàng trực tuyến, tích hợp thanh toán và vận chuyển"
-            features={["Giỏ hàng", "Thanh toán online", "Quản lý tồn kho"]}
+            features={['Giỏ hàng', 'Thanh toán online', 'Quản lý tồn kho']}
             icon={<ShoppingCart className="h-6 w-6" />}
           />
           <EnhancedCard
             title="Hosting & Hạ tầng"
             description="Cung cấp hosting tốc độ cao, bảo mật và hỗ trợ kỹ thuật 24/7"
-            features={["Hosting SSD", "Domain", "Sao lưu dữ liệu"]}
+            features={['Hosting SSD', 'Domain', 'Sao lưu dữ liệu']}
             icon={<Server className="h-6 w-6" />}
           />
           <EnhancedCard
             title="Quản lý bán hàng qua livestream"
             description="Hỗ trợ chốt đơn, theo dõi đơn hàng và tương tác với khách hàng trong suốt buổi livestream"
             features={[
-              "Lên lịch và quản lý phiên livestream",
-              "Tích hợp đa nền tảng (Facebook, TikTok...)",
-              "Tự động chốt đơn và phản hồi người xem",
+              'Lên lịch và quản lý phiên livestream',
+              'Tích hợp đa nền tảng (Facebook, TikTok...)',
+              'Tự động chốt đơn và phản hồi người xem',
             ]}
             icon={<Video className="h-6 w-6" />}
           />
@@ -262,9 +269,9 @@ export default function HomePage() {
             title="Giải pháp in ấn"
             description="Kết nối và điều phối máy in, quản lý số lượng và chi phí in hiệu quả"
             features={[
-              "Theo dõi máy in",
-              "Báo cáo in ấn",
-              "Tích hợp hệ thống nội bộ",
+              'Theo dõi máy in',
+              'Báo cáo in ấn',
+              'Tích hợp hệ thống nội bộ',
             ]}
             icon={<Printer className="h-6 w-6" />}
           />
@@ -297,14 +304,14 @@ export default function HomePage() {
               delay={100}
             />
             <StatsCard
-              value="120+"
+              value="1200+"
               label="Khách hàng Doanh nghiệp"
               icon={<Briefcase className="h-8 w-8" />}
               // trend={22}
               delay={200}
             />
             <StatsCard
-              value="60+"
+              value="600+"
               label="Hệ thống Mầm non"
               icon={<School className="h-8 w-8" />}
               // trend={10}
@@ -347,7 +354,7 @@ export default function HomePage() {
               return (
                 <TechProductCard
                   key={product.id || index}
-                  title={product.name}
+                  title={getName(product.name)}
                   description={product.description}
                   image={product.image}
                   badge={product?.category}
@@ -389,7 +396,7 @@ export default function HomePage() {
                 <div className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32">
                   <div className="relative w-full h-16">
                     <Image
-                      src={partner?.content[0]?.imageUrl || "/placeholder.svg"}
+                      src={partner?.content[0]?.imageUrl || '/placeholder.svg'}
                       alt={partner?.content[0]?.title || `Partner ${index + 1}`}
                       layout="fill"
                       className="object-contain"
@@ -421,7 +428,7 @@ export default function HomePage() {
               </p>
             </div>
           </Reveal>
-          {console.log(news, "mews")}
+          {console.log(news, 'mews')}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {news?.map((post, index) => (
               <TechProductCard
@@ -429,10 +436,10 @@ export default function HomePage() {
                 title={post.title}
                 description={
                   post.short_description ||
-                  post.short_description?.substring(0, 150) + "..."
+                  post.short_description?.substring(0, 150) + '...'
                 }
-                image={post.thumbnail || "/placeholder.svg"}
-                badge={post.topics[0]?.name || "Tin tức"}
+                image={post.thumbnail || '/placeholder.svg'}
+                badge={post.topics[0]?.name || 'Tin tức'}
                 badgeColor="bg-blue-600"
                 delay={index * 100}
                 link={`/news/${post.slug}`}
@@ -442,7 +449,10 @@ export default function HomePage() {
         </div>
       </section>
       {/* Enhanced Contact Section */}
-      <section className="py-20 bg-gradient-to-r from-navy-tech via-tech-blue-900 to-tech-blue-800 text-white relative overflow-hidden" id="contact">
+      <section
+        className="py-20 bg-gradient-to-r from-navy-tech via-tech-blue-900 to-tech-blue-800 text-white relative overflow-hidden"
+        id="contact"
+      >
         {showBackgrounds && <CircuitBoard />}
 
         <div className="container px-4 md:px-6 relative z-10">
@@ -468,9 +478,9 @@ export default function HomePage() {
                 </p>
                 <div className="space-y-4">
                   {[
-                    "Thiết kế giao diện UI/UX hiện đại, chuẩn SEO",
-                    "Xây dựng website & hệ thống web app tùy biến",
-                    "Triển khai giải pháp AI, Cloud & giám sát vận hành",
+                    'Thiết kế giao diện UI/UX hiện đại, chuẩn SEO',
+                    'Xây dựng website & hệ thống web app tùy biến',
+                    'Triển khai giải pháp AI, Cloud & giám sát vận hành',
                   ].map((step, index) => (
                     <div
                       key={index}

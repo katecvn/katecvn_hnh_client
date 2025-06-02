@@ -22,9 +22,9 @@ export function Header() {
   const navigation = [
     { name: 'Trang chủ', href: '/' },
     { name: 'Sản phẩm', href: '/products' },
-    // { name: "Dịch vụ", href: "/services" },
     { name: 'Tin tức', href: '/news' },
     { name: 'Về chúng tôi', href: '/about' },
+    { name: 'Tuyển dụng', href: '/careers' },
     { name: 'Liên hệ', href: '/contact' },
   ];
 
@@ -41,35 +41,35 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-2">
             <div className="flex items-center gap-3">
-              {/* Animated Logo Icon */}
+              {/* Animated Logo Icon 
               <div className="relative group cursor-pointer">
-                {/* Outer glow ring */}
+               
                 <div className="absolute inset-0 w-10 h-10 bg-gradient-to-r from-blue-900 via-sky-400 to-purple-600 rounded-full blur-md opacity-75 group-hover:opacity-100 group-hover:blur-lg transition-all duration-500 animate-pulse"></div>
 
-                {/* Main logo container */}
+                
                 <div className="relative w-10 h-10 bg-gradient-to-br from-blue-900 via-sky-400 to-purple-600 rounded-full p-0.5 group-hover:scale-110 transition-transform duration-300">
-                  {/* Inner gradient circle - Changed to white background */}
+                 
                   <div className="w-full h-full bg-white rounded-full flex items-center justify-center relative overflow-hidden">
-                    {/* Animated shine effect */}
+                   
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
 
-                    {/* Logo letter K */}
+                   
                     <span className="text-sm font-black bg-gradient-to-br from-blue-900 to-purple-600 bg-clip-text text-transparent relative z-10">
                       <img src="/favicon.ico" />
                     </span>
 
-                    {/* Floating particles */}
+                    
                     <div className="absolute top-1 right-1 w-1 h-1 bg-sky-300 rounded-full animate-ping"></div>
                     <div className="absolute bottom-1 left-1 w-0.5 h-0.5 bg-purple-400 rounded-full animate-pulse delay-300"></div>
                   </div>
                 </div>
-              </div>
+              </div>*/}
 
               {/* Enhanced Text Logo */}
               <div className="relative group">
                 <span
                   className={cn(
-                    'text-2xl font-black tracking-tight relative transition-all duration-500',
+                    'text-3xl font-black tracking-tight relative transition-all duration-500',
                     isScrolled
                       ? 'bg-gradient-to-r from-blue-900 via-sky-400 to-purple-600 bg-clip-text text-transparent'
                       : 'text-white',

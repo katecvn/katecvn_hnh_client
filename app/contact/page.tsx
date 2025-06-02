@@ -24,6 +24,7 @@ import { AnimatedSection } from '@/components/animated-section';
 import { ContactForm } from '@/components/contact-form';
 import { OfficeMap } from '@/components/office-map';
 import { Button } from '@/components/ui/button';
+import HeroSection from './HeroSection';
 
 export const metadata: Metadata = {
   title: 'Liên hệ - Katec | Tư vấn miễn phí giải pháp công nghệ',
@@ -44,9 +45,9 @@ export default function ContactPage() {
       coordinates: { lat: 10.0410184, lng: 105.7539256 },
     },
     {
-      city: 'TP. Đà Nẵng.',
+      city: 'TP. Đà Nẵng',
       address:
-        'KS Phương Nam - thôn Túy Loan Đông 2, Hòa Phong, Hòa Vang, TP. Đà Nẵng.',
+        'KS Phương Nam - thôn Túy Loan Đông 2, Hòa Phong, Hòa Vang, TP. Đà Nẵng',
       phone: '+84 934 777 245',
       email: 'katec.danang@gmail.com',
       hours: '8:00 - 18:00 (T2-T6)',
@@ -153,36 +154,8 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="container px-4 md:px-6">
-          <AnimatedSection className="text-center max-w-3xl mx-auto">
-            <Badge variant="outline" className="mb-4">
-              Liên hệ với chúng tôi
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Sẵn sàng hỗ trợ
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {' '}
-                24/7
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng tư vấn và hỗ trợ
-              bạn tìm ra giải pháp công nghệ tối ưu nhất cho doanh nghiệp.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-green-600 hover:bg-green-700">
-                <Phone className="mr-2 h-4 w-4" />
-                Gọi ngay: 0889 881 010
-              </Button>
-              <Button size="lg" variant="outline">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Chat trực tuyến
-              </Button>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+
+      <HeroSection />
 
       {/* Contact Methods */}
       <AnimatedSection className="py-20 bg-white">
@@ -235,16 +208,16 @@ export default function ContactPage() {
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Enhanced Contact Form */}
-            <AnimatedSection delay={4000}>
+            <AnimatedSection delay={100}>
               <div className="relative overflow-hidden">
                 {/* Animated background gradients */}
                 <div
                   className="absolute inset-0  bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 animate-pulse "
-                  style={{ animationDelay: '1s', padding: '1rem' }}
+                  style={{ animationDelay: '0.5s', padding: '1rem' }}
                 ></div>
                 <div
                   className="absolute inset-0 bg-gradient-to-tr from-cyan-500/30 via-blue-500/30 to-purple-500/30 "
-                  style={{ animationDelay: '1s', borderRadius: '16px' }}
+                  style={{ animationDelay: '0.5s', borderRadius: '16px' }}
                 ></div>
 
                 {/* Floating particles */}

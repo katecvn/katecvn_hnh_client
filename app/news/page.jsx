@@ -19,6 +19,7 @@ import { handleError } from '@/utils/handle-error';
 import { toast } from 'sonner';
 import NewsCard from './EnhancedArticleCard';
 import DynamicNewsGrid from './DynamicNewsGrid';
+import AnimatedHeroSection from './HeroSection';
 
 export default function NewsPage() {
   const [posts, setPosts] = useState([]);
@@ -179,42 +180,7 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-blue-50 to-purple-50 overflow-hidden">
-        {/* Lớp hiệu ứng bong bóng */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="bubble bubble-1" />
-          <div className="bubble bubble-2" />
-          <div className="bubble bubble-3" />
-          <div className="bubble bubble-4" />
-          <div className="bubble bubble-5" />
-        </div>
-
-        <div className="container relative z-10 px-4 md:px-6">
-          <AnimatedSection className="text-center max-w-3xl mx-auto">
-            <Badge variant="outline" className="mb-4">
-              Tin tức & Insights
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Cập nhật
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {' '}
-                công nghệ mới nhất
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Theo dõi những xu hướng công nghệ, case study thành công và
-              insights từ các chuyên gia hàng đầu
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-              <div className="relative flex-1 ">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 m-1" />
-                <Input placeholder=" Tìm kiếm bài viết..." className="pl-10" />
-              </div>
-              <Button>Tìm kiếm</Button>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+      <AnimatedHeroSection />
 
       {/* Featured Article */}
       <section className="py-20">
@@ -350,20 +316,6 @@ export default function NewsPage() {
                         </div>
                       ))
                     )}
-                  </CardContent>
-                </Card>
-
-                {/* Newsletter */}
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle>Đăng ký nhận tin</CardTitle>
-                    <CardDescription>
-                      Nhận tin tức công nghệ mới nhất qua email
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <Input placeholder="Email của bạn" />
-                    <Button className="w-full">Đăng ký</Button>
                   </CardContent>
                 </Card>
               </AnimatedSection>

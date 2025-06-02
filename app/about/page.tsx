@@ -28,6 +28,8 @@ import {
 import Image from 'next/image';
 import { AnimatedSection } from '@/components/animated-section';
 import Link from 'next/link';
+import { ButtonScroll } from '@/components/ui/button-scroll';
+import HeroSection from './HeroSection';
 
 export const metadata: Metadata = {
   title: 'Về chúng tôi - Katec | Đội ngũ chuyên gia công nghệ hàng đầu',
@@ -127,7 +129,7 @@ export default function AboutPage() {
       name: 'Trương Hoàng Khải',
       position: 'Chủ tịch HĐQT & Giám đốc',
       bio: 'Người sáng lập và điều hành KATEC. Với hơn 15 năm kinh nghiệm trong lĩnh vực công nghệ và quản trị doanh nghiệp, và là người định hướng chiến lược toàn diện cho công ty.',
-      image: '/khai.png?height=300&width=300&query=professional CEO portrait',
+      image: '/khai.jpg?height=300&width=300&query=professional CEO portrait',
       linkedin: '#',
       email: 'khaith.katec@gmail.com',
       specialties: [
@@ -196,7 +198,7 @@ export default function AboutPage() {
     {
       name: 'Nguyễn Thị Tiên',
       position: 'Nhân viên Kinh doanh lâu năm',
-      bio: 'Chị Tiên là một trong những nhân sự gắn bó lâu dài nhất với KATEC. Với sự hiểu biết sâu rộng về sản phẩm và khách hàng, anh đóng vai trò quan trọng trong việc duy trì và mở rộng mạng lưới khách hàng.',
+      bio: 'Chị Tiên là một trong những nhân sự gắn bó lâu dài nhất với KATEC. Với sự hiểu biết sâu rộng về sản phẩm và khách hàng, và trong việc duy trì và mở rộng mạng lưới khách hàng.',
       image:
         '/tien.jpg?height=300&width=300&query=professional business staff portrait',
       linkedin: '#',
@@ -247,39 +249,21 @@ export default function AboutPage() {
     { name: 'DevOps', level: 87 },
   ];
 
+  // Smooth scroll function
+  const scrollToProducts = () => {
+    const productsSection = document.getElementById('portfolio');
+    if (productsSection) {
+      productsSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="container px-4 md:px-6">
-          <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <Badge variant="outline" className="mb-4">
-              Về Katec
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Đối tác công nghệ
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {' '}
-                đáng tin cậy
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Chúng tôi là đội ngũ những người đam mê công nghệ, cam kết mang
-              lại những giải pháp IT tiên tiến nhất để giúp doanh nghiệp Việt
-              Nam phát triển và cạnh tranh trên thị trường toàn cầu.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg">
-                Liên hệ hợp tác
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button size="lg" variant="outline">
-                Xem portfolio
-              </Button>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Company Stats */}
       <AnimatedSection className="py-20 bg-white">
@@ -523,7 +507,7 @@ export default function AboutPage() {
 
       {/* Team Section */}
       <AnimatedSection className="py-20 bg-gray-50">
-        <div className="container px-4 md:px-6">
+        <div id="portfolio" className="container px-4 md:px-6">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4">
               Đội ngũ lãnh đạo
@@ -690,8 +674,10 @@ export default function AboutPage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline">
-              Liên hệ hợp tác
+            <Button asChild size="lg" variant="outline">
+              <Link href="/contact" className="flex items-center">
+                Liên hệ hợp tác
+              </Link>
             </Button>
           </div>
         </div>

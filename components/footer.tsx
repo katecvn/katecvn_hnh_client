@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 import {
   Code2,
   Mail,
@@ -9,99 +9,123 @@ import {
   Facebook,
   Youtube,
   Clock,
-  MessageCircle
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
-import api from "@/utils/axios";
+  MessageCircle,
+  FileAxis3D,
+  Clock12,
+  ClockAlert,
+  ClockArrowDown,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useState, useEffect } from 'react';
+import api from '@/utils/axios';
 
-export function Footer() {
-  const [companyInfo, setCompanyInfo] = useState<any>(null);
+interface ContentItem {
+  key: string;
+  value: string;
+  url?: string;
+}
+
+interface CompanyInfo {
+  content: ContentItem[];
+}
+
+export function Footer(): JSX.Element {
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
 
   useEffect(() => {
-    const fetchCompanyInfo = async () => {
+    const fetchCompanyInfo = async (): Promise<void> => {
       try {
         const response = await api.get(
-          "/page-section/public/shows?sectionType=infoCompany"
+          '/page-section/public/shows?sectionType=infoCompany'
         );
         const { data } = response.data;
         if (data && data.length > 0) {
           setCompanyInfo(data[0]);
         }
       } catch (error) {
-        console.error("Error fetching company info:", error);
+        console.error('Error fetching company info:', error);
       }
     };
 
     fetchCompanyInfo();
   }, []);
 
-  const getContentValue = (key: string) => {
+  const getContentValue = (key: string): string => {
     return (
-      companyInfo?.content?.find((item: any) => item.key === key)?.value || ""
+      companyInfo?.content?.find((item: ContentItem) => item.key === key)
+        ?.value || ''
     );
   };
 
-  const getContentUrl = (key: string) => {
+  const getContentUrl = (key: string): string => {
     return (
-      companyInfo?.content?.find((item: any) => item.key === key)?.url || ""
+      companyInfo?.content?.find((item: ContentItem) => item.key === key)
+        ?.url || ''
     );
+  };
+
+  // Tạo Google Maps embed URL từ địa chỉ
+  const getMapEmbedUrl = (): string => {
+    const address = getContentValue('address');
+    if (!address) return '';
+
+    const encodedAddress = encodeURIComponent(address);
+    return `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${encodedAddress}`;
   };
 
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 lg:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="space-y-4">
+        {/* Top row with proper grid layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
+          {/* Company Info - spans 4 columns */}
+          <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Code2 className="h-5 w-5 text-white" />
-              </div>
               <span className="text-xl font-bold">
-                {getContentValue("name")}
+                {getContentValue('name')}
               </span>
             </div>
             <div className="space-y-3 text-sm text-gray-300">
               <div className="flex items-start space-x-2">
-                <MapPin className="h-4 w-4 text-blue-400 mt-1" />
-                <span>{getContentValue("address")}</span>
+                <MapPin className="h-10 w-10 text-blue-400" />
+                <span>{getContentValue('address')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-blue-400" />
                 <a
-                  href={`tel:${getContentValue("number_phone")}`}
+                  href={`tel:${getContentValue('number_phone')}`}
                   className="hover:text-white"
                 >
-                  {getContentValue("number_phone")}
+                  {getContentValue('number_phone')}
                 </a>
               </div>
               <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-blue-400" />
-                <span>{getContentValue("fax")}</span>
+                <FileAxis3D className="h-4 w-4 text-blue-400" />
+                <span>{getContentValue('fax')}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-blue-400" />
                 <a
-                  href={`mailto:${getContentValue("email")}`}
+                  href={`mailto:${getContentValue('email')}`}
                   className="hover:text-white"
                 >
-                  {getContentValue("email")}
+                  {getContentValue('email')}
                 </a>
               </div>
               <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-blue-400" />
-                <span>{getContentValue("working_fulltime")}</span>
+                <ClockAlert className="h-4 w-4 text-blue-400" />
+                <span>{getContentValue('working_fulltime')}</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-blue-400" />
-                <span>{getContentValue("working_parttime")}</span>
+                <Clock className="h-5 w-5 text-blue-400" />
+                <span>{getContentValue('working_parttime')}</span>
               </div>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-4">
+          {/* Quick Links - spans 2 columns */}
+          <div className="lg:col-span-2 space-y-4">
             <h3 className="text-lg font-semibold">Liên kết nhanh</h3>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
@@ -109,7 +133,6 @@ export function Footer() {
                   Về chúng tôi
                 </Link>
               </li>
-
               <li>
                 <Link href="/products" className="hover:text-white">
                   Sản phẩm
@@ -128,8 +151,8 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Customer Guidance */}
-          <div className="space-y-4">
+          {/* Customer Guidance - spans 2 columns */}
+          <div className="lg:col-span-2 space-y-4">
             <h3 className="text-lg font-semibold">Hướng dẫn khách hàng</h3>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
@@ -145,52 +168,81 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Social Media */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Kết nối với chúng tôi</h3>
-            <div className="flex space-x-3">
-              {getContentUrl("facebook") && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-300 hover:text-white"
-                  asChild
-                >
-                  <Link href={getContentUrl("facebook")} target="_blank">
-                    <Facebook className="h-4 w-4" />
-                  </Link>
-                </Button>
-              )}
-              {getContentUrl("messenger") && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-300 hover:text-white"
-                  asChild
-                >
-                  <Link href={getContentUrl("messenger")} target="_blank">
-                    <MessageCircle className="h-4 w-4" />
-                  </Link>
-                </Button>
-              )}
-              {getContentUrl("youtube") && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-300 hover:text-white"
-                  asChild
-                >
-                  <Link href={getContentUrl("youtube")} target="_blank">
-                    <Youtube className="h-4 w-4" />
-                  </Link>
-                </Button>
-              )}
+          {/* Social Media & Map Section - spans 4 columns */}
+          <div className="lg:col-span-4 space-y-4">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Kết nối với chúng tôi</h3>
+              <div className="flex space-x-3">
+                {getContentUrl('facebook') && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-300 hover:text-blue-700"
+                    asChild
+                  >
+                    <Link href={getContentUrl('facebook')} target="_blank">
+                      <Facebook className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                )}
+                {getContentUrl('messenger') && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-300 hover:text-green-700"
+                    asChild
+                  >
+                    <Link href={getContentUrl('messenger')} target="_blank">
+                      <MessageCircle className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                )}
+                {getContentUrl('youtube') && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-300 hover:text-red-700"
+                    asChild
+                  >
+                    <Link href={getContentUrl('youtube')} target="_blank">
+                      <Youtube className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* Map Section */}
+            <div className="w-full">
+              <div className="w-full h-36 rounded-lg overflow-hidden border border-gray-700">
+                {getContentValue('address') ? (
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14221.100915639166!2d105.75392600000002!3d10.041018!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a0886c3ecc3e01%3A0x5a84e770728f1669!2zMTg5IMSQLiBQaGFuIEh1eSBDaMO6LCBQaMaw4budbmcgQW4gS2jDoW5oLCBOaW5oIEtp4buBdSwgQ-G6p24gVGjGoSA5MDAwMDAsIFZp4buHdCBOYW0!5e1!3m2!1svi!2sus!4v1748829783103!5m2!1svi!2sus"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="rounded-lg"
+                    title="Google Maps Location"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
+                    <div className="text-center">
+                      <MapPin className="h-8 w-8 mx-auto mb-2" />
+                      <p className="text-sm">Bản đồ sẽ hiển thị tại đây</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Copyright */}
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} {getContentValue("name")}. Tất cả các
+          © {new Date().getFullYear()} {getContentValue('name')}. Tất cả các
           quyền được bảo lưu.
         </div>
       </div>

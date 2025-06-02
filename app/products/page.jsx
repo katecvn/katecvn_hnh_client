@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Users, TrendingUp, Shield, Zap } from 'lucide-react';
 import api from '@/utils/axios';
+import HeroSection from './HeroSection';
+import Link from 'next/link';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -297,38 +299,10 @@ export default function ProductsPage() {
       `}</style>
 
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="container mx-auto px-4 md:px-6">
-          <AnimatedSection className="text-center max-w-3xl mx-auto">
-            <Badge variant="outline" className="mb-4">
-              Sản phẩm công nghệ
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Giải pháp phần mềm
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {' '}
-                doanh nghiệp
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Khám phá bộ sưu tập sản phẩm công nghệ tiên tiến được thiết kế đặc
-              biệt cho doanh nghiệp Việt Nam
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg">
-                Tư vấn miễn phí
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button size="lg" variant="outline">
-                Xem demo trực tiếp
-              </Button>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Products Grid */}
-      <section className="py-20">
+      <section id="products" className="py-20">
         <div className="container mx-auto px-4 md:px-6">
           {loading ? (
             <div className="flex justify-center items-center py-20">
@@ -547,9 +521,11 @@ export default function ProductsPage() {
             Liên hệ ngay để được tư vấn miễn phí và trải nghiệm demo sản phẩm
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary">
-              Đặt lịch demo
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button asChild size="lg" variant="secondary">
+              <Link href="/contact" className="flex items-center">
+                Đặt lịch demo
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
             <Button
               size="lg"
