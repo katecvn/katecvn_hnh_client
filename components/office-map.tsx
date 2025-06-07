@@ -1,32 +1,32 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 interface Office {
-  city: string
-  address: string
-  phone: string
-  email: string
-  hours: string
-  isMain: boolean
-  coordinates: { lat: number; lng: number }
+  city: string;
+  address: string;
+  phone: string;
+  email: string;
+  hours: string;
+  isMain: boolean;
+  coordinates: { lat: number; lng: number };
 }
 
 interface OfficeMapProps {
-  offices: Office[]
+  offices: Office[];
 }
 
 export function OfficeMap({ offices }: OfficeMapProps) {
-  const [selectedOffice, setSelectedOffice] = useState(0)
+  const [selectedOffice, setSelectedOffice] = useState(0);
 
   // Google Maps embed URL for the selected office
   const getMapUrl = (office: Office) => {
-    const { lat, lng } = office.coordinates
-    return `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zVGVjaFZpZXQ!5e0!3m2!1svi!2s!4v1234567890123!5m2!1svi!2s`
-  }
+    const { lat, lng } = office.coordinates;
+    return `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zVGVjaFZpZXQ!5e0!3m2!1svi!2s!4v1234567890123!5m2!1svi!2s`;
+  };
 
   return (
     <div className="space-y-6">
@@ -35,13 +35,12 @@ export function OfficeMap({ offices }: OfficeMapProps) {
         {offices.map((office, index) => (
           <Button
             key={index}
-            variant={selectedOffice === index ? "default" : "outline"}
+            variant={selectedOffice === index ? 'default' : 'outline'}
             onClick={() => setSelectedOffice(index)}
             className="flex items-center"
           >
             <MapPin className="h-4 w-4 mr-2" />
             {office.city}
-            {office.isMain && <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Chính</span>}
           </Button>
         ))}
       </div>
@@ -70,7 +69,9 @@ export function OfficeMap({ offices }: OfficeMapProps) {
                   <MapPin className="h-5 w-5 mr-2 text-blue-600" />
                   {offices[selectedOffice].city}
                   {offices[selectedOffice].isMain && (
-                    <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Trụ sở chính</span>
+                    <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                      Trụ sở chính
+                    </span>
                   )}
                 </h3>
                 <div className="space-y-1 text-sm text-gray-600">
@@ -122,5 +123,5 @@ export function OfficeMap({ offices }: OfficeMapProps) {
         </Button>
       </div>
     </div>
-  )
+  );
 }

@@ -51,7 +51,7 @@ export function EnhancedCard({
     <Reveal direction="up" delay={delay}>
       <NeonBorder
         color="blue"
-        className="group relative overflow-hidden transition-all duration-500 hover-lift cursor-pointer bg-gradient-to-br from-white to-tech-blue-50/50"
+        className="group bg-white relative overflow-hidden transition-all duration-500 hover-lift cursor-pointer bg-gradient-to-br from-white to-tech-blue-50/50 border border-gray-300"
       >
         {/* Tech Grid Background */}
         <div className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
@@ -71,8 +71,8 @@ export function EnhancedCard({
 
           <div
             className={cn(
-              'w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all ',
-              'group-hover:scale-110 group-hover:rotate-3 animate-cyber-glow',
+              'w-14 h-14 border border-gray-300 rounded-xl flex items-center justify-center mb-4 transition-all',
+              'group-hover:scale-110 group-hover:rotate-3 group-hover:animate-cyber-glow',
               color
             )}
           >
@@ -81,10 +81,10 @@ export function EnhancedCard({
             </div>
           </div>
 
-          <CardTitle className="text-xl group-hover:text-tech-blue-600 transition-colors duration-300">
+          <CardTitle className="text-xl text-tech-blue-700 group-hover:text-tech-blue-600 transition-colors duration-300">
             <h1>{title}</h1>
           </CardTitle>
-          <CardDescription className="text-base leading-relaxed text-tech-blue-700">
+          <CardDescription className="text-base leading-relaxed text-gray-600 group-hover:text-tech-blue-600">
             {description}
           </CardDescription>
         </CardHeader>
@@ -95,7 +95,7 @@ export function EnhancedCard({
               {features.map((feature, index) => (
                 <div
                   key={index}
-                  className="flex items-center text-sm text-tech-blue-600 group-hover:text-tech-blue-800 transition-colors"
+                  className="flex items-center text-sm  group-hover:text-tech-blue-700 transition-colors"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="w-1.5 h-1.5 bg-gradient-to-r from-tech-blue-500 to-cyber-blue rounded-full mr-3 group-hover:animate-pulse" />
@@ -106,7 +106,7 @@ export function EnhancedCard({
 
             <CyberButton
               variant="outline"
-              className="w-full mt-4 text-tech-blue-600 border-tech-blue-500 hover:bg-tech-blue-500 hover:text-white group"
+              className="w-full mt-4 text-gray-600  border-gray-300 hover:bg-tech-blue-500 hover:text-white group"
               onClick={() => {
                 const productSection = document.getElementById('products');
                 if (productSection) {
@@ -251,7 +251,7 @@ export function TechProductCard({
     <Reveal direction="up" delay={delay}>
       <NeonBorder
         color="blue"
-        className="group overflow-hidden transition-all duration-500 hover-lift bg-white"
+        className="group overflow-hidden transition-all duration-500 hover-lift bg-white border border-gray-200"
       >
         {/* Product Image */}
         <div className="relative w-full h-48 overflow-hidden">
@@ -282,10 +282,10 @@ export function TechProductCard({
 
         {/* Card Content */}
         <CardHeader>
-          <CardTitle className="text-xl group-hover:text-tech-blue-600 transition-colors line-clamp-2">
+          <CardTitle className="text-xl  text-tech-blue-600 transition-colors line-clamp-2">
             {title}
           </CardTitle>
-          <CardDescription className="text-base text-tech-blue-700">
+          <CardDescription className="text-base text-gray-600">
             {description}
           </CardDescription>
         </CardHeader>
@@ -294,7 +294,7 @@ export function TechProductCard({
           <a href={link} target="_blank" rel="noopener noreferrer">
             <CyberButton
               variant="outline"
-              className="w-full text-tech-blue-600 border-tech-blue-500 hover:bg-tech-blue-500 hover:text-white"
+              className="w-full mt-4 text-gray-600  border-gray-300 hover:bg-tech-blue-500 hover:text-white group"
             >
               Tìm hiểu thêm
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

@@ -168,10 +168,10 @@ export default function HomePage() {
     }
   };
 
-  const getName = (str) => {
-    const words = str.split(' ');
+  const getSplitText = (text, number) => {
+    const words = text.split(' ');
     const shortName =
-      words.length > 16 ? words.slice(0, 16).join(' ') + '…' : str;
+      words.length > number ? words.slice(0, number).join(' ') + '…' : text;
     return shortName;
   };
 
@@ -355,8 +355,8 @@ export default function HomePage() {
               return (
                 <TechProductCard
                   key={product.id || index}
-                  title={getName(product.name)}
-                  description={product.description}
+                  title={getSplitText(product.name, 16)}
+                  description={getSplitText(product.description, 28)}
                   image={product.image}
                   badge={product?.category}
                   badgeColor="bg-green-600"

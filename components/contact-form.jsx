@@ -35,8 +35,7 @@ export function ContactForm() {
 
   // Form data state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phone: '',
     subject: '',
@@ -73,53 +72,23 @@ export function ContactForm() {
     setIsLoading(true);
     setError(null);
 
-    const { firstName, lastName, email, phone, subject, message, agreeTerms } =
-      formData;
+    const { name, email, phone, subject, message } = formData;
 
     // Validate required fields
-    if (!firstName || !lastName || !phone || !subject || !message) {
+    if (!name || !phone || !subject || !message) {
       setError('Vui lòng điền đầy đủ các trường bắt buộc');
       setIsLoading(false);
       return;
     }
 
-    if (!agreeTerms) {
-      setError('Vui lòng đồng ý với điều khoản sử dụng');
-      setIsLoading(false);
-      return;
-    }
-
-    if (subject.length < 3) {
-      setError('Chủ đề phải có ít nhất 3 ký tự');
-      setIsLoading(false);
-      return;
-    }
-
-    if (message.length < 10) {
-      setError('Nội dung phải có ít nhất 10 ký tự');
-      setIsLoading(false);
-      return;
-    }
-
-    const formDataString = `Lời nhắn: ${formData.message}, Tên công ty: ${
-      formData.company
-    }, Chức vụ: ${formData.position}, Lĩnh vực: ${
-      formData.industry
-    }, Số lượng nhân viên: ${
-      formData.companySize
-    }, Giờ liên lạc: ${formData.contactTimes.join(', ')}, Cách thức liên hệ: ${
-      formData.contactMethod
-    }, Chấp nhận điều khoản: ${formData.agreeTerms}, Theo dõi bản tin: ${
-      formData.subscribeNewsletter
-    }`;
     try {
       // Prepare API payload
       const payload = {
-        name: `${firstName} ${lastName}`.trim(),
+        name: name.trim(),
         email: email || undefined,
         phone: phone,
         subject: subject,
-        message: formDataString,
+        message: message,
       };
 
       const response = await api.post('/contact/create', payload);
@@ -175,29 +144,29 @@ export function ContactForm() {
       )}
 
       {/* Personal Information */}
-      <div className="space-y-4 text-white">
-        <h3 className="text-lg text-white font-semibold">Thông tin cá nhân</h3>
+      <div className="space-y-4 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="firstName">Họ *</Label>
+            <Label htmlFor="name">Họ tên *</Label>
             <Input
               style={{ color: '#000' }}
-              id="firstName"
+              id="name"
               required
-              placeholder="Nhập họ"
-              value={formData.firstName}
-              onChange={(e) => handleInputChange('firstName', e.target.value)}
+              placeholder="Nhập tên"
+              value={formData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="lastName">Tên *</Label>
+            <Label htmlFor="subject">Chủ đề *</Label>
             <Input
               style={{ color: '#000' }}
-              id="lastName"
+              id="subject"
               required
-              placeholder="Nhập tên"
-              value={formData.lastName}
-              onChange={(e) => handleInputChange('lastName', e.target.value)}
+              placeholder="Nhập chủ đề"
+              minLength={3}
+              value={formData.subject}
+              onChange={(e) => handleInputChange('subject', e.target.value)}
             />
           </div>
         </div>
@@ -231,26 +200,13 @@ export function ContactForm() {
 
       {/* Contact Details */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Chi tiết liên hệ</h3>
-        <div className="space-y-2">
-          <Label htmlFor="subject">Chủ đề *</Label>
-          <Input
-            style={{ color: '#000' }}
-            id="subject"
-            required
-            placeholder="Nhập chủ đề (tối thiểu 3 ký tự)"
-            minLength={3}
-            value={formData.subject}
-            onChange={(e) => handleInputChange('subject', e.target.value)}
-          />
-        </div>
-
-        <div className="space-y-2">
+        <div className="space-y-2 ">
           <Label htmlFor="message">Nội dung *</Label>
           <Textarea
             id="message"
             required
-            placeholder="Nhập nội dung chi tiết (tối thiểu 10 ký tự)"
+            style={{ color: '#000' }}
+            placeholder="Nhập nội dung chi tiết "
             minLength={10}
             rows={5}
             value={formData.message}
@@ -259,162 +215,8 @@ export function ContactForm() {
         </div>
       </div>
 
-      {/* Company Information */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Thông tin công ty (tùy chọn)</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="company">Tên công ty</Label>
-            <Input
-              style={{ color: '#000' }}
-              id="company"
-              placeholder="Tên công ty/tổ chức"
-              value={formData.company}
-              onChange={(e) => handleInputChange('company', e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="position">Chức vụ</Label>
-            <Input
-              style={{ color: '#000' }}
-              id="position"
-              placeholder="Chức vụ của bạn"
-              value={formData.position}
-              onChange={(e) => handleInputChange('position', e.target.value)}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="industry">Lĩnh vực kinh doanh</Label>
-            <Select
-              value={formData.industry}
-              onValueChange={(value) => handleInputChange('industry', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn lĩnh vực" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="manufacturing">Sản xuất</SelectItem>
-                <SelectItem value="retail">Bán lẻ</SelectItem>
-                <SelectItem value="finance">Tài chính - Ngân hàng</SelectItem>
-                <SelectItem value="healthcare">Y tế</SelectItem>
-                <SelectItem value="education">Giáo dục</SelectItem>
-                <SelectItem value="logistics">Logistics</SelectItem>
-                <SelectItem value="real-estate">Bất động sản</SelectItem>
-                <SelectItem value="other">Khác</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="companySize">Quy mô công ty</Label>
-            <Select
-              value={formData.companySize}
-              onValueChange={(value) => handleInputChange('companySize', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Chọn quy mô" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1-10">1-10 nhân viên</SelectItem>
-                <SelectItem value="11-50">11-50 nhân viên</SelectItem>
-                <SelectItem value="51-200">51-200 nhân viên</SelectItem>
-                <SelectItem value="201-500">201-500 nhân viên</SelectItem>
-                <SelectItem value="500+">500+ nhân viên</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
-
-      {/* Contact Preferences */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Thông tin liên hệ</h3>
-        <div className="space-y-2">
-          <Label>Thời gian thuận tiện để liên hệ</Label>
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              '8:00 - 12:00',
-              '13:00 - 17:00',
-              '18:00 - 20:00',
-              'Cuối tuần',
-            ].map((time) => (
-              <div key={time} className="flex items-center space-x-2">
-                <Checkbox
-                  id={time}
-                  checked={formData.contactTimes.includes(time)}
-                  onCheckedChange={(checked) =>
-                    handleContactTimeChange(time, checked)
-                  }
-                />
-                <Label htmlFor={time} className="text-sm">
-                  {time}
-                </Label>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Hình thức liên hệ ưu tiên</Label>
-          <RadioGroup
-            value={formData.contactMethod}
-            onValueChange={(value) => handleInputChange('contactMethod', value)}
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="phone" id="contact-phone" />
-              <Label htmlFor="contact-phone">Điện thoại</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="email" id="contact-email" />
-              <Label htmlFor="contact-email">Email</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="meeting" id="contact-meeting" />
-              <Label htmlFor="contact-meeting">Gặp mặt trực tiếp</Label>
-            </div>
-          </RadioGroup>
-        </div>
-      </div>
-
       {/* Terms and Submit */}
       <div className="space-y-4">
-        <div className="flex items-start space-x-2">
-          <Checkbox
-            id="terms"
-            required
-            checked={formData.agreeTerms}
-            onCheckedChange={(checked) =>
-              handleInputChange('agreeTerms', checked)
-            }
-          />
-          <Label htmlFor="terms" className="text-sm">
-            Tôi đồng ý với{' '}
-            <a href="/privacy" className="text-blue-600 hover:underline">
-              Chính sách bảo mật
-            </a>{' '}
-            và{' '}
-            <a href="/terms" className="text-blue-600 hover:underline">
-              Điều khoản sử dụng
-            </a>{' '}
-            của Katec *
-          </Label>
-        </div>
-
-        <div className="flex items-start space-x-2">
-          <Checkbox
-            id="newsletter"
-            checked={formData.subscribeNewsletter}
-            onCheckedChange={(checked) =>
-              handleInputChange('subscribeNewsletter', checked)
-            }
-          />
-          <Label htmlFor="newsletter" className="text-sm">
-            Tôi muốn nhận tin tức và ưu đãi từ Katec qua email
-          </Label>
-        </div>
-
         <Button
           onClick={handleSubmit}
           className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"

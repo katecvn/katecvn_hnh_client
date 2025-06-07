@@ -45,16 +45,6 @@ export default function ContactPage() {
       isMain: true,
       coordinates: { lat: 10.0410184, lng: 105.7539256 },
     },
-    {
-      city: 'TP. Đà Nẵng',
-      address:
-        'KS Phương Nam - thôn Túy Loan Đông 2, Hòa Phong, Hòa Vang, TP. Đà Nẵng',
-      phone: '+84 934 777 245',
-      email: 'katec.danang@gmail.com',
-      hours: '8:00 - 18:00 (T2-T6)',
-      isMain: false,
-      coordinates: { lat: 21.0285, lng: 105.8542 },
-    },
   ];
 
   const contactMethods = [
@@ -96,8 +86,8 @@ export default function ContactPage() {
     {
       department: 'Tư vấn bán hàng',
       description: 'Tư vấn giải pháp và báo giá',
-      phone: '+84 28 1234 5678',
-      email: 'sales@Katec.com',
+      phone: '0889 88 1010',
+      email: 'tposlivestream@gmail.com',
       hours: '8:00 - 20:00 (T2-CN)',
       gradientClass:
         'bg-gradient-to-br from-teal-400 via-blue-200 to-purple-300',
@@ -105,8 +95,8 @@ export default function ContactPage() {
     {
       department: 'Hỗ trợ kỹ thuật',
       description: 'Hỗ trợ sản phẩm và dịch vụ',
-      phone: '+84 889 88 1010',
-      email: 'katec.cantho@gmail.com',
+      phone: '0932 927 007',
+      email: 'hotro.katec@gmail.com',
       hours: '24/7',
       gradientClass:
         'bg-gradient-to-br from-emerald-400 via-teal-200 to-blue-300',
@@ -114,8 +104,8 @@ export default function ContactPage() {
     {
       department: 'Đối tác & Hợp tác',
       description: 'Hợp tác kinh doanh và đối tác',
-      phone: '+84 28 1234 5680',
-      email: 'partner@Katec.com',
+      phone: '0911 881 010',
+      email: 'katec.cantho@gmail.com',
       hours: '8:00 - 18:00 (T2-T6)',
       gradientClass:
         'bg-gradient-to-br from-blue-500 via-indigo-200 to-purple-400',
@@ -205,84 +195,47 @@ export default function ContactPage() {
       </AnimatedSection>
 
       {/* Contact Form & Map - ENHANCED SECTION */}
-      <section className="py-20 bg-gray-50">
+      <section className="pt-20 pb-10 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Enhanced Contact Form */}
             <AnimatedSection delay={100}>
-              <div className="relative overflow-hidden">
-                {/* Animated background gradients */}
-                <div
-                  className="absolute inset-0  bg-gradient-to-br from-blue-700 via-purple-700 to-pink-600 animate-pulse "
-                  style={{ animationDelay: '0.5s', padding: '1rem' }}
-                ></div>
-                <div
-                  className="absolute inset-0 bg-gradient-to-tr from-cyan-600/30 via-blue-600/30 to-purple-600/30 "
-                  style={{ animationDelay: '0.5s', borderRadius: '16px' }}
-                ></div>
+              <div className="group shadow-xl transition-all duration-300 h-full rounded-lg overflow-hidden relative">
+                <div className="relative z-10 bg-white px-10 py-8  border border-gray-200 rounded-lg ">
+                  <Badge
+                    variant="outline"
+                    className="mb-6 bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 animate-gentle-pulse"
+                  >
+                    ✨ Gửi yêu cầu
+                  </Badge>
 
-                {/* Floating particles */}
-                <div className="absolute inset-0 overflow-hidden">
-                  <div
-                    className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/30 rounded-full animate-bounce"
-                    style={{ animationDelay: '0s' }}
-                  ></div>
-                  <div
-                    className="absolute top-3/4 left-3/4 w-1 h-1 bg-white/40 rounded-full animate-bounce"
-                    style={{ animationDelay: '0.5s' }}
-                  ></div>
-                  <div
-                    className="absolute top-1/2 left-1/2 w-3 h-3 bg-white/20 rounded-full animate-bounce"
-                    style={{ animationDelay: '1s' }}
-                  ></div>
-                  <div
-                    className="absolute top-1/3 right-1/4 w-2 h-2 bg-white/25 rounded-full animate-bounce"
-                    style={{ animationDelay: '1.5s' }}
-                  ></div>
-                </div>
-
-                {/* Glassmorphism container */}
-                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20 transform transition-all duration-500">
-                  {/* Glowing border effect */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 opacity-20 blur-sm"></div>
-
-                  <div className="relative z-10">
-                    <Badge
-                      variant="outline"
-                      className="mb-6 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30 hover:text-white transition-all duration-300 animate-gentle-pulse"
-                    >
-                      ✨ Gửi yêu cầu
-                    </Badge>
-
-                    <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white animate-pulse">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                    <HolographicTitle>
                       Để lại thông tin liên hệ
-                    </h2>
+                    </HolographicTitle>
+                  </h2>
 
-                    <p className="text-white mb-8 text-lg leading-relaxed backdrop-blur-sm">
-                      Điền form bên dưới và chúng tôi sẽ liên hệ với bạn trong
-                      vòng
-                      <span className="text-white font-semibold animate-pulse">
-                        {' '}
-                        24 giờ{' '}
-                      </span>
-                      để tư vấn chi tiết.
-                    </p>
+                  <p className="mb-8 text-md  text-gray-600 leading-relaxed backdrop-blur-sm">
+                    Điền form bên dưới và chúng tôi sẽ liên hệ với bạn trong
+                    vòng
+                    <span className="font-semibold"> 24 giờ </span>
+                    để tư vấn chi tiết.
+                  </p>
 
-                    <div className="transform text-white hover:scale-102 transition-transform duration-300">
-                      <ContactForm />
-                    </div>
+                  <div className="transform  hover:scale-102 transition-transform duration-300">
+                    <ContactForm />
                   </div>
-
-                  {/* Corner decorations */}
-                  <div className="absolute top-4 right-4 w-16 h-16 border-t-2 border-r-2 border-white/30 rounded-tr-2xl"></div>
-                  <div className="absolute bottom-4 left-4 w-16 h-16 border-b-2 border-l-2 border-white/30 rounded-bl-2xl"></div>
                 </div>
+
+                {/* Corner decorations */}
+                <div className="absolute top-4 right-4 w-16 h-16 border-t-2 border-r-2 border-white/30 rounded-tr-2xl"></div>
+                <div className="absolute bottom-4 left-4 w-16 h-16 border-b-2 border-l-2 border-white/30 rounded-bl-2xl"></div>
               </div>
             </AnimatedSection>
 
             {/* Map */}
             <AnimatedSection delay={200}>
-              <div className="space-y-6">
+              <div className="space-y-6 pt-2">
                 <div>
                   <Badge variant="outline" className="mb-4">
                     Vị trí văn phòng
@@ -301,70 +254,6 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-
-      {/* Office Locations */}
-      <AnimatedSection className="py-20 bg-white">
-        <div className="container px-4 md:px-6">
-          <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
-              Văn phòng
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <HolographicTitle>Hệ thống văn phòng toàn quốc</HolographicTitle>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Chúng tôi có mặt tại 2 thành phố lớn để phục vụ khách hàng tốt
-              nhất
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8">
-            {offices.map((office, index) => (
-              <AnimatedSection key={index} delay={index * 100}>
-                <Card
-                  className={`hover:shadow-xl transition-all duration-300 h-full ${
-                    office.isMain ? 'ring-2 ring-blue-200' : ''
-                  }`}
-                >
-                  {office.isMain && (
-                    <div className="bg-blue-600 text-white text-center py-2 text-sm font-medium rounded-t-lg">
-                      Trụ sở chính
-                    </div>
-                  )}
-                  <CardHeader>
-                    <CardTitle className="flex items-center text-xl">
-                      <MapPin className="h-5 w-5 mr-2 text-blue-600" />
-                      {office.city}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-start space-x-3">
-                      <MapPin className="h-4 w-4 mt-1 text-gray-400" />
-                      <span className="text-gray-600">{office.address}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Phone className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-600">{office.phone}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Mail className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-600">{office.email}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <Clock className="h-4 w-4 text-gray-400" />
-                      <span className="text-gray-600">{office.hours}</span>
-                    </div>
-                    <div className="pt-4">
-                      <Button variant="outline" className="w-full">
-                        Xem bản đồ
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </AnimatedSection>
-            ))}
-          </div>
-        </div>
-      </AnimatedSection>
 
       {/* Support Teams */}
       <AnimatedSection className="py-20 bg-gray-50">
