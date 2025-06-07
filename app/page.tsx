@@ -20,6 +20,7 @@ import {
   Printer,
   Lock,
   Newspaper,
+  BarChart3,
 } from 'lucide-react';
 // import { ContactForm } from "@/components/contact-form";
 import { ContactForm } from '@/components/contact-form';
@@ -275,6 +276,16 @@ export default function HomePage() {
               'Tích hợp hệ thống nội bộ',
             ]}
             icon={<Printer className="h-6 w-6" />}
+          />
+          <EnhancedCard
+            title="AI & Phân tích dữ liệu"
+            description="Ứng dụng trí tuệ nhân tạo và phân tích dữ liệu để đưa ra quyết định thông minh và tối ưu hoạt động"
+            features={[
+              'Phân tích dữ liệu khách hàng',
+              'Tự động hóa quy trình với AI',
+              'Dự đoán xu hướng kinh doanh',
+            ]}
+            icon={<BarChart3 className="h-6 w-6" />}
           />
         </div>
       </section>
