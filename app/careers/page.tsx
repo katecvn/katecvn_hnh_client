@@ -69,10 +69,10 @@ export default function CareersPage() {
     {
       title: 'Senior Full-stack Developer',
       department: 'Engineering',
-      location: 'TP.HCM',
+      location: 'Cần Thơ ',
       type: 'Full-time',
       experience: '3+ năm',
-      salary: '25-40 triệu VNĐ',
+      salary: '8-10 triệu VNĐ',
       description:
         'Phát triển và maintain các ứng dụng web sử dụng React, Node.js và cloud technologies.',
       requirements: [
@@ -86,10 +86,10 @@ export default function CareersPage() {
     {
       title: 'AI/ML Engineer',
       department: 'AI Research',
-      location: 'TP.HCM',
+      location: 'Cần Thơ',
       type: 'Full-time',
       experience: '2+ năm',
-      salary: '30-50 triệu VNĐ',
+      salary: '7-10 triệu VNĐ',
       description:
         'Nghiên cứu và phát triển các mô hình AI/ML cho các sản phẩm của công ty.',
       requirements: [
@@ -103,10 +103,10 @@ export default function CareersPage() {
     {
       title: 'DevOps Engineer',
       department: 'Infrastructure',
-      location: 'TP.HCM',
+      location: 'Cần Thơ',
       type: 'Full-time',
       experience: '2+ năm',
-      salary: '22-35 triệu VNĐ',
+      salary: '8-10 triệu VNĐ',
       description:
         'Quản lý infrastructure, CI/CD pipeline và monitoring systems.',
       requirements: [
@@ -120,10 +120,10 @@ export default function CareersPage() {
     {
       title: 'UX/UI Designer',
       department: 'Design',
-      location: 'TP.HCM',
+      location: 'Cần Thơ',
       type: 'Full-time',
-      experience: '2+ năm',
-      salary: '18-30 triệu VNĐ',
+      experience: '11+ năm',
+      salary: '6-7 triệu VNĐ',
       description:
         'Thiết kế giao diện người dùng cho web và mobile applications.',
       requirements: [
@@ -135,28 +135,12 @@ export default function CareersPage() {
       ],
     },
     {
-      title: 'Product Manager',
-      department: 'Product',
-      location: 'TP.HCM',
-      type: 'Full-time',
-      experience: '3+ năm',
-      salary: '28-45 triệu VNĐ',
-      description: 'Quản lý lifecycle của sản phẩm từ ý tưởng đến triển khai.',
-      requirements: [
-        'Product Strategy',
-        'Agile/Scrum',
-        'Data Analysis',
-        'User Research',
-        'Technical Background',
-      ],
-    },
-    {
       title: 'Mobile Developer (React Native)',
       department: 'Engineering',
-      location: 'TP.HCM',
+      location: 'Cần Thơ',
       type: 'Full-time',
-      experience: '2+ năm',
-      salary: '20-32 triệu VNĐ',
+      experience: '1+ năm',
+      salary: '6-8 triệu VNĐ',
       description:
         'Phát triển ứng dụng mobile cross-platform sử dụng React Native.',
       requirements: [
