@@ -1,36 +1,25 @@
 'use client';
 
 import { Badge } from '@/components/ui/badge';
-import {
-  Code,
-  Database,
-  Globe,
-  Award,
-  TrendingUp,
-  Zap,
-  Shield,
-  Cpu,
-  Cloud,
-  Briefcase,
-  School,
-  ShieldCheck,
-  ShoppingCart,
-  Server,
-  Video,
-  Printer,
-  Lock,
-  Newspaper,
-  BarChart3,
-} from 'lucide-react';
+import * as Icons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 // import { ContactForm } from "@/components/contact-form";
 import { ContactForm } from '@/components/contact-form';
 import { EnhancedHero } from '@/components/enhanced-hero';
 import {
   EnhancedCard,
   StatsCard,
-  FeatureCard,
   TechProductCard,
+  ProductCard,
 } from '@/components/enhanced-cards';
+import {
+  LoadingSkeleton,
+  LoadingStatsSkeleton,
+  LoadingPartnersSkeleton,
+  LoadingNewsSkeleton,
+  SectionLoader,
+  LoadingSolutionsSkeleton,
+} from '@/components/loading-error-components';
 import { Reveal } from '@/components/enhanced-animations';
 import {
   HolographicText,
@@ -42,14 +31,24 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import api from '@/utils/axios';
 
+import type {
+  GeneralContentItem,
+  SectionItem as BaseSectionItem,
+} from './interface';
+
+type ContentItem = GeneralContentItem;
+type SectionItem = BaseSectionItem<ContentItem>;
+
 export default function HomePage() {
   const [showBackgrounds, setShowBackgrounds] = useState(false);
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [partners, setPartners] = useState([]);
-  const [news, setNews] = useState([]);
+  const [solutions, setSolutions] = useState<SectionItem[]>([]);
+  const [numbers, setNumbers] = useState<SectionItem[]>([]);
+  const [partners, setPartners] = useState<SectionItem[]>([]);
+  const [news, setNews] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalPages: 1,
@@ -57,10 +56,95 @@ export default function HomePage() {
   });
 
   useEffect(() => {
-    fetchProducts();
-    fetchPartners();
-    fetchNews();
+    fetchAllHomeData();
   }, []);
+
+  const fetchAllHomeData = async (
+    options = { page: 1, limit: 10, categoryId: null }
+  ) => {
+    setLoading(true);
+    setError(null);
+
+    const { page, limit, categoryId } = options;
+
+    const requests = [];
+
+    // Prepare product URL
+    let productUrl = `/product/public/shows?page=${page}&limit=${limit}`;
+    if (categoryId && categoryId !== 'all') {
+      productUrl += `&category_id=${categoryId}`;
+    }
+    requests.push(api.get(productUrl)); // index 0
+
+    // Prepare other endpoints
+    requests.push(api.get('/page-section/public/shows?sectionType=solutions')); // index 1
+    requests.push(api.get('/page-section/public/shows?sectionType=numbers')); // index 2
+    requests.push(api.get('/page-section/public/shows?sectionType=partner')); // index 3
+    requests.push(api.get(`/post/public/shows?page=1&limit=3`)); // index 4
+
+    try {
+      const [productRes, solutionRes, numberRes, partnerRes, newsRes] =
+        await Promise.all(requests);
+
+      // Products
+      const productData = productRes.data.data;
+      const transformedProducts = productData.products.map((product: any) => {
+        let image =
+          'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop';
+        try {
+          image = JSON.parse(JSON.parse(product.imagesUrl))[0] || image;
+        } catch {}
+
+        return {
+          id: product.id,
+          name: product.name,
+          category: product.category?.name || 'Sản phẩm',
+          slug: product.slug,
+          description: product.content
+            ? product.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
+            : 'Mô tả sản phẩm',
+          features: [
+            `SKU: ${product.sku}`,
+            `Đơn vị: ${product.unit}`,
+            product.brand?.name
+              ? `Thương hiệu: ${product.brand.name}`
+              : 'Sản phẩm chất lượng',
+            product.isFeatured ? 'Sản phẩm nổi bật' : 'Giải pháp chuyên nghiệp',
+          ],
+          price: product.salePrice
+            ? `${parseInt(product.salePrice).toLocaleString('vi-VN')} VNĐ`
+            : 'Liên hệ để biết giá',
+          originalPrice: product.originalPrice,
+          image,
+          badge: product.isFeatured ? 'Nổi bật' : '',
+          color: getRandomColor(),
+          stock: product.stock,
+        };
+      });
+
+      setProducts(transformedProducts);
+      setPagination({
+        totalItems: productData.totalItems || 0,
+        totalPages: productData.totalPages || 1,
+        currentPage: productData.currentPage || 1,
+      });
+
+      // Solutions, Partners, News
+      setSolutions(solutionRes.data.data || []);
+      setNumbers(numberRes.data.data || []);
+      setPartners(partnerRes.data.data || []);
+      setNews(newsRes.data.data?.posts || []);
+    } catch (error: any) {
+      console.error('Error fetching homepage data:', error);
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        'Không thể tải dữ liệu trang chủ';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Delay loading background elements
@@ -83,104 +167,54 @@ export default function HomePage() {
     const colors = ['blue', 'purple', 'green', 'orange', 'red', 'slate'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
-  const fetchProducts = async (page = 1, limit = 10, categoryId = null) => {
-    try {
-      setLoading(true);
-      setError(null);
 
-      let url = `/product/public/shows?page=${page}&limit=${limit}`;
-      if (categoryId && categoryId !== 'all') {
-        url += `&category_id=${categoryId}`;
-      }
+  const getIcon = (iconName: string): LucideIcon => {
+    const Icon = Icons[iconName as keyof typeof Icons];
 
-      const response = await api.get(url);
-      const { data } = response.data;
-
-      // Transform API data to match component structure
-      const transformedProducts = data.products.map((product: any) => ({
-        id: product.id,
-        name: product.name,
-        category: product.category?.name || 'Sản phẩm',
-        slug: product.slug,
-        description: product.content
-          ? product.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...'
-          : 'Mô tả sản phẩm',
-        features: [
-          `SKU: ${product.sku}`,
-          `Đơn vị: ${product.unit}`,
-          product.brand?.name
-            ? `Thương hiệu: ${product.brand.name}`
-            : 'Sản phẩm chất lượng',
-          product.isFeatured ? 'Sản phẩm nổi bật' : 'Giải pháp chuyên nghiệp',
-        ],
-        price: product.salePrice
-          ? `${parseInt(product.salePrice).toLocaleString('vi-VN')} VNĐ`
-          : 'Liên hệ để biết giá',
-        originalPrice: product.originalPrice,
-        image: product.imagesUrl
-          ? JSON.parse(JSON.parse(product.imagesUrl))[0] ||
-            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop'
-          : 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop',
-        badge: product.isFeatured ? 'Nổi bật' : '',
-        color: getRandomColor(),
-
-        stock: product.stock,
-      }));
-
-      setProducts(transformedProducts);
-      setPagination({
-        totalItems: data.totalItems || 0,
-        totalPages: data.totalPages || 1,
-        currentPage: data.currentPage || 1,
-      });
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      const message =
-        error.response?.data?.message ||
-        error.message ||
-        'Không thể tải danh sách sản phẩm';
-      setError(message);
-    } finally {
-      setLoading(false);
+    // Chỉ trả về nếu Icon là một React component (function or object with $$typeof)
+    if (typeof Icon === 'function' || typeof Icon === 'object') {
+      return Icon as LucideIcon;
     }
-  };
 
-  const fetchPartners = async () => {
-    try {
-      const response = await api.get(
-        '/page-section/public/shows?sectionType=partner'
-      );
-      const { data } = response.data;
-      setPartners(data || []);
-    } catch (error) {
-      console.error('Error fetching partners:', error);
-    }
-  };
-
-  const fetchNews = async (page = 1, limit = 3) => {
-    try {
-      const response = await api.get(
-        `/post/public/shows?page=${page}&limit=${limit}`
-      );
-      const { data } = response.data;
-      setNews(data?.posts || []);
-    } catch (error) {
-      console.error('Error fetching news:', error);
-    }
-  };
-
-  const getSplitText = (text, number) => {
-    const words = text.split(' ');
-    const shortName =
-      words.length > number ? words.slice(0, number).join(' ') + '…' : text;
-    return shortName;
+    // fallback nếu không tồn tại hoặc không hợp lệ
+    return Icons.Code;
   };
 
   return (
     <div className="min-h-screen">
       {/* Enhanced Hero Section */}
 
-      <EnhancedHero />
+      {error && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 shadow-lg max-w-sm">
+            <div className="flex items-start">
+              <Icons.AlertCircle className="h-5 w-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" />
+              <div>
+                <h3 className="text-sm font-medium text-red-800">
+                  Lỗi tải dữ liệu
+                </h3>
+                <p className="text-sm text-red-700 mt-1">{error}</p>
+                <button
+                  onClick={() => {
+                    setError(null);
+                    fetchAllHomeData();
+                  }}
+                  className="text-sm text-red-600 hover:text-red-500 mt-2 underline"
+                >
+                  Thử lại
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <EnhancedHero
+        loading={loading}
+        numbers={numbers}
+        solutions={solutions}
+        getIcon={getIcon}
+      />
       {/* Enhanced Stats Section */}
 
       {/* Enhanced Services Section */}
@@ -188,6 +222,13 @@ export default function HomePage() {
         {showBackgrounds && <CircuitBoard />}
 
         <div className="text-center mb-16">
+          <Badge
+            variant="outline"
+            className="mb-4 border-tech-blue-500 text-tech-blue-600"
+          >
+            <Icons.Shield className="h-4 w-4 mr-2" />
+            Dịch vụ công nghệ
+          </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             <HolographicText>
               Giải pháp công nghệ toàn diện cho doanh nghiệp & tổ chức
@@ -200,95 +241,45 @@ export default function HomePage() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 container px-4 md:px-6 relative z-1">
-          <EnhancedCard
-            title="Thiết kế Website"
-            description="Tạo dựng website hiện đại, tối ưu SEO và tương thích thiết bị di động"
-            features={[
-              'Website doanh nghiệp',
-              'Landing Page',
-              'E-commerce',
-              'Responsive UI',
-            ]}
-            icon={<Globe className="h-6 w-6" />}
-          />
-          <EnhancedCard
-            title="Hệ thống quản lý doanh nghiệp"
-            description="Tối ưu quy trình nội bộ, quản lý nhân sự, khách hàng, tài chính"
-            features={[
-              'CRM',
-              'ERP',
-              'Báo cáo tự động',
-              'Phân quyền người dùng',
-            ]}
-            icon={<Briefcase className="h-6 w-6" />}
-          />
-          <EnhancedCard
-            title="Giải pháp quản lý cho đài truyền hình"
-            description="Triển khai hệ thống hỗ trợ quản lý nội dung, hợp đồng bản quyền và xử lý yêu cầu liên quan đến chương trình"
-            features={[
-              'Quản lý chương trình và lịch phát sóng',
-              'Tự động hóa quy trình sản xuất và phân phối',
-              'Bảo mật thông tin và dữ liệu bản quyền',
-            ]}
-            icon={<ShieldCheck className="h-6 w-6" />}
-          />
+        <div className="container px-4 md:px-6 relative z-1">
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingSolutionsSkeleton}
+            errorTitle="Không thể tải giải pháp công nghệ"
+          >
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {solutions?.map((solution: any) => {
+                const IconComponent = getIcon(solution?.content[0]?.icon);
+                return (
+                  <EnhancedCard
+                    key={solution.id}
+                    color=""
+                    title={solution?.content[0]?.title}
+                    description={solution?.content[0]?.description}
+                    features={solution?.content[0]?.features}
+                    icon={<IconComponent className="h-6 w-6" />}
+                  />
+                );
+              })}
+            </div>
 
-          <EnhancedCard
-            title="Quản lý trường học & mầm non"
-            description="Giải pháp số hóa trường học: điểm danh, học phí, sổ liên lạc điện tử"
-            features={[
-              'Hệ thống mầm non',
-              'Trường tư thục',
-              'Ứng dụng phụ huynh',
-            ]}
-            icon={<School className="h-6 w-6" />}
-          />
-          <EnhancedCard
-            title="Thương mại điện tử"
-            description="Xây dựng nền tảng bán hàng trực tuyến, tích hợp thanh toán và vận chuyển"
-            features={['Giỏ hàng', 'Thanh toán online', 'Quản lý tồn kho']}
-            icon={<ShoppingCart className="h-6 w-6" />}
-          />
-          <EnhancedCard
-            title="Hosting & Hạ tầng"
-            description="Cung cấp hosting tốc độ cao, bảo mật và hỗ trợ kỹ thuật 24/7"
-            features={['Hosting SSD', 'Domain', 'Sao lưu dữ liệu']}
-            icon={<Server className="h-6 w-6" />}
-          />
-          <EnhancedCard
-            title="Quản lý bán hàng qua livestream"
-            description="Hỗ trợ chốt đơn, theo dõi đơn hàng và tương tác với khách hàng trong suốt buổi livestream"
-            features={[
-              'Lên lịch và quản lý phiên livestream',
-              'Tích hợp đa nền tảng (Facebook, TikTok...)',
-              'Tự động chốt đơn và phản hồi người xem',
-            ]}
-            icon={<Video className="h-6 w-6" />}
-          />
-
-          <EnhancedCard
-            title="Giải pháp in ấn"
-            description="Kết nối và điều phối máy in, quản lý số lượng và chi phí in hiệu quả"
-            features={[
-              'Theo dõi máy in',
-              'Báo cáo in ấn',
-              'Tích hợp hệ thống nội bộ',
-            ]}
-            icon={<Printer className="h-6 w-6" />}
-          />
-          <EnhancedCard
-            title="AI & Phân tích dữ liệu"
-            description="Ứng dụng trí tuệ nhân tạo và phân tích dữ liệu để đưa ra quyết định thông minh và tối ưu hoạt động"
-            features={[
-              'Phân tích dữ liệu khách hàng',
-              'Tự động hóa quy trình với AI',
-              'Dự đoán xu hướng kinh doanh',
-            ]}
-            icon={<BarChart3 className="h-6 w-6" />}
-          />
+            {solutions?.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <Icons.Settings className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                  Chưa có giải pháp nào
+                </h3>
+                <p className="text-gray-500">
+                  Các giải pháp công nghệ sẽ được cập nhật sớm nhất có thể.
+                </p>
+              </div>
+            )}
+          </SectionLoader>
         </div>
       </section>
+
       <section className="py-20 bg-gradient-to-r from-tech-blue-50 via-white to-cyber-blue/10 relative">
         {showBackgrounds && <TechGrid />}
         <div className="container px-4 md:px-6 relative z-10">
@@ -298,7 +289,7 @@ export default function HomePage() {
                 variant="outline"
                 className="mb-4 border-tech-blue-500 text-tech-blue-600"
               >
-                <Award className="h-4 w-4 mr-2" />
+                <Icons.Award className="h-4 w-4 mr-2" />
                 Thành tựu công nghệ
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -307,37 +298,31 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <StatsCard
-              value="300+"
-              label="Dự án Web & Hệ thống"
-              icon={<Cpu className="h-8 w-8" />}
-              // trend={15}
-              delay={100}
-            />
-            <StatsCard
-              value="1200+"
-              label="Khách hàng Doanh nghiệp"
-              icon={<Briefcase className="h-8 w-8" />}
-              // trend={22}
-              delay={200}
-            />
-            <StatsCard
-              value="600+"
-              label="Hệ thống Mầm non"
-              icon={<School className="h-8 w-8" />}
-              // trend={10}
-              delay={300}
-            />
-            <StatsCard
-              value="24/7"
-              label="Hỗ trợ & Giám sát"
-              icon={<ShieldCheck className="h-8 w-8" />}
-              delay={400}
-            />
-          </div>
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingStatsSkeleton}
+            errorTitle="Không thể tải thống kê"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {numbers?.map((number: any, index: number) => {
+                const IconComponent = getIcon(number?.content[0]?.icon);
+                return (
+                  <StatsCard
+                    key={number.id}
+                    value={number?.content[0]?.title}
+                    label={number?.content[0]?.description}
+                    icon={<IconComponent className="h-8 w-8" />}
+                    delay={100 * index}
+                  />
+                );
+              })}
+            </div>
+          </SectionLoader>
         </div>
       </section>
+
       {/* Enhanced Featured Products */}
       <section className="py-20 bg-white relative" id="products">
         <div className="container px-4 md:px-6">
@@ -347,7 +332,7 @@ export default function HomePage() {
                 variant="outline"
                 className="mb-4 border-tech-blue-500 text-tech-blue-600"
               >
-                <Award className="h-4 w-4 mr-2" />
+                <Icons.LayoutDashboard className="h-4 w-4 mr-2" />
                 Sản phẩm công nghệ
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -360,25 +345,40 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products?.map((product: any, index: number) => {
-              const nameC = product?.category?.name || null;
-              return (
-                <TechProductCard
-                  key={product.id || index}
-                  title={getSplitText(product.name, 16)}
-                  description={getSplitText(product.description, 28)}
-                  image={product.image}
-                  badge={product?.category}
-                  badgeColor="bg-green-600"
-                  delay={index * 100}
-                  link={product.slug}
-                />
-              );
-            })}
-          </div>
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingSkeleton}
+            errorTitle="Không thể tải sản phẩm"
+          >
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {products?.map((product: any, index: number) => {
+                return (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    index={index}
+                  />
+                );
+              })}
+            </div>
+
+            {products?.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <Icons.Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                  Chưa có sản phẩm nào
+                </h3>
+                <p className="text-gray-500">
+                  Các sản phẩm sẽ được cập nhật sớm nhất có thể.
+                </p>
+              </div>
+            )}
+          </SectionLoader>
         </div>
       </section>
+
       {/* Enhanced Why Choose Us */}
       <section className="py-20 bg-gradient-to-br from-tech-blue-50 to-cyber-blue/10 relative overflow-hidden">
         {showBackgrounds && <TechGrid />}
@@ -390,7 +390,7 @@ export default function HomePage() {
                 variant="outline"
                 className="mb-4 border-tech-blue-500 text-tech-blue-600"
               >
-                <Shield className="h-4 w-4 mr-2" />
+                <Icons.Handshake className="h-4 w-4 mr-2" />
                 Đối tác của chúng tôi
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -402,35 +402,59 @@ export default function HomePage() {
               </p>
             </div>
           </Reveal>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-            {partners?.map((partner, index) => (
-              <Reveal direction="up" delay={index * 100} key={partner.id}>
-                <div className="bg-white rounded-lg p-1 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center h-32 overflow-hidden">
-                  <div className="relative w-full h-20 group">
-                    <Image
-                      src={partner?.content[0]?.imageUrl || '/placeholder.svg'}
-                      alt={partner?.content[0]?.title || `Partner ${index + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-contain group-hover:object-cover group-hover:scale-95 transition-all duration-500 ease-in-out"
-                      style={{
-                        objectPosition: 'center center',
-                        filter: 'contrast(1.1) brightness(1.05)',
-                        background: 'transparent',
-                      }}
-                      priority={index < 6}
-                      quality={90}
-                      onLoad={(e) => {
-                        // Tự động crop phần trắng nếu cần
-                        const img = e.target;
-                        img.style.imageRendering = 'crisp-edges';
-                      }}
-                    />
+
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingPartnersSkeleton}
+            errorTitle="Không thể tải thông tin đối tác"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+              {partners?.map((partner, index) => (
+                <Reveal direction="up" delay={index * 100} key={partner.id}>
+                  <div className="bg-white rounded-lg p-1 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center h-32 overflow-hidden">
+                    <div className="relative w-full h-20 group">
+                      <Image
+                        src={
+                          partner?.content[0]?.imageUrl || '/placeholder.svg'
+                        }
+                        alt={
+                          partner?.content[0]?.title || `Partner ${index + 1}`
+                        }
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-contain transition-all duration-500 ease-in-out"
+                        style={{
+                          objectPosition: 'center center',
+                          filter: 'contrast(1.1) brightness(1.05)',
+                          background: 'transparent',
+                        }}
+                        priority={index < 6}
+                        quality={90}
+                        onLoad={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          img.style.imageRendering = 'crisp-edges';
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+                </Reveal>
+              ))}
+            </div>
+
+            {partners?.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <Icons.Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                  Chưa có thông tin đối tác
+                </h3>
+                <p className="text-gray-500">
+                  Thông tin đối tác sẽ được cập nhật sớm.
+                </p>
+              </div>
+            )}
+          </SectionLoader>
         </div>
       </section>
       {/* News Section */}
@@ -442,7 +466,7 @@ export default function HomePage() {
                 variant="outline"
                 className="mb-4 border-tech-blue-500 text-tech-blue-600"
               >
-                <Newspaper className="h-4 w-4 mr-2" />
+                <Icons.Newspaper className="h-4 w-4 mr-2" />
                 Tin tức & Sự kiện
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -454,28 +478,48 @@ export default function HomePage() {
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {news?.map((post, index) => (
-              <TechProductCard
-                key={post.id || index}
-                title={post.title}
-                description={
-                  post.short_description ||
-                  post.short_description?.substring(0, 150) + '...'
-                }
-                image={post.thumbnail || '/placeholder.svg'}
-                badge={post.topics[0]?.name || 'Tin tức'}
-                badgeColor="bg-blue-600"
-                delay={index * 100}
-                link={`/news/${post.slug}`}
-              />
-            ))}
-          </div>
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingNewsSkeleton}
+            errorTitle="Không thể tải tin tức"
+          >
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {news?.map((post, index) => (
+                <TechProductCard
+                  key={post.id || index}
+                  title={post.title}
+                  description={
+                    post.short_description ||
+                    post.short_description?.substring(0, 150) + '...'
+                  }
+                  image={post.thumbnail || '/placeholder.svg'}
+                  badge={post.topics[0]?.name || 'Tin tức'}
+                  badgeColor="bg-blue-600"
+                  delay={index * 100}
+                  link={`/news/${post.slug}`}
+                />
+              ))}
+            </div>
+
+            {news?.length === 0 && !loading && (
+              <div className="text-center py-12">
+                <Icons.Newspaper className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                  Chưa có tin tức mới
+                </h3>
+                <p className="text-gray-500">
+                  Tin tức mới sẽ được cập nhật thường xuyên.
+                </p>
+              </div>
+            )}
+          </SectionLoader>
         </div>
       </section>
       {/* Enhanced Contact Section */}
       <section
-        className="py-20 bg-gradient-to-r from-navy-tech via-tech-blue-900 to-tech-blue-800 text-white relative overflow-hidden"
+        className="py-20 bg-gradient-to-r from-navy-tech via-tech-blue-800 to-tech-blue-700 text-white relative overflow-hidden"
         id="contact"
       >
         {showBackgrounds && <CircuitBoard />}
@@ -488,7 +532,7 @@ export default function HomePage() {
                   variant="outline"
                   className="mb-4 border-tech-blue-400/30 text-tech-blue-100 animate-tech-pulse"
                 >
-                  <Zap className="h-4 w-4 mr-2" />
+                  <Icons.Zap className="h-4 w-4 mr-2" />
                   Đối tác công nghệ của bạn
                 </Badge>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
@@ -524,8 +568,8 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal direction="right" skipAnimation={isInitialRender}>
-              <div className="glass-tech rounded-lg p-8 border border-tech-blue-400/20">
-                <ContactForm />
+              <div className="glass-tech rounded-lg p-8 border border-tech-blue-600/40">
+                <ContactForm title="" />
               </div>
             </Reveal>
           </div>

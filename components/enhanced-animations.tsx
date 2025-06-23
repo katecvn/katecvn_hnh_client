@@ -1,9 +1,17 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
+import {
+  GlitchTextProps,
+  GradientTextProps,
+  MagneticButtonProps,
+  ParallaxProps,
+  RevealProps,
+  TypewriterProps,
+} from '@/app/interface';
 
 // Floating Elements Animation
 export function FloatingElements() {
@@ -40,8 +48,8 @@ export function FloatingElements() {
         <div
           key={i}
           className={cn(
-            "absolute w-4 h-4 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full",
-            "animate-float"
+            'absolute w-4 h-4 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full',
+            'animate-float'
           )}
           style={{
             left: element.left,
@@ -56,17 +64,12 @@ export function FloatingElements() {
 }
 
 // Gradient Text Animation
-interface GradientTextProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
 export function GradientText({ children, className }: GradientTextProps) {
   return (
     <span
       className={cn(
-        "bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent",
-        "bg-[length:200%_100%] animate-gradient-x",
+        'bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent',
+        'bg-[length:200%_100%] animate-gradient-x',
         className
       )}
     >
@@ -87,14 +90,10 @@ export function MorphingShapes() {
 }
 
 // Glitch Effect
-interface GlitchTextProps {
-  children: React.ReactNode;
-  className?: string;
-}
 
 export function GlitchText({ children, className }: GlitchTextProps) {
   return (
-    <div className={cn("relative inline-block", className)}>
+    <div className={cn('relative inline-block', className)}>
       <span className="relative z-10">{children}</span>
       <span className="absolute top-0 left-0 text-red-500 animate-glitch-1 opacity-70">
         {children}
@@ -107,15 +106,9 @@ export function GlitchText({ children, className }: GlitchTextProps) {
 }
 
 // Typewriter Effect
-interface TypewriterProps {
-  texts: string[];
-  className?: string;
-  speed?: number;
-}
-
 export function Typewriter({ texts, className, speed = 100 }: TypewriterProps) {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [currentText, setCurrentText] = useState("");
+  const [currentText, setCurrentText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -131,7 +124,7 @@ export function Typewriter({ texts, className, speed = 100 }: TypewriterProps) {
 
         if (!isDeleting && currentText === fullText) {
           setTimeout(() => setIsDeleting(true), 1000);
-        } else if (isDeleting && currentText === "") {
+        } else if (isDeleting && currentText === '') {
           setIsDeleting(false);
           setCurrentTextIndex((prev) => (prev + 1) % texts.length);
         }
@@ -151,12 +144,6 @@ export function Typewriter({ texts, className, speed = 100 }: TypewriterProps) {
 }
 
 // Parallax Container
-interface ParallaxProps {
-  children: React.ReactNode;
-  speed?: number;
-  className?: string;
-}
-
 export function Parallax({ children, speed = 0.5, className }: ParallaxProps) {
   const [offset, setOffset] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -171,8 +158,8 @@ export function Parallax({ children, speed = 0.5, className }: ParallaxProps) {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [speed]);
 
   return (
@@ -183,12 +170,6 @@ export function Parallax({ children, speed = 0.5, className }: ParallaxProps) {
 }
 
 // Magnetic Button Effect
-interface MagneticButtonProps {
-  children: React.ReactNode;
-  className?: string;
-  strength?: number;
-}
-
 export function MagneticButton({
   children,
   className,
@@ -217,7 +198,7 @@ export function MagneticButton({
   return (
     <div
       ref={ref}
-      className={cn("transition-transform duration-300 ease-out", className)}
+      className={cn('transition-transform duration-300 ease-out', className)}
       style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -228,17 +209,9 @@ export function MagneticButton({
 }
 
 // Reveal Animation on Scroll
-interface RevealProps {
-  children: React.ReactNode;
-  direction?: "up" | "down" | "left" | "right";
-  delay?: number;
-  className?: string;
-  skipAnimation?: boolean;
-}
-
 export function Reveal({
   children,
-  direction = "up",
+  direction = 'up',
   delay = 0,
   className,
   skipAnimation = false,
@@ -285,16 +258,16 @@ export function Reveal({
 
   const getInitialTransform = () => {
     switch (direction) {
-      case "up":
-        return "translateY(50px)";
-      case "down":
-        return "translateY(-50px)";
-      case "left":
-        return "translateX(50px)";
-      case "right":
-        return "translateX(-50px)";
+      case 'up':
+        return 'translateY(50px)';
+      case 'down':
+        return 'translateY(-50px)';
+      case 'left':
+        return 'translateX(50px)';
+      case 'right':
+        return 'translateX(-50px)';
       default:
-        return "translateY(50px)";
+        return 'translateY(50px)';
     }
   };
 
@@ -307,12 +280,12 @@ export function Reveal({
     <div
       ref={ref}
       className={cn(
-        "transition-all duration-700 ease-out",
-        isVisible ? "opacity-100 transform-none" : "opacity-0",
+        'transition-all duration-700 ease-out',
+        isVisible ? 'opacity-100 transform-none' : 'opacity-0',
         className
       )}
       style={{
-        transform: isVisible ? "none" : getInitialTransform(),
+        transform: isVisible ? 'none' : getInitialTransform(),
       }}
     >
       {children}
@@ -338,7 +311,7 @@ export function LoadingDots() {
 // Pulse Ring Effect
 export function PulseRing({ className }: { className?: string }) {
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn('relative', className)}>
       <div className="absolute inset-0 rounded-full bg-blue-400 animate-ping opacity-20" />
       <div className="absolute inset-0 rounded-full bg-blue-400 animate-pulse opacity-30" />
     </div>

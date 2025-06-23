@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Handshake } from 'lucide-react';
 import { ButtonScroll } from '@/components/ui/button-scroll';
 import { Badge } from '@/components/ui/badge';
 
@@ -394,7 +394,11 @@ const HeroSection = () => {
 
         <div className="container px-4 md:px-6 relative z-10 mx-auto max-w-7xl">
           <AnimatedSection className="text-center max-w-3xl mx-auto">
-            <Badge variant="blue" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <Handshake className="h-4 w-4 mr-2" />
               Tuyển dụng
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">

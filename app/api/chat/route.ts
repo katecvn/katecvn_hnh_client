@@ -1,7 +1,7 @@
-import { openai } from "@ai-sdk/openai";
-import { streamText } from "ai";
-import type { NextRequest } from "next/server";
-import { knowledgeBaseManager } from "@/lib/knowledge-base";
+import { openai } from '@ai-sdk/openai';
+import { streamText } from 'ai';
+import type { NextRequest } from 'next/server';
+import { knowledgeBaseManager } from '@/lib/knowledge-base';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -15,7 +15,7 @@ async function initializeKnowledgeBase() {
       await knowledgeBaseManager.initializeEmbeddings();
       isInitialized = true;
     } catch (error) {
-      console.error("Knowledge base initialization failed:", error);
+      console.error('Knowledge base initialization failed:', error);
       // Continue without embeddings - keyword search will be used
       isInitialized = true;
     }
@@ -47,7 +47,7 @@ CÁCH TRẢ LỜI:
 THÔNG TIN LIÊN HỆ NHANH:
 - Hotline: 1900 1234
 - Email: info@Katec.com
-- Website: https://Katec.com
+- Website: https://katec.vn
 
 Hãy sử dụng knowledge base được cung cấp để trả lời chính xác và hữu ích nhất!`;
 
@@ -64,18 +64,18 @@ export async function POST(request: NextRequest) {
     );
 
     // Build context from relevant documents
-    let contextInfo = "";
+    let contextInfo = '';
     if (relevantDocs.length > 0) {
-      contextInfo = "\n\nTHÔNG TIN TỪ KNOWLEDGE BASE:\n";
+      contextInfo = '\n\nTHÔNG TIN TỪ KNOWLEDGE BASE:\n';
       relevantDocs.forEach((result, index) => {
         contextInfo += `\n${index + 1}. ${
           result.document.title
         } (Độ liên quan: ${(result.similarity * 100).toFixed(1)}%)\n`;
         contextInfo += `${result.relevantChunk}\n`;
         if (result.document.tags.length > 0) {
-          contextInfo += `Tags: ${result.document.tags.join(", ")}\n`;
+          contextInfo += `Tags: ${result.document.tags.join(', ')}\n`;
         }
-        contextInfo += "---\n";
+        contextInfo += '---\n';
       });
     }
 
@@ -91,13 +91,13 @@ export async function POST(request: NextRequest) {
 ${bestMatch.relevantChunk}
 
 ${
-  bestMatch.document.category === "product"
-    ? "Để biết thêm chi tiết về sản phẩm này, "
-    : ""
+  bestMatch.document.category === 'product'
+    ? 'Để biết thêm chi tiết về sản phẩm này, '
+    : ''
 }${
-          bestMatch.document.category === "service"
-            ? "Để tìm hiểu thêm về dịch vụ này, "
-            : ""
+          bestMatch.document.category === 'service'
+            ? 'Để tìm hiểu thêm về dịch vụ này, '
+            : ''
         }bạn có thể liên hệ:
 - Hotline: 1900 1234
 - Email: info@Katec.com
@@ -107,7 +107,7 @@ Bạn có câu hỏi gì khác không?`;
         return new Response(
           JSON.stringify({
             response,
-            source: "knowledge-base-only",
+            source: 'knowledge-base-only',
             knowledgeSources: relevantDocs.map((doc) => ({
               title: doc.document.title,
               category: doc.document.category,
@@ -115,14 +115,14 @@ Bạn có câu hỏi gì khác không?`;
               id: doc.document.id,
             })),
             suggestedActions: [
-              "Liên hệ sales",
-              "Xem thêm sản phẩm",
-              "Đặt lịch tư vấn",
+              'Liên hệ sales',
+              'Xem thêm sản phẩm',
+              'Đặt lịch tư vấn',
             ],
           }),
           {
             status: 200,
-            headers: { "Content-Type": "application/json" },
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       } else {
@@ -139,17 +139,17 @@ Bạn có muốn tìm hiểu về sản phẩm hoặc dịch vụ nào cụ th�
         return new Response(
           JSON.stringify({
             response: fallbackResponse,
-            source: "fallback-no-ai",
+            source: 'fallback-no-ai',
             suggestedActions: [
-              "Sản phẩm ERP",
-              "Dịch vụ CRM",
-              "Phát triển phần mềm",
-              "Liên hệ sales",
+              'Sản phẩm ERP',
+              'Dịch vụ CRM',
+              'Phát triển phần mềm',
+              'Liên hệ sales',
             ],
           }),
           {
             status: 200,
-            headers: { "Content-Type": "application/json" },
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
@@ -158,18 +158,18 @@ Bạn có muốn tìm hiểu về sản phẩm hoặc dịch vụ nào cụ th�
     // Build messages array for OpenAI
     const messages = [
       {
-        role: "system",
+        role: 'system',
         content: SYSTEM_PROMPT + contextInfo,
       },
       ...conversationHistory.map((msg: any) => ({
-        role: msg.sender === "user" ? "user" : "assistant",
+        role: msg.sender === 'user' ? 'user' : 'assistant',
         content: msg.content,
       })),
-      { role: "user", content: message },
+      { role: 'user', content: message },
     ];
 
     const result = streamText({
-      model: openai("gpt-4o-mini"),
+      model: openai('gpt-4o-mini'),
       messages,
       temperature: 0.3, // Lower temperature for more factual responses
       maxTokens: 800,
@@ -177,7 +177,7 @@ Bạn có muốn tìm hiểu về sản phẩm hoặc dịch vụ nào cụ th�
 
     return result.toDataStreamResponse();
   } catch (error) {
-    console.error("Chat API error:", error);
+    console.error('Chat API error:', error);
 
     // Enhanced fallback with knowledge base search
     try {
@@ -202,28 +202,28 @@ Bạn có câu hỏi gì khác về ${doc.document.category} không?`;
         return new Response(
           JSON.stringify({
             response: fallbackResponse,
-            source: "knowledge-base-fallback",
+            source: 'knowledge-base-fallback',
             suggestedActions: [
-              "Liên hệ sales",
-              "Xem thêm sản phẩm",
-              "Đặt lịch tư vấn",
+              'Liên hệ sales',
+              'Xem thêm sản phẩm',
+              'Đặt lịch tư vấn',
             ],
           }),
           {
             status: 200,
-            headers: { "Content-Type": "application/json" },
+            headers: { 'Content-Type': 'application/json' },
           }
         );
       }
     } catch (kbError) {
-      console.error("Knowledge base fallback error:", kbError);
+      console.error('Knowledge base fallback error:', kbError);
     }
 
     // Final fallback
     const fallbackResponses = [
-      "Xin lỗi, tôi đang gặp chút vấn đề kỹ thuật. Bạn có thể liên hệ hotline 1900 1234 để được hỗ trợ ngay lập tức không?",
-      "Hệ thống đang bảo trì, vui lòng thử lại sau ít phút hoặc liên hệ email info@Katec.com",
-      "Tôi không thể xử lý yêu cầu lúc này. Bạn có muốn tôi kết nối với chuyên viên tư vấn không?",
+      'Xin lỗi, tôi đang gặp chút vấn đề kỹ thuật. Bạn có thể liên hệ hotline 1900 1234 để được hỗ trợ ngay lập tức không?',
+      'Hệ thống đang bảo trì, vui lòng thử lại sau ít phút hoặc liên hệ email info@Katec.com',
+      'Tôi không thể xử lý yêu cầu lúc này. Bạn có muốn tôi kết nối với chuyên viên tư vấn không?',
     ];
 
     const fallbackResponse =
@@ -233,11 +233,11 @@ Bạn có câu hỏi gì khác về ${doc.document.category} không?`;
       JSON.stringify({
         response: fallbackResponse,
         error: true,
-        suggestedActions: ["Liên hệ sales", "Gọi hotline", "Gửi email"],
+        suggestedActions: ['Liên hệ sales', 'Gọi hotline', 'Gửi email'],
       }),
       {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
   }

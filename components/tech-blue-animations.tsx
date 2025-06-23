@@ -217,11 +217,11 @@ export function HolographicText({ children, className }: HolographicTextProps) {
     >
       {children}
       {/* Bright overlay layer */}
-      <span className="absolute inset-0 bg-gradient-to-r from-white-200 via-cyan-400 to-blue-400 bg-clip-text text-transparent animate-neon-flicker opacity-30">
+      <span className="absolute inset-0 bg-gradient-to-r from-white-100 via-cyan-400 to-blue-600 bg-clip-text text-transparent  opacity-30">
         {children}
       </span>
       {/* Additional glow layer */}
-      <span className="absolute inset-0 text-transparent bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text  animate-pulse opacity-20">
+      <span className="absolute inset-0 text-transparent bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 bg-clip-text  animate-pulse opacity-20">
         {children}
       </span>
     </span>
@@ -235,18 +235,18 @@ export function HolographicTitle({
   return (
     <span
       className={cn(
-        'relative inline-block text-transparent bg-gradient-to-r from-cyan-700 via-blue-600 to-purple-700 bg-clip-text',
+        'relative inline-block text-transparent bg-gradient-to-r from-cyan-700 via-blue-600 to-purple-600 bg-clip-text',
         'animate-hologram',
         className
       )}
     >
-      {children}
+      <span className="relative z-10">{children}</span>
       {/* Bright overlay layer */}
-      <span className="absolute inset-0 bg-gradient-to-r from-white via-cyan-700 to-blue-800 bg-clip-text text-transparent animate-neon-flicker opacity-20">
+      <span className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent  opacity-20">
         {children}
       </span>
       {/* Additional glow layer */}
-      <span className="absolute inset-0 bg-gradient-to-r from-cyan-800 via-blue-800 to-purple-800 bg-clip-text text-transparent animate-pulse opacity-10">
+      <span className="absolute inset-0 bg-gradient-to-r from-cyan-700 via-blue-800 to-purple-600 bg-clip-text text-transparent animate-pulse opacity-10">
         {children}
       </span>
     </span>
@@ -257,27 +257,20 @@ export function HolographicTitle({
 interface NeonBorderProps {
   children: React.ReactNode;
   className?: string;
-  color?: 'blue' | 'cyan' | 'electric';
+  color?: 'blue' | 'cyan' | 'electric' | 'gray';
 }
 
 export function NeonBorder({
   children,
   className,
-  color = 'blue',
+  color = 'gray',
 }: NeonBorderProps) {
-  const colorClasses = {
-    blue: 'border-tech-blue-500 hover:shadow-[0_0_5px_rgba(59,130,246,0.4),0_0_10px_rgba(59,130,246,0.3),0_0_15px_rgba(59,130,246,0.2)]',
-    cyan: 'border-cyber-blue hover:shadow-[0_0_5px_rgba(6,182,212,0.4),0_0_10px_rgba(6,182,212,0.3),0_0_15px_rgba(6,182,212,0.2)]',
-    electric:
-      'border-electric-blue hover:shadow-[0_0_5px_rgba(0,191,255,0.4),0_0_10px_rgba(0,191,255,0.3),0_0_15px_rgba(0,191,255,0.2)]',
-  };
-
   return (
     <div
       className={cn(
         'relative border-2 rounded-lg transition-all duration-300 ease-in-out',
-        colorClasses[color],
-        'hover:animate-cyber-glow [animation-duration:3s]',
+        'border-gray-400 hover:shadow-xl transition-all duration-300',
+        'hover:scale-105 hover:shadow-[0_0_18px_rgba(191,219,254,0.4),0_0_30px_rgba(191,219,254,0.3),0_0_42px_rgba(191,219,254,0.2)] [animation-duration:3s]',
         className
       )}
     >

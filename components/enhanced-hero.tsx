@@ -2,20 +2,11 @@
 
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import {
-  ArrowRight,
-  Cpu,
-  Zap,
-  Rocket,
-  Database,
-  Code2,
-  Shield,
-} from 'lucide-react';
+import { ArrowRight, Cpu, Zap, Rocket } from 'lucide-react';
 import {
   MatrixRain,
   CircuitBoard,
   DataStream,
-  HolographicText,
   TechTypewriter,
   CyberButton,
   FloatingTechElements,
@@ -25,13 +16,36 @@ import {
 } from './tech-blue-animations';
 import { Reveal } from './enhanced-animations';
 import { useState, useEffect } from 'react';
+import {
+  LoadingNumbersSkeleton,
+  LoadingSolutionsBadgesSkeleton,
+} from './loading-error-components';
 
-export function EnhancedHero() {
+type EnhancedHeroProps = {
+  loading: boolean;
+  numbers: any[]; // hoặc định nghĩa chính xác kiểu nếu bạn có
+  solutions: any[];
+  getIcon: (iconName: string) => React.ElementType;
+};
+
+export function EnhancedHero({
+  loading,
+  numbers,
+  solutions,
+  getIcon,
+}: EnhancedHeroProps) {
   const typewriterTexts = [
     'Thiết kế Website chuyên nghiệp',
     'Giải pháp công nghệ cho doanh nghiệp',
     'Hệ thống quản lý trường mầm non',
     'Phần mềm hỗ trợ Livestream hiệu quả',
+  ];
+
+  const colorClasses = [
+    'text-cyber-blue',
+    'text-electric-blue',
+    'text-neon-blue',
+    'text-tech-blue-400',
   ];
 
   const [isInitialRender, setIsInitialRender] = useState(true);
@@ -55,7 +69,7 @@ export function EnhancedHero() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-navy-tech via-tech-blue-900 to-tech-blue-800">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-navy-tech via-tech-blue-900 to-tech-blue-800  ">
       {showBackgrounds && <MatrixRain />}
       {showBackgrounds && <CircuitBoard />}
       {showBackgrounds && <TechGrid />}
@@ -65,7 +79,7 @@ export function EnhancedHero() {
 
       <div className="absolute inset-0 bg-[linear-gradient(rgba(0,191,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,191,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
-      <div className="container px-4 md:px-6 relative z-10 pt-20 md:pt-20">
+      <div className="container px-4 md:px-6 relative z-10 pt-20 md:pt-20 mb-4 md:mb-8">
         <div className="text-center space-y-6 md:space-y-8 max-w-4xl mx-auto">
           <Reveal direction="down" delay={0} skipAnimation={isInitialRender}>
             <div className="relative flex justify-center">
@@ -85,7 +99,7 @@ export function EnhancedHero() {
             {typewriterTexts.map((text, idx) => (
               <div
                 key={idx}
-                className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
               >
                 {text}
               </div>
@@ -160,77 +174,71 @@ export function EnhancedHero() {
             </div>
           </Reveal>
 
-          <Reveal direction="up" delay={200} skipAnimation={isInitialRender}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-12 md:mt-16 pt-6 md:pt-8 border-t border-tech-blue-400/20">
-              {[
-                {
-                  number: '300+',
-                  label: 'Website đã triển khai',
-                  icon: <Code2 className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: 'text-cyber-blue',
-                },
-                {
-                  number: '100+',
-                  label: 'Khách hàng doanh nghiệp & tổ chức',
-                  icon: <Database className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: 'text-electric-blue',
-                },
-                {
-                  number: '500+',
-                  label: 'Trường mầm non sử dụng hệ thống',
-                  icon: <Cpu className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: 'text-neon-blue',
-                },
-                {
-                  number: '24/7',
-                  label: 'Hỗ trợ kỹ thuật & vận hành',
-                  icon: <Shield className="h-5 w-5 md:h-6 md:w-6" />,
-                  color: 'text-tech-blue-400',
-                },
-              ].map((stat, index) => (
-                <div
-                  key={index}
-                  className="text-center group hover-lift glass-tech rounded-lg p-3 md:p-4"
-                  style={{ animationDelay: `${index * 50}ms` }}
-                >
-                  <div className="flex justify-center mb-2 md:mb-3">
-                    <div className={cn('animate-tech-pulse', stat.color)}>
-                      {stat.icon}
-                    </div>
-                  </div>
-                  <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2 group-hover:scale-110 transition-transform">
-                    <HolographicTextWhite>{stat.number}</HolographicTextWhite>
-                  </div>
-                  <div className="text-tech-blue-200 text-xs sm:text-sm">
-                    {stat.label}
-                  </div>
+          {loading ? (
+            <>
+              <LoadingNumbersSkeleton />
+              <LoadingSolutionsBadgesSkeleton />
+            </>
+          ) : (
+            <>
+              {' '}
+              <Reveal
+                direction="up"
+                delay={200}
+                skipAnimation={isInitialRender}
+              >
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 mt-12 md:mt-16 pt-6 md:pt-8 border-t border-tech-blue-400/20">
+                  {numbers.map((stat: any, index: number) => {
+                    const IconComponent = getIcon(stat?.content[0]?.icon);
+                    return (
+                      <div
+                        key={index}
+                        className="text-center group hover-lift glass-tech rounded-lg p-3 md:p-4"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <div className="flex justify-center mb-2 md:mb-3">
+                          <div
+                            className={cn(
+                              'animate-tech-pulse',
+                              colorClasses[index]
+                            )}
+                          >
+                            <IconComponent className="h-5 w-5 md:h-6 md:w-6" />
+                          </div>
+                        </div>
+                        <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2 group-hover:scale-110 transition-transform">
+                          <HolographicTextWhite>
+                            {stat?.content[0]?.title}
+                          </HolographicTextWhite>
+                        </div>
+                        <div className="text-tech-blue-200 text-xs sm:text-sm">
+                          {stat?.content[0]?.description}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal direction="up" delay={250} skipAnimation={isInitialRender}>
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-8 mb-4 md:mb-8 md:mt-12">
-              {[
-                'Thiết kế Website & Hệ thống',
-                'Giải pháp phần mềm tùy chỉnh',
-                'Hosting & Hạ tầng Web',
-                'Ứng dụng AI trong doanh nghiệp',
-                'Quản lý trường mầm non',
-                'Phần mềm hỗ trợ Livestream',
-                'Đào tạo & tư vấn công nghệ',
-              ].map((tech, index) => (
-                <Badge
-                  key={index}
-                  variant="outline"
-                  className="text-tech-blue-200 border-tech-blue-400/30 bg-tech-blue-500/10 hover:bg-tech-blue-500/20 transition-all duration-300 text-xs sm:text-sm"
-                  style={{ animationDelay: `${index * 30}ms` }}
-                >
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-          </Reveal>
+              </Reveal>
+              <Reveal
+                direction="up"
+                delay={250}
+                skipAnimation={isInitialRender}
+              >
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-8 md:mt-12">
+                  {solutions.map((solution: any, index: number) => (
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="text-tech-blue-200 border-tech-blue-400/30 bg-tech-blue-500/10 hover:bg-tech-blue-500/20 transition-all duration-300 text-xs sm:text-sm"
+                      style={{ animationDelay: `${index * 30}ms` }}
+                    >
+                      {solution?.content[0]?.title}
+                    </Badge>
+                  ))}
+                </div>
+              </Reveal>
+            </>
+          )}
         </div>
       </div>
 

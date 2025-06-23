@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Award, LayoutDashboard, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { ButtonScroll } from '@/components/ui/button-scroll';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import ContactDialog from '@/components/dialog-contact';
 
 // Generate initial bubbles immediately
 const generateInitialBubbles = () => {
@@ -85,6 +86,7 @@ const AnimatedSection = ({ children, className = '' }) => {
 const HeroSection = () => {
   // Initialize bubbles immediately when component is created
   const [bubbles] = useState(() => generateInitialBubbles());
+  const [openContact, setOpenContact] = useState(false);
 
   useEffect(() => {
     // Regenerate bubbles periodically to keep the animation fresh
@@ -163,7 +165,11 @@ const HeroSection = () => {
 
         <div className="container mx-auto px-4 md:px-6 relative z-10">
           <AnimatedSection className="text-center max-w-3xl mx-auto">
-            <Badge variant="blue" className="mb-4 bg-white/80 backdrop-blur-sm">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <LayoutDashboard className="h-4 w-4 mr-2" />
               Sản phẩm công nghệ
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-800">
@@ -180,13 +186,11 @@ const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-                asChild
+                onClick={() => setOpenContact(true)}
                 className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
-                <Link href="/contact" className="flex items-center">
-                  Tư vấn miễn phí
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+                Tư vấn miễn phí
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <ButtonScroll
                 size="lg"
@@ -199,6 +203,14 @@ const HeroSection = () => {
             </div>
           </AnimatedSection>
         </div>
+
+        {/* Form Contact */}
+        <ContactDialog
+          title="Đăng ký tư vấn miễn phí"
+          des="Vui lòng để lại thông tin của bạn. Chúng tôi sẽ liên hệ tư vấn hoàn toàn miễn phí trong thời gian sớm nhất."
+          open={openContact}
+          onOpenChange={setOpenContact}
+        />
 
         {/* Bottom wave effect */}
         <div className="absolute bottom-0 left-0 w-full">

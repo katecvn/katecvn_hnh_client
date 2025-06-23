@@ -1,15 +1,17 @@
 'use client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ArrowRight, Calendar, User, Search, TrendingUp } from 'lucide-react';
+  ArrowRight,
+  Calendar,
+  User,
+  TrendingUp,
+  Clock,
+  Zap,
+  Sparkle,
+  ScrollText,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatedSection } from '@/components/animated-section';
@@ -17,31 +19,52 @@ import { useEffect, useState } from 'react';
 import api from '@/utils/axios';
 import { handleError } from '@/utils/handle-error';
 import { toast } from 'sonner';
-import NewsCard from './EnhancedArticleCard';
 import DynamicNewsGrid from './DynamicNewsGrid';
 import AnimatedHeroSection from './HeroSection';
+import { SupportSection } from '@/components/enhanced-support';
+import { Pagination } from '@/components/pagination';
+import { HolographicText } from '@/components/tech-blue-animations';
+import {
+  LoadingFeaturedArticleSkeleton,
+  LoadingNewsPageSkeleton,
+  LoadingNewsSkeleton,
+  SectionLoader,
+} from '@/components/loading-error-components';
 
 export default function NewsPage() {
+  const MAX_LENGHT_LIMIT = 6;
+
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [categories, setCategories] = useState([]);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('tat-ca');
+
+  const [searchKeyword, setSearchKeyword] = useState('');
+
   const [pagination, setPagination] = useState({
     totalItems: 0,
     totalPages: 1,
     currentPage: 1,
   });
 
-  const getPost = async (page = 1, limit = 10, topicId = null) => {
+  const getPost = async (
+    page = 1,
+    limit = MAX_LENGHT_LIMIT,
+    topicSlug = null,
+    keyword = ''
+  ) => {
     try {
       setLoading(true);
       setError(null);
-
       let url = `/post/public/shows?page=${page}&limit=${limit}`;
-      if (topicId && topicId !== 'all') {
-        url += `&topic_id=${topicId}`;
+
+      if (topicSlug && topicSlug !== 'all') {
+        url += `&topicSlug=${topicSlug}`;
+      }
+      if (keyword) {
+        url += `&keyword=${encodeURIComponent(keyword)}`;
       }
 
       const response = await api.get(url);
@@ -61,14 +84,28 @@ export default function NewsPage() {
     }
   };
 
-  const getCategories = async (page = 1, limit = 10) => {
+  const handleSearch = (keyword) => {
+    setSearchKeyword(keyword);
+    getPost(
+      1,
+      MAX_LENGHT_LIMIT,
+      selectedCategory === 'tat-ca' ? null : selectedCategory,
+      keyword
+    );
+    const section = document.getElementById('postId');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const getCategories = async (page = 1, limit = MAX_LENGHT_LIMIT) => {
     try {
       setCategoriesLoading(true);
 
       // Fetch topics and all posts in parallel
       const [topicsResponse, postsResponse] = await Promise.all([
-        api.get(`/topic/public/shows?page=${page}&limit=${limit}`),
-        api.get('/post/public/shows?page=1&limit=1000'), // Fetch a large number to get all posts
+        api.get(`/topic/public/shows?page=${page}`),
+        api.get('/post/public/shows?page=1&limit=9999'), // Fetch a large number to get all posts
       ]);
 
       const topics = topicsResponse.data.data.topics || [];
@@ -89,6 +126,7 @@ export default function NewsPage() {
       const categoriesWithCounts = topics.map((topic) => ({
         id: topic.id,
         name: topic.name,
+        slug: topic.slug,
         post_count: topicPostCounts[topic.id] || 0,
       }));
 
@@ -97,6 +135,7 @@ export default function NewsPage() {
         {
           id: 'all',
           name: 'Tất cả',
+          slug: 'tat-ca',
           post_count: totalPostsCount,
         },
         ...categoriesWithCounts,
@@ -112,15 +151,14 @@ export default function NewsPage() {
     }
   };
 
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= pagination.totalPages) {
-      getPost(page, 10, selectedCategory);
+  const handleCategoryChange = (categorySlug) => {
+    setSelectedCategory(categorySlug);
+    const topicParam = categorySlug === 'tat-ca' ? null : categorySlug;
+    getPost(1, MAX_LENGHT_LIMIT, topicParam);
+    const section = document.getElementById('postId');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
     }
-  };
-
-  const handleCategoryChange = (categoryId) => {
-    setSelectedCategory(categoryId);
-    getPost(1, 10, categoryId); // Reset to first page when changing category
   };
 
   // Get featured news from first post or fallback
@@ -160,291 +198,369 @@ export default function NewsPage() {
   };
 
   useEffect(() => {
-    getPost(1, 4); // Load first page with 10 items
+    getPost(1, MAX_LENGHT_LIMIT); // Load first page with 10 items
     getCategories(); // Load categories
   }, []);
 
   // Update "Tất cả" category count when pagination changes
   useEffect(() => {
-    if (categories.length > 0 && selectedCategory === 'all') {
+    if (categories.length > 0 && selectedCategory === 'tat-ca') {
       setCategories((prev) =>
         prev.map((cat) =>
-          cat.id === 'all' ? { ...cat, post_count: pagination.totalItems } : cat
+          cat.slug === 'tat-ca'
+            ? { ...cat, post_count: pagination.totalItems }
+            : cat
         )
       );
     }
   }, [pagination.totalItems, selectedCategory]);
+
   const featuredNews = getFeaturedNews();
   const [isHovered, setIsHovered] = useState(false);
+
+  const getRandomCategoryColor = (index) => {
+    const gradients = [
+      { from: '#3B82F6', to: '#06B6D4', class: 'from-blue-500 to-cyan-500' },
+    ];
+
+    return gradients[index % gradients.length];
+  };
+
+  const categoryColor = getRandomCategoryColor(1);
+
+  const getWords = (str) => {
+    const words = str.split(' ');
+    const shortName =
+      words.length > 50 ? words.slice(0, 50).join(' ') + '…' : str;
+    return shortName;
+  };
+
+  const handlePostPageChange = (options) => {
+    const { page, limit, categorySlug } = options;
+    getPost(page, limit, categorySlug, searchKeyword);
+    const section = document.getElementById('postId');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
-      <AnimatedHeroSection />
+      <AnimatedHeroSection onSearch={handleSearch} />
 
       {/* Featured Article */}
-      <section className="py-20">
-        <div className="container px-4 md:px-6">
-          <AnimatedSection>
-            <div
-              className="group relative h-full cursor-pointer hover:shadow-xl"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              {/* Enhanced Floating Background Glow */}
-              <div
-                className={`absolute -inset-2 rounded-3xl blur-2xl transition-all duration-700 transform
-        ${isHovered ? 'opacity-30 scale-110' : 'opacity-0 scale-95'} -z-20`}
-                style={{
-                  background: 'linear-gradient(135deg, #3B82F6, #06B6D4)',
-                }}
-              />
+      {loading ? (
+        <LoadingFeaturedArticleSkeleton />
+      ) : posts.length !== 0 ? (
+        <section className="py-20">
+          <div className="container px-4 md:px-6">
+            <AnimatedSection>
+              <Link href={`/news/${featuredNews.slug}`} className="block">
+                <div
+                  className="group relative h-full cursor-pointer hover:shadow-lg hover:scale-105 transition-all duration-500 ease-in-out"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  {/* Enhanced Floating Background Glow */}
+                  <div
+                    className={`absolute -inset-2 rounded-3xl blur-2xl transition-all duration-700 transform
+        ${isHovered ? 'opacity-30 scale-105' : 'opacity-0 scale-95'} -z-20`}
+                    style={{
+                      background: 'linear-gradient(135deg, #3B82F6, #06B6D4)',
+                    }}
+                  />
 
-              {/* Original Card with enhanced hover effects */}
-              <Card className="overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02] relative z-10">
-                <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative overflow-hidden">
-                    <Image
-                      src={featuredNews.image || '/placeholder.svg'}
-                      alt={featuredNews.title}
-                      width={800}
-                      height={600}
-                      className={`w-full md:h-full object-cover transition-transform duration-700 
-              ${isHovered ? 'scale-110' : 'scale-100'}`}
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-blue-600 transition-all duration-300 hover:bg-blue-700">
-                        Nổi bật
-                      </Badge>
-                    </div>
+                  {/* Original Card with enhanced hover effects */}
+                  <Card className=" overflow-hidden transition-all duration-500 hover:shadow-lg hover:scale-[1.02] relative z-10">
+                    <div className="grid md:grid-cols-2 gap-0">
+                      <div
+                        style={{ aspectRatio: '2/1' }}
+                        className="relative  overflow-hidden rounded-tl-lg rounded-bl-lg"
+                      >
+                        <Image
+                          src={featuredNews.image || '/placeholder.svg'}
+                          alt={featuredNews.title}
+                          fill
+                          className={`w-full h-auto object-cover transition-transform duration-700 
+      ${isHovered ? 'scale-110' : 'scale-100'}`}
+                        />
 
-                    {/* Overlay gradient on hover */}
-                    <div
-                      className={`absolute inset-0 transition-opacity duration-500 
-              ${isHovered ? 'opacity-20' : 'opacity-0'}`}
-                      style={{
-                        background: 'linear-gradient(135deg, #3B82F6, #06B6D4)',
-                      }}
-                    />
-                  </div>
+                        <div className="absolute top-4 left-4 z-20">
+                          <div
+                            className={`px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md border border-white/30
+                transition-all duration-500 transform ${
+                  isHovered
+                    ? 'text-white shadow-lg scale-110 rotate-3'
+                    : 'bg-white/90 text-gray-800 hover:scale-105'
+                }`}
+                            style={{
+                              background: isHovered
+                                ? `linear-gradient(135deg, ${categoryColor.from}, ${categoryColor.to})`
+                                : 'rgba(255, 255, 255, 0.9)',
+                            }}
+                          >
+                            <div className="flex items-center gap-1">
+                              <Zap className="w-3 h-3" />
+                              Nổi bật
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                  <div className="p-8 flex flex-col justify-center relative">
-                    <Badge
-                      variant="outline"
-                      className={`w-fit mb-4 transition-all duration-300 
-              ${isHovered ? 'border-blue-500 text-blue-600' : ''}`}
-                    >
-                      {featuredNews.category}
-                    </Badge>
+                      <div className="p-8 flex flex-col justify-center relative">
+                        <h2
+                          className={`text-2xl md:text-3xl font-bold mb-4 transition-all duration-300 ${
+                            isHovered
+                              ? 'text-transparent bg-clip-text'
+                              : 'text-gray-900'
+                          }`}
+                          style={
+                            isHovered
+                              ? {
+                                  backgroundImage:
+                                    'linear-gradient(135deg, #3B82F6, #06B6D4)',
+                                  WebkitBackgroundClip: 'text',
+                                  WebkitTextFillColor: 'transparent',
+                                }
+                              : {}
+                          }
+                        >
+                          {featuredNews.title}
+                        </h2>
 
-                    <h2
-                      className={`text-2xl md:text-3xl font-bold mb-4 transition-colors duration-300
-            ${isHovered ? 'text-blue-600' : ''}`}
-                    >
-                      {featuredNews.title}
-                    </h2>
+                        <p className="text-gray-600 text-sm mb-6 transition-colors duration-300">
+                          {getWords(featuredNews.excerpt)}
+                        </p>
 
-                    <p className="text-gray-600 mb-6 transition-colors duration-300">
-                      {featuredNews.excerpt}
-                    </p>
+                        <div className="flex items-center text-xs text-gray-500 mb-4 gap-4 flex-wrap relative z-10">
+                          <div
+                            className={`flex items-center gap-1 transition-all duration-300 transform
+                ${isHovered ? 'scale-105' : ''}`}
+                            style={{
+                              color: isHovered ? categoryColor.from : undefined,
+                            }}
+                          >
+                            <Calendar className="h-3 w-3" />
+                            <span>
+                              {featuredNews.date
+                                ? new Date(
+                                    featuredNews.date
+                                  ).toLocaleDateString('vi-VN')
+                                : article.date || 'N/A'}
+                            </span>
+                          </div>
 
-                    <div className="flex items-center text-sm text-gray-500 mb-6 transition-colors duration-300">
-                      <Calendar className="h-4 w-4 mr-2" />
-                      <span className="mr-4">{featuredNews.date}</span>
-                      <User className="h-4 w-4 mr-2" />
-                      <span className="mr-4">{featuredNews.author}</span>
-                      <span>{featuredNews.readTime}</span>
-                    </div>
+                          <div
+                            className={`flex items-center gap-1 transition-all duration-300 transform
+                ${isHovered ? 'scale-105' : ''}`}
+                            style={{
+                              color: isHovered ? categoryColor.to : undefined,
+                            }}
+                          >
+                            <User className="h-3 w-3" />
+                            <span>{featuredNews.author || 'Admin'}</span>
+                          </div>
 
-                    <Button
-                      className={`w-fit transition-all duration-300 transform
-              ${isHovered ? 'translate-x-2 shadow-lg' : ''}`}
-                      style={{
-                        background: isHovered
-                          ? 'linear-gradient(135deg, #3B82F6, #06B6D4)'
-                          : undefined,
-                      }}
-                    >
-                      Đọc bài viết
-                      <ArrowRight
-                        className={`ml-2 h-4 w-4 transition-transform duration-300 
+                          <div
+                            className={`flex items-center gap-1 transition-all duration-300 transform
+                ${isHovered ? 'scale-105' : ''}`}
+                            style={{
+                              color: isHovered ? categoryColor.from : undefined,
+                            }}
+                          >
+                            <Clock className="w-3 h-3" />
+                            <span>{featuredNews.readTime || '5 phút đọc'}</span>
+                          </div>
+                        </div>
+
+                        <Button
+                          className={`w-full mt-3 py-5 px-6 text-sm text-gray-900 bg-white transition-all duration-300 transform
+              ${
+                isHovered
+                  ? 'translate-x-2 shadow-lg text-white bg-blue-600'
+                  : ''
+              }`}
+                        >
+                          <span className="relative py-2 z-10 transition-all duration-300">
+                            {isHovered ? 'Khám phá ngay' : 'Đọc thêm'}
+                          </span>
+                          <ArrowRight
+                            className={`ml-2 h-4 w-4 transition-transform duration-300 
               ${isHovered ? 'translate-x-1' : ''}`}
-                      />
-                    </Button>
-                  </div>
+                          />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
                 </div>
-              </Card>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+              </Link>
+            </AnimatedSection>
+          </div>
+        </section>
+      ) : null}
 
       {/* Categories and News List */}
-      <section className="py-20 bg-gray-50">
+      <section id="postId" className="py-20 bg-gray-50">
+        <div className="text-center mb-16">
+          <Badge
+            variant="outline"
+            className="mb-4 border-tech-blue-500 text-tech-blue-600"
+          >
+            <ScrollText className="h-4 w-4 mr-2" />
+            Tin tức
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <HolographicText>Cập nhật mới mỗi ngày</HolographicText>
+          </h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Đừng bỏ lỡ những thông tin mới nhất về công nghệ, sản phẩm và hoạt
+            động cộng đồng tại Katec.
+          </p>
+        </div>
+
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col md:flex-row gap-8">
+          <div className="flex sm:flex-row flex-col   gap-8">
             {/* Sidebar - 4/12 columns */}
-            <div className="md:w-1/3 flex-shrink-0 ">
+            <div className="md:w-1/4 flex-shrink-0">
               <AnimatedSection>
-                <Card className="mb-3">
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <TrendingUp className="h-5 w-5 mr-2" />
-                      Danh mục
+                <Card className="mb-6 shadow-lg border-0 bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm">
+                  <CardHeader className="pb-4 border-b border-gray-100">
+                    <CardTitle className="flex items-center text-gray-800">
+                      <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mr-3 shadow-md">
+                        <TrendingUp className="h-5 w-5 text-white" />
+                      </div>
+                      <span className="font-bold text-lg">Danh mục</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-2">
+
+                  <CardContent className="p-4">
                     {categoriesLoading ? (
-                      <div className="flex justify-center py-4">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                      <div className="flex flex-col items-center justify-center py-8 space-y-3">
+                        <div className="relative">
+                          <div className="animate-spin rounded-full h-8 w-8 border-3 border-gray-200"></div>
+                          <div className="animate-spin rounded-full h-8 w-8 border-3 border-blue-500 border-t-transparent absolute top-0 left-0"></div>
+                        </div>
+                        <p className="text-gray-500 text-sm font-medium">
+                          Đang tải danh mục...
+                        </p>
                       </div>
                     ) : (
-                      categories.map((category) => (
-                        <div
-                          key={category.id}
-                          className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
-                            selectedCategory === category.id
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'hover:bg-gray-100'
-                          }`}
-                          onClick={() => handleCategoryChange(category.id)}
-                        >
-                          <span className="font-medium">{category.name}</span>
-                          <Badge variant="secondary">
-                            {category.post_count || 0}
-                          </Badge>
-                        </div>
-                      ))
+                      <div className="space-y-2">
+                        {categories.map((category, index) => (
+                          <div
+                            key={category.id}
+                            className={`group relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 ease-out transform hover:scale-[1.02] ${
+                              selectedCategory === category.id
+                                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/25'
+                                : 'bg-white hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 border border-gray-100 hover:border-blue-200 hover:shadow-md'
+                            }`}
+                            onClick={() => handleCategoryChange(category.slug)}
+                            style={{
+                              animationDelay: `${index * 50}ms`,
+                            }}
+                          >
+                            <div
+                              className={`absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                                selectedCategory === category.id
+                                  ? 'opacity-0'
+                                  : ''
+                              }`}
+                            ></div>
+
+                            <div className="relative flex items-center justify-between p-4">
+                              <div className="flex items-center space-x-3 mr-2 md:mr-4">
+                                <div
+                                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                    selectedCategory === category.id
+                                      ? 'bg-white shadow-lg'
+                                      : 'bg-gradient-to-r from-blue-400 to-purple-500 group-hover:scale-125'
+                                  }`}
+                                ></div>
+                                <span
+                                  className={`font-semibold text-sm transition-colors duration-300 ${
+                                    selectedCategory === category.id
+                                      ? 'text-white'
+                                      : 'text-gray-700 group-hover:text-blue-700'
+                                  }`}
+                                >
+                                  {category.name}
+                                </span>
+                              </div>
+
+                              <Badge
+                                variant={
+                                  selectedCategory === category.id
+                                    ? 'outline'
+                                    : 'secondary'
+                                }
+                                className={`transition-all duration-300 font-bold ${
+                                  selectedCategory === category.id
+                                    ? 'bg-white/20 text-white border-white/30 shadow-sm'
+                                    : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-600 group-hover:from-blue-100 group-hover:to-purple-100 group-hover:text-blue-700 border-0'
+                                }`}
+                              >
+                                {category.post_count || 0}
+                              </Badge>
+                            </div>
+
+                            {selectedCategory === category.id && (
+                              <div className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full shadow-lg"></div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     )}
+
+                    <div className="mt-6 pt-4 border-t border-gray-100">
+                      <div className="flex justify-center">
+                        <div className="w-12 h-1 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full opacity-30"></div>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               </AnimatedSection>
             </div>
 
             {/* Main Content - 8/12 columns */}
-            <div className="md:w-2/3 flex-1">
-              {loading ? (
-                <div className="flex justify-center items-center py-20">
-                  <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-gray-600">Đang tải tin tức...</p>
+            <div className="md:w-3/4 flex-1">
+              <SectionLoader
+                loading={loading}
+                error={error}
+                onRetry={() =>
+                  getPost(
+                    pagination.currentPage,
+                    MAX_LENGHT_LIMIT,
+                    selectedCategory
+                  )
+                }
+                loadingComponent={LoadingNewsPageSkeleton}
+              >
+                {posts.length === 0 ? (
+                  <div className="text-center text-gray-600">
+                    Không có bài viết nào phù hợp với tìm kiếm hoặc danh mục
+                    này.
                   </div>
-                </div>
-              ) : error ? (
-                <div className="text-center py-20">
-                  <p className="text-red-600 mb-4">
-                    Có lỗi xảy ra khi tải tin tức
-                  </p>
-                  <Button
-                    onClick={() =>
-                      getPost(pagination.currentPage, 10, selectedCategory)
-                    }
-                  >
-                    Thử lại
-                  </Button>
-                </div>
-              ) : (
-                <>
-                  <DynamicNewsGrid posts={posts} />
-
-                  <AnimatedSection className="mt-12 flex flex-col items-center">
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        variant="outline"
-                        disabled={pagination.currentPage <= 1}
-                        onClick={() =>
-                          handlePageChange(pagination.currentPage - 1)
-                        }
-                      >
-                        Trước
-                      </Button>
-
-                      {Array.from(
-                        { length: Math.min(5, pagination.totalPages) },
-                        (_, i) => {
-                          let pageNum;
-                          if (pagination.totalPages <= 5) {
-                            pageNum = i + 1;
-                          } else if (pagination.currentPage <= 3) {
-                            pageNum = i + 1;
-                          } else if (
-                            pagination.currentPage >=
-                            pagination.totalPages - 2
-                          ) {
-                            pageNum = pagination.totalPages - 4 + i;
-                          } else {
-                            pageNum = pagination.currentPage - 2 + i;
-                          }
-
-                          return (
-                            <Button
-                              key={pageNum}
-                              variant={
-                                pagination.currentPage === pageNum
-                                  ? 'default'
-                                  : 'outline'
-                              }
-                              className={
-                                pagination.currentPage === pageNum
-                                  ? 'bg-blue-600'
-                                  : ''
-                              }
-                              onClick={() => handlePageChange(pageNum)}
-                            >
-                              {pageNum}
-                            </Button>
-                          );
-                        }
-                      )}
-
-                      {pagination.totalPages > 5 &&
-                        pagination.currentPage < pagination.totalPages - 2 && (
-                          <>
-                            <span className="px-2">...</span>
-                            <Button
-                              variant="outline"
-                              onClick={() =>
-                                handlePageChange(pagination.totalPages)
-                              }
-                            >
-                              {pagination.totalPages}
-                            </Button>
-                          </>
-                        )}
-
-                      <Button
-                        variant="outline"
-                        disabled={
-                          pagination.currentPage >= pagination.totalPages
-                        }
-                        onClick={() =>
-                          handlePageChange(pagination.currentPage + 1)
-                        }
-                      >
-                        Sau
-                      </Button>
-                    </div>
-
-                    <div className="mt-4 text-sm text-gray-600 text-center">
-                      Hiển thị{' '}
-                      {Math.min(
-                        (pagination.currentPage - 1) * 10 + 1,
-                        pagination.totalItems
-                      )}{' '}
-                      -{' '}
-                      {Math.min(
-                        pagination.currentPage * 10,
-                        pagination.totalItems
-                      )}{' '}
-                      của {pagination.totalItems} bài viết
-                    </div>
-                  </AnimatedSection>
-                </>
-              )}
+                ) : (
+                  <DynamicNewsGrid posts={posts} row={false} />
+                )}
+                <Pagination
+                  keyword="bài viết"
+                  pagination={pagination}
+                  onPageChange={handlePostPageChange}
+                  itemsPerPage={MAX_LENGHT_LIMIT}
+                  selectedCategory={selectedCategory}
+                />
+              </SectionLoader>
             </div>
           </div>
         </div>
       </section>
+
+      {/* <VideoSection /> */}
+
+      {/* Support Section */}
+      <SupportSection className="bg-white" />
     </div>
   );
 }

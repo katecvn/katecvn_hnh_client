@@ -1,6 +1,7 @@
 'use client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Headset } from 'lucide-react';
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 
@@ -643,7 +644,11 @@ const ContactSection = () => {
 
         <div className="container px-4 md:px-6">
           <AnimatedSection className="text-center max-w-3xl mx-auto">
-            <Badge variant="blue" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <Headset className="h-4 w-4 mr-2" />
               Liên hệ với chúng tôi
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold mb-6">

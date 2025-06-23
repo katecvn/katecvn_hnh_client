@@ -1,3 +1,5 @@
+'use client';
+
 import type { Metadata } from 'next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,23 +24,29 @@ import {
   Code,
   Database,
   Smartphone,
-  Facebook,
-  Mail,
+  BookAIcon,
+  ChartCandlestick,
+  HousePlug,
+  UsersRound,
+  HeartHandshake,
+  Telescope,
+  Handshake,
 } from 'lucide-react';
 import Image from 'next/image';
 import { AnimatedSection } from '@/components/animated-section';
 import Link from 'next/link';
 import { ButtonScroll } from '@/components/ui/button-scroll';
 import HeroSection from './HeroSection';
-import { HolographicTitle } from '@/components/tech-blue-animations';
+import { HolographicText } from '@/components/tech-blue-animations';
+import { useEffect, useState } from 'react';
+import api from '@/utils/axios';
+import ContactDialog from '@/components/dialog-contact';
+import type { FeedbackContentItem as ContentItem } from '../interface';
 
-export const metadata: Metadata = {
-  title: 'Về chúng tôi - Katec | Đội ngũ chuyên gia công nghệ hàng đầu',
-  description:
-    'Tìm hiểu về Katec - công ty công nghệ thông tin hàng đầu Việt Nam với đội ngũ chuyên gia giàu kinh nghiệm và cam kết mang lại giá trị cho khách hàng.',
-  keywords:
-    'về Katec, đội ngũ IT, chuyên gia công nghệ, công ty phần mềm Việt Nam, giá trị cốt lõi',
-};
+interface SectionItem {
+  id: string | number;
+  content: ContentItem[];
+}
 
 export default function AboutPage() {
   const coreValues = [
@@ -208,6 +216,30 @@ export default function AboutPage() {
     },
   ];
 
+  const mockAwards = [
+    {
+      name: 'Giải thưởng kỹ thuật',
+      image:
+        '/giaithuong1.jpg?height=300&width=300&query=professional CEO portrait',
+      description:
+        'Giải nhất cuộc thi sáng tạo kỹ thuật lần thứ 12 năm 2022–2023 TP. Cần Thơ.',
+    },
+    {
+      name: 'Chứng nhận KH&CN',
+      image:
+        '/giaithuong2.jpg?height=300&width=300&query=professional CEO portrait',
+      description:
+        'Được công nhận là doanh nghiệp khoa học và công nghệ TP. Cần Thơ 2024.',
+    },
+    {
+      name: 'Giấy chứng nhận doanh nghiệp KH&CN',
+      image:
+        '/giaithuong3.jpg?height=300&width=300&query=professional CEO portrait',
+      description:
+        'Chứng nhận doanh nghiệp khoa học và công nghệ cấp ngày 25/01/2024.',
+    },
+  ];
+
   const stats = [
     {
       label: 'Năm kinh nghiệm',
@@ -250,14 +282,42 @@ export default function AboutPage() {
     { name: 'DevOps', level: 87 },
   ];
 
-  // Smooth scroll function
-  const scrollToProducts = () => {
-    const productsSection = document.getElementById('portfolio');
-    if (productsSection) {
-      productsSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [awards, setAwards] = useState<SectionItem[]>([]);
+  const [teams, setTeams] = useState<SectionItem[]>([]);
+
+  const [openContact, setOpenContact] = useState(false);
+
+  useEffect(() => {
+    fetchAllData();
+  }, []);
+
+  const fetchAllData = async () => {
+    setLoading(true);
+    setError(null);
+
+    const requests = [];
+
+    // Prepare other endpoints
+    requests.push(api.get('/page-section/public/shows?sectionType=award')); // index 0
+    requests.push(api.get('/page-section/public/shows?sectionType=teams')); // index 1
+
+    try {
+      const [awardRes, teamRes] = await Promise.all(requests);
+
+      // Awards, Teams
+      setAwards(awardRes.data.data || []);
+      setTeams(teamRes.data.data || []);
+    } catch (error: any) {
+      console.error('Error fetching homepage data:', error);
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        'Không thể tải dữ liệu trang chủ';
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -290,13 +350,17 @@ export default function AboutPage() {
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge variant="outline" className="mb-4">
+              <Badge
+                variant="outline"
+                className="mb-4 border-tech-blue-500 text-tech-blue-600"
+              >
+                <BookAIcon className="h-4 w-4 mr-2" />
                 Câu chuyện của chúng tôi
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                <HolographicTitle>
+                <HolographicText>
                   Hành trình 5 năm xây dựng và phát triển
-                </HolographicTitle>
+                </HolographicText>
               </h2>
               <p className="text-gray-600 mb-6 text-lg">
                 Katec được thành lập vào năm 2019 với tầm nhìn trở thành công ty
@@ -351,13 +415,17 @@ export default function AboutPage() {
       <AnimatedSection className="py-20 bg-white">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <ChartCandlestick className="h-4 w-4 mr-2" />
               Giá trị cốt lõi
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <HolographicTitle>
+              <HolographicText>
                 Những giá trị định hướng hành động
-              </HolographicTitle>
+              </HolographicText>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Các giá trị cốt lõi này là nền tảng cho mọi quyết định và hành
@@ -392,11 +460,15 @@ export default function AboutPage() {
       <AnimatedSection className="py-20 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <TrendingUp className="h-4 w-4 mr-2" />
               Hành trình phát triển
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <HolographicTitle>Các mốc quan trọng</HolographicTitle>
+              <HolographicText>Các mốc quan trọng</HolographicText>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Những cột mốc đánh dấu sự phát triển và thành công của Katec qua
@@ -453,13 +525,15 @@ export default function AboutPage() {
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge variant="outline" className="mb-4">
+              <Badge
+                variant="outline"
+                className="mb-4 border-tech-blue-500 text-tech-blue-600"
+              >
+                <HousePlug className="h-4 w-4 mr-2" />
                 Công nghệ chúng tôi sử dụng
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                <HolographicTitle>
-                  Chuyên môn công nghệ hàng đầu
-                </HolographicTitle>
+                <HolographicText>Chuyên môn công nghệ hàng đầu</HolographicText>
               </h2>
               <p className="text-gray-600 mb-8 text-lg">
                 Đội ngũ của chúng tôi thành thạo các công nghệ tiên tiến nhất,
@@ -512,63 +586,124 @@ export default function AboutPage() {
         </div>
       </AnimatedSection>
 
-      {/* Team Section */}
       <AnimatedSection className="py-20 bg-gray-50">
-        <div id="portfolio" className="container px-4 md:px-6">
+        <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
-              Đội ngũ lãnh đạo
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <Award className="h-4 w-4 mr-2" />
+              Thành tích & Giải thưởng
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <HolographicTitle>Gặp gỡ đội ngũ chuyên gia</HolographicTitle>
+              <HolographicText>
+                Vinh danh những cột mốc đáng tự hào
+              </HolographicText>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Những con người tài năng và đam mê công nghệ, dẫn dắt Katec hướng
-              tới thành công
+              Những giải thưởng không chỉ ghi nhận nỗ lực không ngừng nghỉ, mà
+              còn là minh chứng cho sự sáng tạo và cống hiến của tập thể Katec
+              trong hành trình chinh phục công nghệ và đổi mới giáo dục.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
+            {awards.map((award, index) => (
               <AnimatedSection key={index} delay={index * 100}>
                 <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
                   <div className="relative">
                     <Image
-                      src={member.image || '/placeholder.svg'}
-                      alt={member.name}
+                      src={award?.content[0]?.imageUrl || '/placeholder.svg'}
+                      alt={award?.content[0]?.name || 'Thành viên'}
                       width={300}
                       height={300}
                       className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <CardHeader>
-                    <CardTitle className="text-xl">{member.name}</CardTitle>
-                    <CardDescription className="text-blue-600 font-medium">
-                      {member.position}
+                    <CardTitle className="text-xl group-hover:text-blue-500">
+                      {award?.content[0]?.name}
+                    </CardTitle>
+                    <CardDescription className="font-medium">
+                      {award?.content[0]?.content}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">{member.bio}</p>
-                    <div className="space-y-2">
-                      <h4 className="font-medium text-sm">Chuyên môn:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {member.specialties.map((specialty, idx) => (
-                          <Badge
-                            key={idx}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {specialty}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
                 </Card>
               </AnimatedSection>
             ))}
           </div>
         </div>
       </AnimatedSection>
+
+      {/* Team Section */}
+      <div id="portfolio">
+        <AnimatedSection className="py-20 bg-gray-50">
+          <div className="container px-4 md:px-6">
+            <div className="text-center mb-16">
+              <Badge
+                variant="outline"
+                className="mb-4 border-tech-blue-500 text-tech-blue-600"
+              >
+                <UsersRound className="h-4 w-4 mr-2" />
+                Đội ngũ lãnh đạo
+              </Badge>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                <HolographicText>Gặp gỡ đội ngũ chuyên gia</HolographicText>
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Những con người tài năng và đam mê công nghệ, dẫn dắt Katec
+                hướng tới thành công
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {teams.map((member, index) => (
+                <AnimatedSection key={index} delay={index * 100}>
+                  <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
+                    <div className="relative">
+                      <Image
+                        src={member?.content[0]?.imageUrl || '/placeholder.svg'}
+                        alt={member?.content[0]?.name || 'Thành viên'}
+                        width={300}
+                        height={300}
+                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <CardHeader>
+                      <CardTitle className="text-xl">
+                        {member?.content[0]?.name}
+                      </CardTitle>
+                      <CardDescription className="text-blue-600 font-medium">
+                        {member?.content[0]?.role}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 mb-4">
+                        {member?.content[0]?.content}
+                      </p>
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-sm">Chuyên môn:</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {member?.content[0]?.features?.map(
+                            (specialty, idx) => (
+                              <Badge
+                                key={idx}
+                                variant="secondary"
+                                className="text-xs"
+                              >
+                                {specialty}
+                              </Badge>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </AnimatedSection>
+              ))}
+            </div>
+          </div>
+        </AnimatedSection>
+      </div>
 
       {/* Mission & Vision */}
       <AnimatedSection className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
@@ -579,8 +714,10 @@ export default function AboutPage() {
                 variant="outline"
                 className="mb-4 border-white/20 text-white"
               >
+                <HeartHandshake className="h-4 w-4 mr-2" />
                 Sứ mệnh
               </Badge>
+
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Sứ mệnh của chúng tôi
               </h2>
@@ -613,8 +750,10 @@ export default function AboutPage() {
                 variant="outline"
                 className="mb-4 border-white/20 text-white"
               >
+                <Telescope className="h-4 w-4 mr-2" />
                 Tầm nhìn
               </Badge>
+
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 Tầm nhìn 2030
               </h2>
@@ -648,13 +787,15 @@ export default function AboutPage() {
       {/* Contact CTA */}
       <AnimatedSection className="py-20 bg-white">
         <div className="container px-4 md:px-6 text-center">
-          <Badge variant="outline" className="mb-4">
+          <Badge
+            variant="outline"
+            className="mb-4 border-tech-blue-500 text-tech-blue-600"
+          >
+            <Handshake className="h-4 w-4 mr-2" />
             Gia nhập đội ngũ
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <HolographicTitle>
-              Cùng xây dựng tương lai công nghệ
-            </HolographicTitle>
+            <HolographicText>Cùng xây dựng tương lai công nghệ</HolographicText>
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Chúng tôi luôn tìm kiếm những tài năng xuất sắc để cùng phát triển
@@ -667,14 +808,23 @@ export default function AboutPage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/contact" className="flex items-center">
-                Liên hệ hợp tác
-              </Link>
+            <Button
+              onClick={() => setOpenContact(true)}
+              size="lg"
+              variant="outline"
+            >
+              Liên hệ hợp tác
             </Button>
           </div>
         </div>
       </AnimatedSection>
+      {/* Form Contact */}
+      <ContactDialog
+        title="Liên hệ hợp tác"
+        des="Vui lòng để lại thông tin của bạn. Chúng tôi sẽ nhanh chóng liên hệ để trao đổi về cơ hội hợp tác và phát triển lâu dài."
+        open={openContact}
+        onOpenChange={setOpenContact}
+      />
     </div>
   );
 }

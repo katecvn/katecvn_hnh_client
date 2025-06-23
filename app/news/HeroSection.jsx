@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search } from 'lucide-react';
+import { Newspaper, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 // AnimatedSection component
@@ -29,8 +29,22 @@ const Button = ({ children, className = '', ...props }) => {
   );
 };
 
-const AnimatedHeroSection = () => {
+const AnimatedHeroSection = ({ onSearch }) => {
   const [showBubbles, setShowBubbles] = useState(false);
+  const [keyword, setKeyword] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowBubbles(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSearch = () => {
+    onSearch?.(keyword.trim());
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSearch();
+  };
 
   // Kích hoạt animation bong bóng khi component mount
   useEffect(() => {
@@ -277,9 +291,14 @@ const AnimatedHeroSection = () => {
 
         <div className="container relative z-10 px-4 md:px-6">
           <AnimatedSection className="text-center max-w-3xl mx-auto">
-            <Badge variant="blue" className="mb-4">
-              Tin tức & Insights
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <Newspaper className="h-4 w-4 mr-2" />
+              Tin tức & Sự kiện
             </Badge>
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Cập nhật
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -295,11 +314,14 @@ const AnimatedHeroSection = () => {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 m-1" />
                 <Input
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   placeholder="Tìm kiếm bài viết..."
                   className="pl-10 backdrop-blur-sm bg-white/90"
                 />
               </div>
-              <Button>Tìm kiếm</Button>
+              <Button onClick={handleSearch}>Tìm kiếm</Button>
             </div>
           </AnimatedSection>
         </div>

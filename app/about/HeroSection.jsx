@@ -1,10 +1,11 @@
 'use client';
-import React, { useEffect, useRef } from 'react';
-import { ArrowRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Building2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { ButtonScroll } from '@/components/ui/button-scroll';
 import { Button } from '@/components/ui/button';
+import ContactDialog from '@/components/dialog-contact';
 
 const FloatingParticles = () => {
   const canvasRef = useRef(null);
@@ -267,6 +268,7 @@ const AnimatedSection = ({ children, className = '' }) => (
 );
 
 export default function HeroSection() {
+  const [openContact, setOpenContact] = useState(false);
   return (
     <section className="relative py-20 bg-gradient-to-br from-blue-50 to-purple-50 overflow-hidden">
       {/* Floating Particles Background */}
@@ -275,7 +277,11 @@ export default function HeroSection() {
       {/* Content */}
       <div className="container px-4 md:px-6 relative z-10">
         <AnimatedSection className="text-center max-w-4xl mx-auto">
-          <Badge variant="blue" className="mb-4 bg-white/80 backdrop-blur-sm">
+          <Badge
+            variant="outline"
+            className="mb-4 border-tech-blue-500 text-tech-blue-600"
+          >
+            <Building2 className="h-4 w-4 mr-2" />
             Về Katec
           </Badge>
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
@@ -293,13 +299,11 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center text-base">
             <Button
               size="lg"
-              asChild
+              onClick={() => setOpenContact(true)}
               className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
-              <a href="/contact" className="flex items-center">
-                Liên hệ hợp tác
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </a>
+              Liên hệ hợp tác
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <ButtonScroll
               size="lg"
@@ -312,6 +316,13 @@ export default function HeroSection() {
           </div>
         </AnimatedSection>
       </div>
+      {/* Form Contact */}
+      <ContactDialog
+        title="Liên hệ hợp tác"
+        des="Vui lòng để lại thông tin của bạn. Chúng tôi sẽ nhanh chóng liên hệ để trao đổi về cơ hội hợp tác và phát triển lâu dài."
+        open={openContact}
+        onOpenChange={setOpenContact}
+      />
     </section>
   );
 }

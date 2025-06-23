@@ -47,6 +47,7 @@ export function OfficeMap({ offices }: OfficeMapProps) {
 
       {/* Map Container */}
       <div className="relative">
+        {/* Map Iframe */}
         <div className="aspect-video rounded-lg overflow-hidden shadow-lg">
           <iframe
             src={getMapUrl(offices[selectedOffice])}
@@ -61,9 +62,10 @@ export function OfficeMap({ offices }: OfficeMapProps) {
         </div>
 
         {/* Office Info Overlay */}
-        <Card className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-sm">
+        <Card className="bg-white z-10 w-full mt-4 sm:mt-0 sm:absolute sm:bottom-4 sm:left-4 sm:right-4 sm:rounded-xl sm:shadow-md sm:bg-white/95 sm:backdrop-blur-sm">
           <CardContent className="p-4">
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+              {/* Info */}
               <div className="space-y-2">
                 <h3 className="font-semibold text-lg flex items-center">
                   <MapPin className="h-5 w-5 mr-2 text-blue-600" />
@@ -89,11 +91,33 @@ export function OfficeMap({ offices }: OfficeMapProps) {
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <Button size="sm" variant="outline">
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={() => {
+                    const { lat, lng } = offices[selectedOffice].coordinates;
+                    window.open(
+                      `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+                      '_blank'
+                    );
+                  }}
+                >
                   Chỉ đường
                 </Button>
-                <Button size="sm">
+
+                <Button
+                  size="sm"
+                  className="w-full sm:w-auto flex items-center justify-center"
+                  onClick={() => {
+                    window.location.href = `tel:${offices[
+                      selectedOffice
+                    ].phone.replace(/\s+/g, '')}`;
+                  }}
+                >
                   <Phone className="h-3 w-3 mr-1" />
                   Gọi
                 </Button>
@@ -105,19 +129,56 @@ export function OfficeMap({ offices }: OfficeMapProps) {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Button variant="outline" className="flex items-center justify-center">
+        <Button
+          variant="outline"
+          className="flex items-center justify-center"
+          onClick={() => {
+            const { lat, lng } = offices[selectedOffice].coordinates;
+            window.open(
+              `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+              '_blank'
+            );
+          }}
+        >
           <MapPin className="h-4 w-4 mr-2" />
           Chỉ đường
         </Button>
-        <Button variant="outline" className="flex items-center justify-center">
+
+        <Button
+          variant="outline"
+          className="flex items-center justify-center"
+          onClick={() => {
+            window.location.href = `tel:${offices[selectedOffice].phone.replace(
+              /\s+/g,
+              ''
+            )}`;
+          }}
+        >
           <Phone className="h-4 w-4 mr-2" />
           Gọi điện
         </Button>
-        <Button variant="outline" className="flex items-center justify-center">
+
+        <Button
+          variant="outline"
+          className="flex items-center justify-center"
+          onClick={() => {
+            window.open(
+              `https://mail.google.com/mail/?view=cm&fs=1&to=${offices[selectedOffice].email}`,
+              '_blank'
+            );
+          }}
+        >
           <Mail className="h-4 w-4 mr-2" />
           Gửi email
         </Button>
-        <Button variant="outline" className="flex items-center justify-center">
+
+        <Button
+          variant="outline"
+          className="flex items-center justify-center"
+          onClick={() => {
+            alert('Bạn vui lòng điền vao form bên cạnh để đặt lịch hẹn!');
+          }}
+        >
           <Clock className="h-4 w-4 mr-2" />
           Đặt lịch hẹn
         </Button>

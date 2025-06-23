@@ -25,20 +25,20 @@ const generateRequestCode = () => {
   return 'TC123456';
 };
 
-export function ContactForm() {
-  const formId = useId();
+export function ContactForm({ title }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [attachedFiles, setAttachedFiles] = useState([]);
+
   const [requestCode] = useState(generateRequestCode());
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Form data state
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    subject: '',
+    subject: title || '',
     message: '',
     company: '',
     position: '',
@@ -58,37 +58,32 @@ export function ContactForm() {
     }));
   };
 
-  // Handle checkbox changes for contact times
-  const handleContactTimeChange = (time, checked) => {
-    setFormData((prev) => ({
-      ...prev,
-      contactTimes: checked
-        ? [...prev.contactTimes, time]
-        : prev.contactTimes.filter((t) => t !== time),
-    }));
-  };
-
   const handleSubmit = async () => {
     setIsLoading(true);
     setError(null);
+    setFieldErrors({}); // reset lỗi
 
     const { name, email, phone, subject, message } = formData;
+    const errors = {};
 
-    // Validate required fields
-    if (!name || !phone || !subject || !message) {
-      setError('Vui lòng điền đầy đủ các trường bắt buộc');
+    if (!name) errors.name = 'Họ tên là bắt buộc';
+    if (!phone) errors.phone = 'Số điện thoại là bắt buộc';
+    if (!subject) errors.subject = 'Chủ đề là bắt buộc';
+    if (!message) errors.message = 'Nội dung là bắt buộc';
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
       setIsLoading(false);
       return;
     }
 
     try {
-      // Prepare API payload
       const payload = {
         name: name.trim(),
         email: email || undefined,
-        phone: phone,
-        subject: subject,
-        message: message,
+        phone,
+        subject,
+        message,
       };
 
       const response = await api.post('/contact/create', payload);
@@ -103,11 +98,6 @@ export function ContactForm() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files || []);
-    setAttachedFiles((prev) => [...prev, ...files]);
   };
 
   if (isSubmitted) {
@@ -132,22 +122,17 @@ export function ContactForm() {
 
   return (
     <div className="space-y-6 ">
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start space-x-3">
-          <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="text-red-800 font-medium">Lỗi</p>
-            <p className="text-red-700 text-sm">{error}</p>
-          </div>
-        </div>
-      )}
-
       {/* Personal Information */}
       <div className="space-y-4 ">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div
+          className={`grid grid-cols-1 ${
+            title ? 'md:grid-cols-1' : 'md:grid-cols-2'
+          } gap-4`}
+        >
           <div className="space-y-2">
-            <Label htmlFor="name">Họ tên *</Label>
+            <Label htmlFor="name">
+              Họ tên <span className="text-red-500">*</span>
+            </Label>
             <Input
               style={{ color: '#000' }}
               id="name"
@@ -156,24 +141,42 @@ export function ContactForm() {
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
             />
+            {fieldErrors.name && (
+              <p className="mt-1 text-sm text-red-600 flex items-center">
+                <AlertCircle className="h-4 w-4 mr-1" />
+                {fieldErrors.name}
+              </p>
+            )}
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="subject">Chủ đề *</Label>
-            <Input
-              style={{ color: '#000' }}
-              id="subject"
-              required
-              placeholder="Nhập chủ đề"
-              minLength={3}
-              value={formData.subject}
-              onChange={(e) => handleInputChange('subject', e.target.value)}
-            />
-          </div>
+          {!title && (
+            <div className="space-y-2">
+              <Label htmlFor="subject">
+                Chủ đề <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                style={{ color: '#000' }}
+                id="subject"
+                required
+                placeholder="Nhập chủ đề"
+                minLength={3}
+                value={formData.subject}
+                onChange={(e) => handleInputChange('subject', e.target.value)}
+              />
+              {fieldErrors.subject && (
+                <p className="mt-1 text-sm text-red-600 flex items-center">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  {fieldErrors.subject}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="phone">Số điện thoại *</Label>
+            <Label htmlFor="phone">
+              Số điện thoại <span className="text-red-500">*</span>
+            </Label>
             <Input
               style={{ color: '#000' }}
               id="phone"
@@ -183,6 +186,12 @@ export function ContactForm() {
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
             />
+            {fieldErrors.phone && (
+              <p className="mt-1 text-sm text-red-600 flex items-center">
+                <AlertCircle className="h-4 w-4 mr-1" />
+                {fieldErrors.phone}
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -201,7 +210,9 @@ export function ContactForm() {
       {/* Contact Details */}
       <div className="space-y-4">
         <div className="space-y-2 ">
-          <Label htmlFor="message">Nội dung *</Label>
+          <Label htmlFor="message">
+            Nội dung <span className="text-red-500">*</span>
+          </Label>
           <Textarea
             id="message"
             required
@@ -212,6 +223,12 @@ export function ContactForm() {
             value={formData.message}
             onChange={(e) => handleInputChange('message', e.target.value)}
           />
+          {fieldErrors.message && (
+            <p className="mt-1 text-sm text-red-600 flex items-center">
+              <AlertCircle className="h-4 w-4 mr-1" />
+              {fieldErrors.message}
+            </p>
+          )}
         </div>
       </div>
 
@@ -219,7 +236,7 @@ export function ContactForm() {
       <div className="space-y-4">
         <Button
           onClick={handleSubmit}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+          className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
           disabled={isLoading}
           size="lg"
         >
@@ -227,7 +244,11 @@ export function ContactForm() {
             'Đang gửi...'
           ) : (
             <>
-              Gửi yêu cầu tư vấn
+              {title === 'Đăng ký dùng thử miễn phí'
+                ? 'Đăng ký ngay'
+                : title === 'Liên hệ hợp tác'
+                ? 'Gửi yêu cầu hợp tác'
+                : 'Gửi yêu cầu tư vấn'}
               <Send className="ml-2 h-4 w-4" />
             </>
           )}

@@ -1,3 +1,5 @@
+'use client';
+
 import type { Metadata } from 'next';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -19,20 +21,18 @@ import {
   Facebook,
   Linkedin,
   Youtube,
+  NotebookTabs,
+  Sparkles,
+  Building2,
+  Headset,
+  MessageCircleQuestion,
 } from 'lucide-react';
 import { AnimatedSection } from '@/components/animated-section';
 import { ContactForm } from '@/components/contact-form';
 import { OfficeMap } from '@/components/office-map';
 import { Button } from '@/components/ui/button';
 import HeroSection from './HeroSection';
-import { HolographicTitle } from '@/components/tech-blue-animations';
-
-export const metadata: Metadata = {
-  title: 'Liên hệ - Katec | Tư vấn miễn phí giải pháp công nghệ',
-  description:
-    'Liên hệ với Katec để được tư vấn miễn phí về các giải pháp công nghệ thông tin. Văn phòng tại TP.HCM, Hà Nội và Đà Nẵng.',
-  keywords: 'liên hệ Katec, tư vấn IT, văn phòng công nghệ, hỗ trợ khách hàng',
-};
+import { HolographicText } from '@/components/tech-blue-animations';
 
 export default function ContactPage() {
   const offices = [
@@ -142,6 +142,33 @@ export default function ContactPage() {
     'shadow-pink-200/50 hover:shadow-pink-300/60 bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200',
     'shadow-indigo-200/50 hover:shadow-indigo-300/60 bg-gradient-to-br from-indigo-50 to-indigo-100 border-indigo-200',
   ];
+
+  const handleClick = (method: any) => {
+    switch (method.action) {
+      case 'Gọi ngay':
+        window.location.href = `tel:${method.contact.replace(/\s+/g, '')}`;
+        break;
+      case 'Gửi email':
+        window.open(
+          `https://mail.google.com/mail/?view=cm&fs=1&to=${method.contact}`,
+          '_blank'
+        );
+        break;
+      case 'Bắt đầu chat':
+        alert('Chức năng chat sẽ sớm được tích hợp!');
+        break;
+      case 'Đặt lịch':
+        const section = document.getElementById('contactId');
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
@@ -152,11 +179,15 @@ export default function ContactPage() {
       <AnimatedSection className="py-20 bg-white">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <NotebookTabs className="h-4 w-4 mr-2" />
               Cách thức liên hệ
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <HolographicTitle>Chọn cách liên hệ phù hợp</HolographicTitle>
+              <HolographicText>Chọn cách liên hệ phù hợp</HolographicText>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Chúng tôi cung cấp nhiều kênh liên hệ để bạn có thể dễ dàng tiếp
@@ -183,6 +214,7 @@ export default function ContactPage() {
                     <Button
                       variant="outline"
                       className="w-full group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                      onClick={() => handleClick(method)}
                     >
                       {method.action}
                     </Button>
@@ -195,7 +227,7 @@ export default function ContactPage() {
       </AnimatedSection>
 
       {/* Contact Form & Map - ENHANCED SECTION */}
-      <section className="pt-20 pb-10 bg-gray-50">
+      <section id="contactId" className="pt-20 pb-10 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Enhanced Contact Form */}
@@ -204,15 +236,14 @@ export default function ContactPage() {
                 <div className="relative z-10 bg-white px-10 py-8  border border-gray-200 rounded-lg ">
                   <Badge
                     variant="outline"
-                    className="mb-6 bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 animate-gentle-pulse"
+                    className="mb-4 border-tech-blue-500 text-tech-blue-600"
                   >
-                    ✨ Gửi yêu cầu
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Gửi yêu cầu
                   </Badge>
 
                   <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                    <HolographicTitle>
-                      Để lại thông tin liên hệ
-                    </HolographicTitle>
+                    <HolographicText>Để lại thông tin liên hệ</HolographicText>
                   </h2>
 
                   <p className="mb-8 text-md  text-gray-600 leading-relaxed backdrop-blur-sm">
@@ -222,8 +253,8 @@ export default function ContactPage() {
                     để tư vấn chi tiết.
                   </p>
 
-                  <div className="transform  hover:scale-102 transition-transform duration-300">
-                    <ContactForm />
+                  <div className="transform  hover:scale-105 transition-transform duration-300">
+                    <ContactForm title="" />
                   </div>
                 </div>
 
@@ -237,11 +268,15 @@ export default function ContactPage() {
             <AnimatedSection delay={200}>
               <div className="space-y-6 pt-2">
                 <div>
-                  <Badge variant="outline" className="mb-4">
+                  <Badge
+                    variant="outline"
+                    className="mb-4 border-tech-blue-500 text-tech-blue-600"
+                  >
+                    <Building2 className="h-4 w-4 mr-2" />
                     Vị trí văn phòng
                   </Badge>
                   <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                    <HolographicTitle>Tìm chúng tôi tại</HolographicTitle>
+                    <HolographicText>Tìm chúng tôi tại</HolographicText>
                   </h2>
                   <p className="text-gray-600 mb-6">
                     Với 3 văn phòng tại các thành phố lớn, chúng tôi luôn gần
@@ -259,13 +294,15 @@ export default function ContactPage() {
       <AnimatedSection className="py-20 bg-gray-50">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <Headset className="h-4 w-4 mr-2" />
               Đội ngũ hỗ trợ
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <HolographicTitle>
-                Liên hệ trực tiếp theo bộ phận
-              </HolographicTitle>
+              <HolographicText>Liên hệ trực tiếp theo bộ phận</HolographicText>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Mỗi bộ phận có chuyên môn riêng để hỗ trợ bạn một cách hiệu quả
@@ -314,11 +351,15 @@ export default function ContactPage() {
       <AnimatedSection className="py-20 bg-white">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
+            <Badge
+              variant="outline"
+              className="mb-4 border-tech-blue-500 text-tech-blue-600"
+            >
+              <MessageCircleQuestion className="h-4 w-4 mr-2" />
               Câu hỏi thường gặp
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <HolographicTitle>Có thể bạn quan tâm</HolographicTitle>
+              <HolographicText>Có thể bạn quan tâm</HolographicText>
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Một số câu hỏi thường gặp từ khách hàng về dịch vụ của chúng tôi
@@ -409,10 +450,6 @@ export default function ContactPage() {
                 <div className="flex items-center">
                   <Mail className="h-4 w-4 mr-3" />
                   <span className="font-medium">katec.cantho@gmail.com</span>
-                </div>
-                <div className="flex items-center">
-                  <Globe className="h-4 w-4 mr-3" />
-                  <span className="font-medium">Remote Support Portal</span>
                 </div>
               </div>
             </div>
