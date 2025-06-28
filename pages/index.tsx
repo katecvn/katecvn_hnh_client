@@ -397,8 +397,8 @@ export default function HomePage() {
                 <HolographicText>Đối tác tiêu biểu</HolographicText>
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto mb-4">
-                Chúng tôi tự hào là đối tác công nghệ tin cậy của các tập đoàn
-                và tổ chức hàng đầu Việt Nam
+                Chúng tôi tự hào là đối tác công nghệ đáng tin cậy của các tập
+                đoàn và tổ chức hàng đầu Việt Nam
               </p>
             </div>
           </Reveal>

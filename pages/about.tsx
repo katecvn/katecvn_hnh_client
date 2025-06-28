@@ -131,113 +131,6 @@ export default function AboutPage() {
     },
   ];
 
-  const teamMembers = [
-    {
-      name: 'Trương Hoàng Khải',
-      position: 'Chủ tịch HĐQT & Giám đốc',
-      bio: 'Người sáng lập và điều hành KATEC. Với hơn 15 năm kinh nghiệm trong lĩnh vực công nghệ và quản trị doanh nghiệp, và là người định hướng chiến lược toàn diện cho công ty.',
-      image: '/khai.jpg?height=300&width=300&query=professional CEO portrait',
-      linkedin: '#',
-      email: 'khaith.katec@gmail.com',
-      specialties: [
-        'Lãnh đạo chiến lược',
-        'Quản trị doanh nghiệp',
-        'Định hướng phát triển công nghệ',
-      ],
-    },
-    {
-      name: 'Văn Hoàng Lũy',
-      position: 'Phó Giám đốc ',
-      bio: 'Chuyên gia kiến trúc hệ thống với hơn 12 năm kinh nghiệm. Anh Lũy là người định hình nền tảng công nghệ cốt lõi tại KATEC, luôn theo đuổi sự ổn định, bảo mật và khả năng mở rộng.',
-      image:
-        '/luy.jpg?height=300&width=300&query=professional CTO portrait male',
-      linkedin: '#',
-      email: 'luyvh.katec@gmail.com',
-      specialties: [
-        'Kiến trúc hệ thống',
-        'Cloud Computing',
-        'DevOps',
-        'Công nghệ AI',
-      ],
-    },
-    {
-      name: 'Nguyễn Thanh Bình',
-      position: 'Trưởng phòng Kinh doanh',
-      bio: 'Dẫn dắt bộ phận kinh doanh với tư duy kỹ thuật sắc bén. Anh Bình kết hợp giữa kỹ năng phát triển phần mềm và chiến lược bán hàng để thúc đẩy tăng trưởng.',
-      image:
-        '/binh.jpg?height=300&width=300&query=professional business lead portrait',
-      linkedin: '#',
-      email: 'binhnt.katec@gmail.com',
-      specialties: [
-        'Chiến lược kinh doanh',
-        'Tư vấn giải pháp',
-        'Chuyển đổi số',
-      ],
-    },
-    {
-      name: 'Nguyễn Trọng Nghĩa',
-      position: 'Trưởng phòng Lập trình',
-      bio: 'Dẫn dắt đội ngũ lập trình viên tại KATEC. Anh Nghĩa là chuyên gia trong việc xây dựng hệ thống phần mềm hiện đại, đặc biệt là trong môi trường phát triển linh hoạt và microservices.',
-      image:
-        '/nghia.jpg?height=300&width=300&query=professional developer portrait',
-      linkedin: '#',
-      email: 'nghia@katec.com',
-      specialties: [
-        'Phát triển phần mềm',
-        'React & Node.js',
-        'Kiến trúc Microservices',
-      ],
-    },
-    {
-      name: 'Trần Thu Vân',
-      position: 'Trưởng phòng Nhân sự',
-      bio: 'Với sự nhạy bén trong việc xây dựng văn hoá doanh nghiệp và phát triển con người, chị Vân quản lý toàn bộ hoạt động tuyển dụng, đào tạo và phúc lợi tại KATEC.',
-      image:
-        '/van.jpg?height=300&width=300&query=professional HR manager portrait',
-      linkedin: '#',
-      email: 'van@katec.com',
-      specialties: [
-        'Quản trị nhân sự',
-        'Văn hóa doanh nghiệp',
-        'Phát triển tổ chức',
-      ],
-    },
-    {
-      name: 'Nguyễn Thị Tiên',
-      position: 'Nhân viên Kinh doanh lâu năm',
-      bio: 'Chị Tiên là một trong những nhân sự gắn bó lâu dài nhất với KATEC. Với sự hiểu biết sâu rộng về sản phẩm và khách hàng, và trong việc duy trì và mở rộng mạng lưới khách hàng.',
-      image:
-        '/tien.jpg?height=300&width=300&query=professional business staff portrait',
-      linkedin: '#',
-      email: 'danh@katec.com',
-      specialties: ['Chăm sóc khách hàng', 'Bán hàng B2B', 'Tư vấn sản phẩm'],
-    },
-  ];
-
-  const mockAwards = [
-    {
-      name: 'Giải thưởng kỹ thuật',
-      image:
-        '/giaithuong1.jpg?height=300&width=300&query=professional CEO portrait',
-      description:
-        'Giải nhất cuộc thi sáng tạo kỹ thuật lần thứ 12 năm 2022–2023 TP. Cần Thơ.',
-    },
-    {
-      name: 'Chứng nhận KH&CN',
-      image:
-        '/giaithuong2.jpg?height=300&width=300&query=professional CEO portrait',
-      description:
-        'Được công nhận là doanh nghiệp khoa học và công nghệ TP. Cần Thơ 2024.',
-    },
-    {
-      name: 'Giấy chứng nhận doanh nghiệp KH&CN',
-      image:
-        '/giaithuong3.jpg?height=300&width=300&query=professional CEO portrait',
-      description:
-        'Chứng nhận doanh nghiệp khoa học và công nghệ cấp ngày 25/01/2024.',
-    },
-  ];
-
   const stats = [
     {
       label: 'Năm kinh nghiệm',
@@ -610,11 +503,9 @@ export default function AboutPage() {
               <AnimatedSection key={index} delay={index * 100}>
                 <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
                   <div className="relative">
-                    <Image
+                    <img
                       src={award?.content[0]?.imageUrl || '/placeholder.svg'}
                       alt={award?.content[0]?.name || 'Thành viên'}
-                      width={300}
-                      height={300}
                       className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
@@ -658,11 +549,9 @@ export default function AboutPage() {
                 <AnimatedSection key={index} delay={index * 100}>
                   <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
                     <div className="relative">
-                      <Image
+                      <img
                         src={member?.content[0]?.imageUrl || '/placeholder.svg'}
                         alt={member?.content[0]?.name || 'Thành viên'}
-                        width={300}
-                        height={300}
                         className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
