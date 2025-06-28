@@ -1,61 +1,110 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group"
-import { type VariantProps } from "class-variance-authority"
+import React, { createContext, useContext, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { toggleVariants } from '@/components/ui/toggle';
+import type { VariantProps } from 'class-variance-authority';
 
-import { cn } from "@/lib/utils"
-import { toggleVariants } from "@/components/ui/toggle"
+interface ToggleGroupContextType extends VariantProps<typeof toggleVariants> {
+  type?: 'single' | 'multiple';
+  value: string[]; // supports multiple selection
+  setValue: (val: string[]) => void;
+}
 
-const ToggleGroupContext = React.createContext<
-  VariantProps<typeof toggleVariants>
->({
-  size: "default",
-  variant: "default",
-})
+const ToggleGroupContext = createContext<ToggleGroupContextType | null>(null);
 
-const ToggleGroup = React.forwardRef<
-  React.ElementRef<typeof ToggleGroupPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Root> &
-    VariantProps<typeof toggleVariants>
->(({ className, variant, size, children, ...props }, ref) => (
-  <ToggleGroupPrimitive.Root
-    ref={ref}
-    className={cn("flex items-center justify-center gap-1", className)}
-    {...props}
-  >
-    <ToggleGroupContext.Provider value={{ variant, size }}>
-      {children}
-    </ToggleGroupContext.Provider>
-  </ToggleGroupPrimitive.Root>
-))
+interface ToggleGroupProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof toggleVariants> {
+  type?: 'single' | 'multiple';
+  value?: string[];
+  defaultValue?: string[];
+  onChange?: (val: string[]) => void;
+}
 
-ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
+export const ToggleGroup = ({
+  className,
+  variant = 'default',
+  size = 'default',
+  type = 'single',
+  value,
+  defaultValue,
+  onChange,
+  children,
+  ...props
+}: ToggleGroupProps) => {
+  const [internalValue, setInternalValue] = useState<string[]>(
+    defaultValue || []
+  );
 
-const ToggleGroupItem = React.forwardRef<
-  React.ElementRef<typeof ToggleGroupPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof ToggleGroupPrimitive.Item> &
-    VariantProps<typeof toggleVariants>
->(({ className, children, variant, size, ...props }, ref) => {
-  const context = React.useContext(ToggleGroupContext)
+  const isControlled = value !== undefined;
+  const currentValue = isControlled ? value : internalValue;
+
+  const setValue = (newVal: string[]) => {
+    if (!isControlled) setInternalValue(newVal);
+    onChange?.(newVal);
+  };
 
   return (
-    <ToggleGroupPrimitive.Item
-      ref={ref}
+    <ToggleGroupContext.Provider
+      value={{ variant, size, type, value: currentValue, setValue }}
+    >
+      <div
+        className={cn('flex items-center justify-center gap-1', className)}
+        role="group"
+        {...props}
+      >
+        {children}
+      </div>
+    </ToggleGroupContext.Provider>
+  );
+};
+
+interface ToggleGroupItemProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof toggleVariants> {
+  value: string;
+}
+
+export const ToggleGroupItem = ({
+  className,
+  children,
+  value,
+  variant,
+  size,
+  ...props
+}: ToggleGroupItemProps) => {
+  const ctx = useContext(ToggleGroupContext);
+  if (!ctx) throw new Error('ToggleGroupItem must be used within ToggleGroup');
+
+  const isActive = ctx.value.includes(value);
+
+  const handleClick = () => {
+    if (ctx.type === 'single') {
+      ctx.setValue(isActive ? [] : [value]);
+    } else {
+      ctx.setValue(
+        isActive ? ctx.value.filter((v) => v !== value) : [...ctx.value, value]
+      );
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      aria-pressed={isActive}
+      onClick={handleClick}
       className={cn(
         toggleVariants({
-          variant: context.variant || variant,
-          size: context.size || size,
+          variant: variant ?? ctx.variant,
+          size: size ?? ctx.size,
         }),
+        isActive && 'bg-primary text-white', // or use `data-[state=on]` in variants
         className
       )}
       {...props}
     >
       {children}
-    </ToggleGroupPrimitive.Item>
-  )
-})
-
-ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName
-
-export { ToggleGroup, ToggleGroupItem }
+    </button>
+  );
+};

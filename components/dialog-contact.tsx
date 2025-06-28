@@ -10,7 +10,7 @@ import {
 import { ContactForm } from './contact-form'; // import form của bạn
 import { Package, Star, Sparkles, Heart, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { ContactDialogProps } from '@/app/interface';
+import { ContactDialogProps } from '@/pages/interface';
 
 const WowProductSection = ({ product }: { product: string }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -20,9 +20,9 @@ const WowProductSection = ({ product }: { product: string }) => {
   }, []);
 
   return (
-    <div className="max-w-md mx-auto mt-3 p-3 bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl">
+    <div className="max-w-md mx-auto mt-6 p-3 bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl">
       <div
-        className={`relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-purple-700 p-[2px] transition-all duration-1000 ${
+        className={`relative  overflow-hidden rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-purple-700 p-[2px] transition-all duration-1000 ${
           isVisible
             ? 'opacity-100 transform translate-y-0'
             : 'opacity-0 transform translate-y-4'
@@ -97,8 +97,8 @@ export default function ContactDialog({
 }: ContactDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto scrollbar-thumb-only">
-        <DialogHeader>
+      <DialogContent className="scrollbar-hide overflow-y-auto scrollbar-thumb-only">
+        <DialogHeader className="mb-4">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{des}</DialogDescription>
           {product && <WowProductSection product={product} />}

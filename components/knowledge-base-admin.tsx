@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useId } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Search,
   Plus,
@@ -25,8 +25,8 @@ import {
   Calendar,
   BarChart3,
   RefreshCw,
-} from "lucide-react";
-import type { KnowledgeDocument } from "@/lib/knowledge-base";
+} from 'lucide-react';
+import type { KnowledgeDocument } from '@/lib/knowledge-base';
 
 interface KnowledgeBaseStats {
   totalDocuments: number;
@@ -50,29 +50,32 @@ interface SearchResult {
 
 // Generate a stable document ID
 let docCounter = 0;
-const generateDocumentId = (prefix = "doc") => {
+const generateDocumentId = (prefix = 'doc') => {
   docCounter += 1;
   return `${prefix}-${docCounter}`;
 };
 
 export function KnowledgeBaseAdmin() {
-  const idPrefix = useId();
+  const idPrefixRef = useRef(
+    `kb-${Math.random().toString(36).substring(2, 9)}`
+  );
+  const idPrefix = idPrefixRef.current;
   const [documents, setDocuments] = useState<KnowledgeDocument[]>([]);
   const [stats, setStats] = useState<KnowledgeBaseStats | null>(null);
   const [categories, setCategories] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
 
   // Form state for adding new documents
   const [newDocument, setNewDocument] = useState({
-    id: "",
-    title: "",
-    content: "",
-    category: "",
-    tags: "",
+    id: '',
+    title: '',
+    content: '',
+    category: '',
+    tags: '',
   });
 
   useEffect(() => {
@@ -82,13 +85,13 @@ export function KnowledgeBaseAdmin() {
   const loadKnowledgeBaseData = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/knowledge-base");
+      const response = await fetch('/api/knowledge-base');
       const data = await response.json();
 
       setStats(data.stats);
       setCategories(data.categories);
     } catch (error) {
-      console.error("Failed to load knowledge base data:", error);
+      console.error('Failed to load knowledge base data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -106,14 +109,14 @@ export function KnowledgeBaseAdmin() {
 
       setSearchResults(data.results || []);
     } catch (error) {
-      console.error("Search failed:", error);
+      console.error('Search failed:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const loadDocumentsByCategory = async (category: string) => {
-    if (category === "all") {
+    if (category === 'all') {
       setDocuments([]);
       return;
     }
@@ -127,7 +130,7 @@ export function KnowledgeBaseAdmin() {
 
       setDocuments(data.documents || []);
     } catch (error) {
-      console.error("Failed to load documents:", error);
+      console.error('Failed to load documents:', error);
     } finally {
       setIsLoading(false);
     }
@@ -141,40 +144,40 @@ export function KnowledgeBaseAdmin() {
         content: newDocument.content,
         category: newDocument.category,
         tags: newDocument.tags
-          .split(",")
+          .split(',')
           .map((tag) => tag.trim())
           .filter(Boolean),
         metadata: {
           lastUpdated: new Date(),
-          source: "admin-panel",
+          source: 'admin-panel',
           priority: 5,
         },
       };
 
-      const response = await fetch("/api/knowledge-base", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/knowledge-base', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(document),
       });
 
       if (response.ok) {
         setShowAddForm(false);
         setNewDocument({
-          id: "",
-          title: "",
-          content: "",
-          category: "",
-          tags: "",
+          id: '',
+          title: '',
+          content: '',
+          category: '',
+          tags: '',
         });
         loadKnowledgeBaseData();
-        alert("Document added successfully!");
+        alert('Document added successfully!');
       } else {
         const error = await response.json();
         alert(`Failed to add document: ${error.error}`);
       }
     } catch (error) {
-      console.error("Failed to add document:", error);
-      alert("Failed to add document");
+      console.error('Failed to add document:', error);
+      alert('Failed to add document');
     }
   };
 
@@ -191,7 +194,7 @@ export function KnowledgeBaseAdmin() {
         );
       }
     } catch (error) {
-      console.error("Failed to view document:", error);
+      console.error('Failed to view document:', error);
     }
   };
 
@@ -204,7 +207,7 @@ export function KnowledgeBaseAdmin() {
         </h1>
         <Button onClick={loadKnowledgeBaseData} disabled={isLoading}>
           <RefreshCw
-            className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
+            className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`}
           />
           Refresh
         </Button>
@@ -244,12 +247,12 @@ export function KnowledgeBaseAdmin() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {stats.embeddingEnabled ? "✅ Enabled" : "⚠️ Disabled"}
+                {stats.embeddingEnabled ? '✅ Enabled' : '⚠️ Disabled'}
               </div>
               <p className="text-xs text-muted-foreground">
                 {stats.embeddingEnabled
                   ? `${stats.documentsWithEmbeddings}/${stats.totalDocuments} with embeddings`
-                  : "Using keyword search fallback"}
+                  : 'Using keyword search fallback'}
               </p>
             </CardContent>
           </Card>
@@ -289,7 +292,7 @@ export function KnowledgeBaseAdmin() {
                   placeholder="Enter search query..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && searchDocuments()}
+                  onKeyPress={(e) => e.key === 'Enter' && searchDocuments()}
                 />
                 <Button onClick={searchDocuments} disabled={isLoading}>
                   <Search className="h-4 w-4 mr-2" />
@@ -517,11 +520,11 @@ export function KnowledgeBaseAdmin() {
                   variant="outline"
                   onClick={() =>
                     setNewDocument({
-                      id: "",
-                      title: "",
-                      content: "",
-                      category: "",
-                      tags: "",
+                      id: '',
+                      title: '',
+                      content: '',
+                      category: '',
+                      tags: '',
                     })
                   }
                 >

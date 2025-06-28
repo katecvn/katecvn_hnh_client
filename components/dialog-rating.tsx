@@ -14,9 +14,12 @@ import { toast } from 'sonner';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
+import { RatingDialogProps } from '@/pages/interface';
 // import form của bạn
-
-export default function RatingDialog({ open, onOpenChange }) {
+export default function RatingDialog({
+  open,
+  onOpenChange,
+}: RatingDialogProps) {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [name, setName] = useState('');

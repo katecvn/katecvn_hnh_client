@@ -7,14 +7,23 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, LogIn } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ContactDialog from './dialog-contact';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
+import { localStorageUtil, UserInfo } from '@/utils/localStorage';
+import UserAccountHeader from './account';
 
 export function Header() {
-  const pathname = usePathname();
+  const router = useRouter();
+  const pathname = router.pathname;
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [openContact, setOpenContact] = useState(false);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorageUtil.getUser();
+    setUserInfo(storedUser);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +42,8 @@ export function Header() {
     { name: 'Liên hệ', href: '/contact' },
   ];
 
+  console.log(userInfo);
+
   return (
     <header
       className={cn(
@@ -45,7 +56,7 @@ export function Header() {
       <div className="container mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="flex items-center gap-3">
+            <a className="flex items-center gap-3">
               {/* Enhanced Text Logo */}
               <div className="relative group flex justify-center md:justify-start">
                 <span
@@ -87,31 +98,44 @@ export function Header() {
                   ></div>
                 </span>
               </div>
-            </div>
+            </a>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={cn(
-                  'text-sm font-medium transition-colors hover:text-tech-blue-300',
-                  isScrolled ? 'text-tech-blue-700' : 'text-white/90'
-                )}
-              >
-                {item.name}
+              <Link key={item.name} href={item.href}>
+                <a
+                  className={cn(
+                    'text-sm font-medium transition-colors hover:text-tech-blue-300',
+                    isScrolled ? 'text-blue-700' : 'text-white'
+                  )}
+                >
+                  {item.name}
+                </a>
               </Link>
             ))}
           </nav>
 
           <div className="hidden md:flex items-center space-x-4">
-            {/* Nút Đăng nhập - Enhanced */}
-            <Link href="/login">
+            {userInfo ? (
+              <UserAccountHeader
+                userInfo={userInfo}
+                onUpdateUser={(updatedInfo: any) => {
+                  // Xử lý cập nhật thông tin
+                  console.log('Cập nhật:', updatedInfo);
+                }}
+                onLogout={() => {
+                  // Xử lý đăng xuất
+                  localStorageUtil.clearAll();
+                  router.push('/');
+                }}
+              />
+            ) : (
               <Button
                 variant="ghost"
                 size="sm"
+                onClick={() => router.push('/login')}
                 className={cn(
                   'relative group transition-all duration-500 gap-2 px-4 py-2 rounded-full overflow-hidden',
                   'hover:scale-[1.02] hover:shadow-lg transform-gpu',
@@ -154,7 +178,7 @@ export function Header() {
                   )}
                 ></div>
               </Button>
-            </Link>
+            )}
 
             {/* Nút Tư vấn miễn phí */}
             <Button
@@ -174,7 +198,7 @@ export function Header() {
 
           {/* Mobile Navigation */}
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="md:hidden">
+            <SheetTrigger className="md:hidden">
               <Button
                 variant="ghost"
                 size="sm"

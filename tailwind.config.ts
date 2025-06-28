@@ -9,7 +9,6 @@ const config: Config = {
     './src/**/*.{ts,tsx}',
     '*.{js,ts,jsx,tsx,mdx}',
   ],
-  prefix: '',
   theme: {
     container: {
       center: true,
@@ -53,7 +52,6 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Tech Blue Color Palette
         'tech-blue': {
           50: 'hsl(240, 100%, 98%)',
           100: 'hsl(239, 100%, 95%)',
@@ -87,7 +85,6 @@ const config: Config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
-        // Tech Blue Animations
         'tech-pulse': {
           '0%, 100%': {
             boxShadow: '0 0 0 0 hsl(214, 100%, 50%, 0.7)',
@@ -196,6 +193,6 @@ const config: Config = {
     },
   },
   plugins: [require('tailwindcss-animate')],
-} satisfies Config;
+};
 
 export default config;

@@ -1,7 +1,37 @@
-"use client"
+import React from 'react';
 
-import * as AspectRatioPrimitive from "@radix-ui/react-aspect-ratio"
+interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
+  ratio?: number; // e.g. 16 / 9
+  children: React.ReactNode;
+}
 
-const AspectRatio = AspectRatioPrimitive.Root
-
-export { AspectRatio }
+export const AspectRatio: React.FC<AspectRatioProps> = ({
+  ratio = 16 / 9,
+  children,
+  style,
+  ...props
+}) => {
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        paddingBottom: `${100 / ratio}%`,
+        ...style,
+      }}
+      {...props}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
