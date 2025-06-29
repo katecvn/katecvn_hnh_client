@@ -1,5 +1,3 @@
-import { openai } from '@ai-sdk/openai';
-import { streamText } from 'ai';
 import type { NextRequest } from 'next/server';
 import { knowledgeBaseManager } from '@/lib/knowledge-base';
 
@@ -8,19 +6,6 @@ export const maxDuration = 30;
 
 // Initialize knowledge base on startup
 let isInitialized = false;
-
-async function initializeKnowledgeBase() {
-  if (!isInitialized) {
-    try {
-      await knowledgeBaseManager.initializeEmbeddings();
-      isInitialized = true;
-    } catch (error) {
-      console.error('Knowledge base initialization failed:', error);
-      // Continue without embeddings - keyword search will be used
-      isInitialized = true;
-    }
-  }
-}
 
 // Check if OpenAI API is available
 function isOpenAIAvailable(): boolean {
@@ -53,8 +38,6 @@ Hãy sử dụng knowledge base được cung cấp để trả lời chính xá
 
 export async function POST(request: NextRequest) {
   try {
-    await initializeKnowledgeBase();
-
     const { message, conversationHistory = [] } = await request.json();
 
     // Search relevant documents from knowledge base
@@ -168,14 +151,29 @@ Bạn có muốn tìm hiểu về sản phẩm hoặc dịch vụ nào cụ th�
       { role: 'user', content: message },
     ];
 
-    const result = streamText({
-      model: openai('gpt-4o-mini'),
-      messages,
-      temperature: 0.3, // Lower temperature for more factual responses
-      maxTokens: 800,
-    });
+    // MỚI — THAY THẾ KHI OpenAI không dùng
+    if (relevantDocs.length > 0) {
+      const bestMatch = relevantDocs[0];
+      const response = `Dựa trên thông tin từ knowledge base về "${bestMatch.document.title}":\n\n${bestMatch.relevantChunk}\n\nBạn có muốn tìm hiểu thêm không?`;
 
-    return result.toDataStreamResponse();
+      return new Response(
+        JSON.stringify({
+          response,
+          source: 'knowledge-base-only',
+          knowledgeSources: relevantDocs.map((doc) => ({
+            title: doc.document.title,
+            category: doc.document.category,
+            similarity: doc.similarity,
+            id: doc.document.id,
+          })),
+          suggestedActions: ['Liên hệ', 'Xem thêm sản phẩm', 'Đặt lịch tư vấn'],
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
   } catch (error) {
     console.error('Chat API error:', error);
 

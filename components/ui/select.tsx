@@ -1,48 +1,68 @@
 'use client';
 
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'; // Hàm merge class (tùy bạn giữ hoặc bỏ)
 
-export interface SelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  options: {
-    label: string;
-    value: string;
-    disabled?: boolean;
-  }[];
-  placeholder?: string;
+export interface SelectOption {
+  label: string;
+  value: string;
+  disabled?: boolean;
 }
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, options, placeholder, ...props }, ref) => {
+export interface CustomSelectProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  options: SelectOption[];
+  placeholder?: string;
+  label?: string;
+  labelClassName?: string;
+  wrapperClassName?: string;
+}
+
+export const Select = React.forwardRef<HTMLSelectElement, CustomSelectProps>(
+  (
+    {
+      options,
+      placeholder,
+      label,
+      labelClassName,
+      wrapperClassName,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     return (
-      <select
-        ref={ref}
-        className={cn(
-          'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-          className
-        )}
-        {...props}
-      >
-        {placeholder && (
-          <option value="" disabled hidden>
-            {placeholder}
-          </option>
-        )}
-        {options.map((option) => (
-          <option
-            key={option.value}
-            value={option.value}
-            disabled={option.disabled}
+      <div className={cn('space-y-1', wrapperClassName)}>
+        {label && (
+          <label
+            className={cn('text-sm font-medium text-gray-700', labelClassName)}
+            htmlFor={props.id}
           >
-            {option.label}
-          </option>
-        ))}
-      </select>
+            {label}
+          </label>
+        )}
+        <select
+          ref={ref}
+          className={cn(
+            'block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50',
+            className
+          )}
+          {...props}
+        >
+          {placeholder && (
+            <option value="" disabled hidden>
+              {placeholder}
+            </option>
+          )}
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value} disabled={opt.disabled}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
     );
   }
 );
 
-Select.displayName = 'Select';
-
-export { Select };
+Select.displayName = 'CustomSelect';

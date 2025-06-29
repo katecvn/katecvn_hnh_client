@@ -6,13 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
@@ -352,26 +346,6 @@ export function KnowledgeBaseAdmin() {
               <CardTitle>Browse by Category</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Select
-                value={selectedCategory}
-                onValueChange={(value) => {
-                  setSelectedCategory(value);
-                  loadDocumentsByCategory(value);
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
               {documents.length > 0 && (
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">
@@ -435,26 +409,6 @@ export function KnowledgeBaseAdmin() {
 
                 <div className="space-y-2">
                   <Label htmlFor="doc-category">Category</Label>
-                  <Select
-                    value={newDocument.category}
-                    onValueChange={(value) =>
-                      setNewDocument((prev) => ({ ...prev, category: value }))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category.charAt(0).toUpperCase() + category.slice(1)}
-                        </SelectItem>
-                      ))}
-                      <SelectItem value="new-category">
-                        + Add New Category
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
 
