@@ -192,6 +192,7 @@ export function Header() {
           </div>
 
           {/* Mobile Navigation */}
+
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger className="md:hidden">
               <Button
@@ -199,30 +200,35 @@ export function Header() {
                 size="sm"
                 className={cn(isScrolled ? 'text-tech-blue-900' : 'text-white')}
               >
-                <Menu className="h-5 w-5" />
+                <Menu
+                  className={cn(
+                    'h-6 w-6',
+                    isScrolled ? 'text-tech-blue-900' : 'text-white'
+                  )}
+                />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="right">
               <div className="flex flex-col space-y-4 mt-8">
                 {navigation.map((item) => {
                   const isActive = pathname === item.href;
                   return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className={`relative group text-lg font-medium transition-colors duration-200 ease-in-out ${
-                        isActive
-                          ? 'text-tech-blue-600'
-                          : 'text-tech-blue-700 hover:text-tech-blue-500'
-                      }`}
-                    >
-                      <span className="relative z-10">{item.name}</span>
-                      <span
-                        className={`absolute bottom-0 left-0 h-[2px] bg-tech-blue-500 transition-all duration-300 ${
-                          isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                    <Link key={item.name} href={item.href} legacyBehavior>
+                      <a
+                        onClick={() => setIsOpen(false)}
+                        className={`relative group text-lg font-medium transition-colors duration-200 ease-in-out ${
+                          isActive
+                            ? 'text-tech-blue-600'
+                            : 'text-tech-blue-700 hover:text-tech-blue-500'
                         }`}
-                      ></span>
+                      >
+                        <span className="relative z-10">{item.name}</span>
+                        <span
+                          className={`absolute bottom-0 left-0 h-[2px] bg-tech-blue-500 transition-all duration-300 ${
+                            isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                          }`}
+                        ></span>
+                      </a>
                     </Link>
                   );
                 })}
