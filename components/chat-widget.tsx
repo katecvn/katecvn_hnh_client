@@ -116,12 +116,14 @@ export function ChatWidget() {
   if (!isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="h-14 w-14 rounded-full bg-blue-600 text-white"
+        <a
+          href="https://m.me/1016769568527370"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="h-14 w-14 rounded-full bg-blue-600 text-white flex items-center justify-center"
         >
           <MessageCircle className="h-6 w-6" />
-        </Button>
+        </a>
       </div>
     );
   }
