@@ -143,7 +143,6 @@ export default function NewsPage() {
     } catch (error) {
       const message = handleError(error);
       toast.error('Không thể tải danh mục');
-      console.error('Error fetching categories:', error);
     } finally {
       setCategoriesLoading(false);
     }

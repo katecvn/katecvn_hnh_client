@@ -31,7 +31,7 @@ import SubmissionSuccess from '../components/submission-success';
 import ApplicationFormSection from '../components/form-application';
 
 import JobDetailPage from '../components/job-detail';
-import { FormCareerErrors, FormData, JobPosition } from './interface';
+import { FormCareerErrors, FormData, JobPosition } from '@/types/interface';
 import { PositionCard } from '@/components/enhanced-cards';
 
 const benefits = [

@@ -3,7 +3,7 @@ import { AnimatedSection } from './animated-section';
 import { Badge } from './ui/badge';
 import { HolographicText } from './tech-blue-animations';
 import { Button } from './ui/button';
-import { WithClassName } from '@/app/interface';
+import { WithClassName } from '@/types/interface';
 
 const services = [
   {

@@ -10,7 +10,7 @@ import {
 import { ContactForm } from './contact-form'; // import form của bạn
 import { Package, Star, Sparkles, Heart, ShoppingBag } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { ContactDialogProps } from '@/pages/interface';
+import { ContactDialogProps } from '@/types/interface';
 
 const WowProductSection = ({ product }: { product: string }) => {
   const [isVisible, setIsVisible] = useState(false);

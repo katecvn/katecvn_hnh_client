@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { SubmissionSuccessProps } from '@/types/interface';
 import { Check } from 'lucide-react';
-import { SubmissionSuccessProps } from '../pages/interface';
 
 export default function SubmissionSuccess({
   position,

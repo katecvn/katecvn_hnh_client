@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { JobDetailPageProps, JobPosition } from '../pages/interface';
+import { JobDetailPageProps, JobPosition } from '@/types/interface';
 
 export default function JobDetailPage({
   jobData,

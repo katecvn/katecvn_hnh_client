@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import { AnimatedSectionProps } from '@/app/interface';
+import { AnimatedSectionProps } from '@/types/interface';
 
 export function AnimatedSection({
   children,

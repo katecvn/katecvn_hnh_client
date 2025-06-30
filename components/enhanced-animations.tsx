@@ -11,7 +11,7 @@ import {
   ParallaxProps,
   RevealProps,
   TypewriterProps,
-} from '@/app/interface';
+} from '../types/interface';
 
 // Floating Elements Animation
 export function FloatingElements() {

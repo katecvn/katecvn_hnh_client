@@ -42,8 +42,6 @@ export function Header() {
     { name: 'Liên hệ', href: '/contact' },
   ];
 
-  console.log(userInfo);
-
   return (
     <header
       className={cn(
@@ -121,10 +119,7 @@ export function Header() {
             {userInfo ? (
               <UserAccountHeader
                 userInfo={userInfo}
-                onUpdateUser={(updatedInfo: any) => {
-                  // Xử lý cập nhật thông tin
-                  console.log('Cập nhật:', updatedInfo);
-                }}
+                onUpdateUser={(updatedInfo: any) => {}}
                 onLogout={() => {
                   // Xử lý đăng xuất
                   localStorageUtil.clearAll();

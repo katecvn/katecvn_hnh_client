@@ -15,8 +15,6 @@ export default function GoogleCallbackPage() {
             `/customer/auth/google/callback?code=${rawQuery}`
           );
 
-          console.log(data);
-
           if (data?.data.token) {
             localStorageUtil.setToken(data?.data.token);
             localStorageUtil.setUser(data?.data.userInformation);

@@ -38,7 +38,7 @@ import { HolographicText } from '@/components/tech-blue-animations';
 import { useEffect, useState } from 'react';
 import api from '@/utils/axios';
 import ContactDialog from '@/components/dialog-contact';
-import type { FeedbackContentItem as ContentItem } from './interface';
+import type { FeedbackContentItem as ContentItem } from '../types/interface';
 import HeroSectionAbout from '@/components/banner/about-section';
 
 interface SectionItem {
@@ -201,7 +201,6 @@ export default function AboutPage() {
       setAwards(awardRes.data.data || []);
       setTeams(teamRes.data.data || []);
     } catch (error: any) {
-      console.error('Error fetching homepage data:', error);
       const message =
         error.response?.data?.message ||
         error.message ||

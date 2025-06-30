@@ -1,12 +1,11 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
-    const event = await request.json()
+    const event = await request.json();
 
     // Store analytics data
     // You can save to database, send to analytics service, etc.
-    console.log("Chat analytics event:", event)
 
     // Example: Save to database
     // await db.chatAnalytics.create({
@@ -19,9 +18,11 @@ export async function POST(request: NextRequest) {
     //   }
     // })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Analytics error:", error)
-    return NextResponse.json({ error: "Failed to track event" }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to track event' },
+      { status: 500 }
+    );
   }
 }

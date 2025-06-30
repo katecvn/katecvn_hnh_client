@@ -32,7 +32,7 @@ import { handleError } from '@/utils/handle-error';
 import { AnimatedSection } from '@/components/animated-section';
 import { HolographicText } from '@/components/tech-blue-animations';
 import { SupportSection } from '@/components/enhanced-support';
-import { ApiResponse, Comment, Post, PostsResponse } from '@/pages/interface';
+import { ApiResponse, Comment, Post, PostsResponse } from '@/types/interface';
 
 const ArticleContent = memo(({ content }: { content: string }) => {
   return (

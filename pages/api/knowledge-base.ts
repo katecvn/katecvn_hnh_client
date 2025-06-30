@@ -1,16 +1,22 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { knowledgeBaseManager, type KnowledgeDocument } from "@/lib/knowledge-base"
+import { type NextRequest, NextResponse } from 'next/server';
+import {
+  knowledgeBaseManager,
+  type KnowledgeDocument,
+} from '@/lib/knowledge-base';
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const query = searchParams.get("q")
-    const category = searchParams.get("category")
-    const limit = Number.parseInt(searchParams.get("limit") || "10")
+    const { searchParams } = new URL(request.url);
+    const query = searchParams.get('q');
+    const category = searchParams.get('category');
+    const limit = Number.parseInt(searchParams.get('limit') || '10');
 
     if (query) {
       // Search documents
-      const results = await knowledgeBaseManager.searchRelevantDocuments(query, limit)
+      const results = await knowledgeBaseManager.searchRelevantDocuments(
+        query,
+        limit
+      );
       return NextResponse.json({
         query,
         results: results.map((r) => ({
@@ -25,12 +31,12 @@ export async function GET(request: NextRequest) {
           relevantChunk: r.relevantChunk,
         })),
         total: results.length,
-      })
+      });
     }
 
     if (category) {
       // Get documents by category
-      const documents = knowledgeBaseManager.getDocumentsByCategory(category)
+      const documents = knowledgeBaseManager.getDocumentsByCategory(category);
       return NextResponse.json({
         category,
         documents: documents.map((doc) => ({
@@ -41,35 +47,46 @@ export async function GET(request: NextRequest) {
           metadata: doc.metadata,
         })),
         total: documents.length,
-      })
+      });
     }
 
     // Get all categories and stats
-    const stats = knowledgeBaseManager.getStats()
-    const categories = knowledgeBaseManager.getAllCategories()
+    const stats = knowledgeBaseManager.getStats();
+    const categories = knowledgeBaseManager.getAllCategories();
 
     return NextResponse.json({
       stats,
       categories,
-      message: "Knowledge Base API - Use ?q=query to search or ?category=name to filter",
-    })
+      message:
+        'Knowledge Base API - Use ?q=query to search or ?category=name to filter',
+    });
   } catch (error) {
-    console.error("Knowledge base API error:", error)
-    return NextResponse.json({ error: "Failed to process knowledge base request" }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to process knowledge base request' },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const document: KnowledgeDocument = await request.json()
+    const document: KnowledgeDocument = await request.json();
 
     // Validate required fields
-    if (!document.id || !document.title || !document.content || !document.category) {
-      return NextResponse.json({ error: "Missing required fields: id, title, content, category" }, { status: 400 })
+    if (
+      !document.id ||
+      !document.title ||
+      !document.content ||
+      !document.category
+    ) {
+      return NextResponse.json(
+        { error: 'Missing required fields: id, title, content, category' },
+        { status: 400 }
+      );
     }
 
     // Add document to knowledge base
-    await knowledgeBaseManager.addDocument(document)
+    await knowledgeBaseManager.addDocument(document);
 
     return NextResponse.json({
       success: true,
@@ -80,9 +97,11 @@ export async function POST(request: NextRequest) {
         category: document.category,
         tags: document.tags,
       },
-    })
+    });
   } catch (error) {
-    console.error("Failed to add document:", error)
-    return NextResponse.json({ error: "Failed to add document to knowledge base" }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to add document to knowledge base' },
+      { status: 500 }
+    );
   }
 }

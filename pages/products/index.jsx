@@ -111,7 +111,6 @@ export default function ProductsPage() {
       // Solutions, Partners, News
       setFeedbacks(feedbackRes.data.data || []);
     } catch (error) {
-      console.error('Error fetching homepage data:', error);
       const message =
         error.response?.data?.message ||
         error.message ||

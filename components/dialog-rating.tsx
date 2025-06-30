@@ -14,7 +14,8 @@ import { toast } from 'sonner';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
-import { RatingDialogProps } from '@/pages/interface';
+import { RatingDialogProps } from '@/types/interface';
+
 // import form của bạn
 export default function RatingDialog({
   open,

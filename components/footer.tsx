@@ -16,10 +16,9 @@ import {
   ClockArrowDown,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { useState, useEffect } from 'react';
 import api from '@/utils/axios';
-import { CompanyContentItem } from '@/app/interface';
+import { CompanyContentItem } from '@/types/interface';
 
 interface CompanyInfo {
   content: CompanyContentItem[];

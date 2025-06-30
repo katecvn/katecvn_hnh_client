@@ -1,5 +1,5 @@
+import { TestimonialSliderProps } from '@/types/interface';
 import React from 'react';
-import { TestimonialSliderProps } from '../pages/interface';
 
 const TestimonialSlider = ({ feedbacks }: TestimonialSliderProps) => {
   const getBgColor = () => {

@@ -55,7 +55,7 @@ import {
   AnimatedSectionProps,
   NewsCardProps,
   ParticleEffectProps,
-} from '@/pages/interface';
+} from '../types/interface';
 
 const getWords = (str: string, number: number) => {
   if (!str) return '';

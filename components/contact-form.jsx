@@ -80,7 +80,6 @@ export function ContactForm({ title }) {
       const response = await api.post('/contact/create', payload);
       const { data } = response.data;
 
-      console.log('API Response:', data);
       setIsSubmitted(true);
     } catch (error) {
       const message = handleError(error);

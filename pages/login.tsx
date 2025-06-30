@@ -46,9 +46,7 @@ const GoogleLoginPage = () => {
   };
 
   useEffect(() => {
-    console.log(11122);
     const listener = () => {
-      console.log(11122233);
       const status = localStorageUtil.getAuthStatus();
       const message = localStorageUtil.getAuthMessage();
 

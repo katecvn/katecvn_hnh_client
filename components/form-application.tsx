@@ -26,7 +26,7 @@ import {
   Ban,
 } from 'lucide-react';
 import { HolographicText } from '@/components/tech-blue-animations';
-import { ApplicationFormSectionProps } from '../pages/interface';
+import { ApplicationFormSectionProps } from '@/types/interface';
 
 export default function ApplicationFormSection({
   selectedPosition,

@@ -53,7 +53,6 @@ const ProductDetailPage = () => {
       if (Array.isArray(parsed)) return parsed[0];
       return [];
     } catch (error) {
-      console.error('Lỗi parse imagesUrl:', error);
       return [];
     }
   };

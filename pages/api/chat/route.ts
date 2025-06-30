@@ -175,8 +175,6 @@ Bạn có muốn tìm hiểu về sản phẩm hoặc dịch vụ nào cụ th�
       );
     }
   } catch (error) {
-    console.error('Chat API error:', error);
-
     // Enhanced fallback with knowledge base search
     try {
       const { message } = await request.json();

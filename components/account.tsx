@@ -101,7 +101,7 @@ const UserAccountHeader = ({ userInfo, onUpdateUser, onLogout }) => {
         <div className="absolute right-0 top-full -mt-2 w-64 text-sm bg-white rounded-md shadow-2xl border border-blue-200 z-50">
           <div>
             {/* Nút cập nhật thông tin */}
-            <button
+            {/*  <button
               onClick={() => {
                 setShowEditProfile(true);
                 setShowAccountMenu(false);
@@ -114,7 +114,7 @@ const UserAccountHeader = ({ userInfo, onUpdateUser, onLogout }) => {
               <span className="text-gray-700 font-medium">
                 Cập nhật thông tin
               </span>
-            </button>
+            </button> */}
 
             {/* Nút đăng xuất */}
             <button

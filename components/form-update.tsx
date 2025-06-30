@@ -8,8 +8,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { X, Save, User, Mail, Phone, Users, Shield } from 'lucide-react'; // import form của bạn
-import { useState, useEffect } from 'react';
-import { ContactDialogProps } from '@/app/interface';
+import { useState } from 'react';
 
 export default function FormUpdate({ userInfo, open, onOpenChange }) {
   const [focusedField, setFocusedField] = useState('');

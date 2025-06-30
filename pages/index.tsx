@@ -34,7 +34,7 @@ import api from '@/utils/axios';
 import type {
   GeneralContentItem,
   SectionItem as BaseSectionItem,
-} from './interface';
+} from '../types/interface';
 
 type ContentItem = GeneralContentItem;
 type SectionItem = BaseSectionItem<ContentItem>;
@@ -135,7 +135,6 @@ export default function HomePage() {
       setPartners(partnerRes.data.data || []);
       setNews(newsRes.data.data?.posts || []);
     } catch (error: any) {
-      console.error('Error fetching homepage data:', error);
       const message =
         error.response?.data?.message ||
         error.message ||
