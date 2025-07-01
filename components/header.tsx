@@ -202,7 +202,7 @@ export function Header() {
               >
                 <Menu
                   className={cn(
-                    'h-6 w-6',
+                    'h-8 w-8',
                     isScrolled ? 'text-tech-blue-900' : 'text-white'
                   )}
                 />
