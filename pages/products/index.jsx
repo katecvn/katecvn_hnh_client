@@ -42,6 +42,13 @@ export default function ProductsPage() {
 
   const [selectedCategory, setSelectedCategory] = useState('all');
 
+  const stats = [
+    { value: '3500+', label: 'Khách hàng tin tưởng', color: 'text-blue-600' },
+    { value: '98%', label: 'Tỷ lệ hài lòng', color: 'text-purple-600' },
+    { value: '24/7', label: 'Hỗ trợ khách hàng', color: 'text-green-600' },
+    { value: '6+', label: 'Năm kinh nghiệm', color: 'text-orange-600' },
+  ];
+
   const fetchAllData = async (
     options = { page: 1, limit: MAX_LENGHT_LIMIT, categoryId: null }
   ) => {
@@ -417,23 +424,15 @@ export default function ProductsPage() {
           <TestimonialSlider feedbacks={feedbacks} />
 
           {/* Statistics */}
-          <div className=" grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
-              <div className="text-gray-600">Khách hàng tin tưởng</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">98%</div>
-              <div className="text-gray-600">Tỷ lệ hài lòng</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">24/7</div>
-              <div className="text-gray-600">Hỗ trợ khách hàng</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-orange-600 mb-2">5+</div>
-              <div className="text-gray-600">Năm kinh nghiệm</div>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {stats.map((stat, index) => (
+              <div key={index}>
+                <div className={`text-3xl font-bold ${stat.color} mb-2`}>
+                  {stat.value}
+                </div>
+                <div className="text-gray-600">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </AnimatedSection>

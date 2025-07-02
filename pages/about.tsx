@@ -134,17 +134,17 @@ export default function AboutPage() {
   const stats = [
     {
       label: 'Năm kinh nghiệm',
-      value: '5+',
+      value: '6+',
       icon: <Award className="h-6 w-6" />,
     },
     {
       label: 'Dự án hoàn thành',
-      value: '500+',
+      value: '300+',
       icon: <Target className="h-6 w-6" />,
     },
     {
       label: 'Khách hàng hài lòng',
-      value: '200+',
+      value: '3500+',
       icon: <Users className="h-6 w-6" />,
     },
     {

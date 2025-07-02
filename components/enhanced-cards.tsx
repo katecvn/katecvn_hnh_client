@@ -499,9 +499,7 @@ export const PositionCard = ({
 
         <div className="flex justify-between items-center mb-6">
           <div className="text-gray-800">
-            <div className="text-2xl text-sky-600 font-bold">
-              {position.salary}
-            </div>
+            <div className="text-2xl text-sky-600 font-bold">$ Thỏa thuận</div>
             <div className="text-sm text-gray-500">{position.experience}</div>
           </div>
           <div className="flex items-center text-gray-600">

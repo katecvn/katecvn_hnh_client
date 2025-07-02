@@ -45,23 +45,24 @@ const GoogleLoginPage = () => {
     }
   };
 
-  useEffect(() => {
-    const listener = () => {
-      const status = localStorageUtil.getAuthStatus();
-      const message = localStorageUtil.getAuthMessage();
+  const listener = () => {
+    console.log('mounted 1111222');
+    const status = localStorageUtil.getAuthStatus();
+    const message = localStorageUtil.getAuthMessage();
 
-      if (status && message) {
-        if (status === 'success') {
-          toast.success(message);
-          window.location.href = '/';
-        } else {
-          toast.error(message);
-        }
-
-        localStorageUtil.clearAuthStatus();
+    if (status && message) {
+      if (status === 'success') {
+        toast.success(message);
+        window.location.href = '/';
+      } else {
+        toast.error(message);
       }
-    };
 
+      localStorageUtil.clearAuthStatus();
+    }
+  };
+
+  useEffect(() => {
     window.addEventListener('message', listener);
     return () => window.removeEventListener('message', listener);
   }, []);

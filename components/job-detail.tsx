@@ -231,9 +231,7 @@ export default function JobDetailPage({
                 <div className="flex items-center gap-3">
                   <DollarSign className="text-green-500" size={20} />
                   <div>
-                    <div className="font-medium text-gray-900">
-                      {jobData.salary}
-                    </div>
+                    <div className="font-medium text-gray-900">Thoả thuận</div>
                     <div className="text-sm text-gray-500">Mức lương</div>
                   </div>
                 </div>
