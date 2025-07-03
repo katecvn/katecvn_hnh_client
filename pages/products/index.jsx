@@ -78,8 +78,10 @@ export default function ProductsPage() {
         let image =
           'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop';
         try {
-          image = JSON.parse(JSON.parse(product.imagesUrl))[0] || image;
-        } catch {}
+          image = product.imagesUrl[0] || image;
+        } catch (error) {
+          console.log(error);
+        }
 
         return {
           id: product.id,

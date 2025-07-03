@@ -279,12 +279,6 @@ export function ProductCard({ product, index }: ProductCardProps) {
 
             {product.badge && <Badge variant="warning">{product.badge}</Badge>}
           </div>
-
-          {product.stock === 0 && (
-            <div className="absolute top-4 right-4">
-              <Badge className="bg-red-600">Hết hàng</Badge>
-            </div>
-          )}
         </div>
 
         {/* Content */}

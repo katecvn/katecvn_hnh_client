@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, MouseEvent } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -10,6 +10,8 @@ import ContactDialog from './dialog-contact';
 import { useRouter } from 'next/router';
 import { localStorageUtil, UserInfo } from '@/utils/localStorage';
 import UserAccountHeader from './account';
+import { toast } from 'sonner';
+import api from '@/utils/axios';
 
 export function Header() {
   const router = useRouter();
@@ -19,9 +21,12 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [openContact, setOpenContact] = useState(false);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [token, setToken] = useState('');
 
   useEffect(() => {
+    const storedToken = localStorageUtil.getToken();
     const storedUser = localStorageUtil.getUser();
+    setToken(storedToken ?? '');
     setUserInfo(storedUser);
   }, []);
 
@@ -41,6 +46,23 @@ export function Header() {
     { name: 'Tuyển dụng', href: '/careers' },
     { name: 'Liên hệ', href: '/contact' },
   ];
+
+  const logoutHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+    try {
+      // Gọi API đăng xuất
+      await api.get('/logout', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success('Đăng xuất thành công!');
+      localStorageUtil.clearAll();
+      setUserInfo(null);
+    } catch (error) {
+      let message = 'Đã xảy ra lỗi khi đăng xuất.';
+      toast.error(message);
+    }
+  };
 
   return (
     <header
@@ -120,11 +142,7 @@ export function Header() {
               <UserAccountHeader
                 userInfo={userInfo}
                 onUpdateUser={(updatedInfo: any) => {}}
-                onLogout={() => {
-                  // Xử lý đăng xuất
-                  localStorageUtil.clearAll();
-                  router.push('/');
-                }}
+                onLogout={logoutHandler}
               />
             ) : (
               <Button

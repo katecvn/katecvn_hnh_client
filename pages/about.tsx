@@ -109,25 +109,30 @@ export default function AboutPage() {
       year: '2021',
       title: 'Mở rộng đội ngũ',
       description:
-        'Phát triển đội ngũ lên 25 chuyên gia và mở rộng dịch vụ sang AI & Machine Learning.',
+        'Phát triển đội ngũ lên 10 chuyên gia và mở rộng dịch vụ sang AI & Machine Learning.',
     },
     {
       year: '2022',
       title: 'Giải thưởng công nghệ',
       description:
-        "Nhận giải thưởng 'Sản phẩm công nghệ xuất sắc' từ Hiệp hội Phần mềm Việt Nam.",
+        "Nhận giải thưởng 'Giải Nhì - Hội thi Sáng tạo kỹ thuật' từ Tp Cần Thơ.",
     },
     {
       year: '2023',
       title: 'Mở rộng thị trường',
-      description:
-        'Phục vụ hơn 200 khách hàng và mở rộng sang thị trường Đông Nam Á.',
+      description: 'Phục vụ hơn 200 khách hàng ở khắp cả nước.',
     },
     {
       year: '2024',
+      title: 'Vinh danh sản phẩm',
+      description:
+        'Top 1 Bình chọn sản phẩm khoa học, công nghệ và đổi mới sáng tạo Tp Cần Thơ.',
+    },
+    {
+      year: '2025',
       title: 'Đổi mới AI',
       description:
-        'Ra mắt nền tảng AI Analytics và đạt mốc 500+ dự án hoàn thành thành công.',
+        'Ra mắt nền tảng AI Analytics và đạt mốc 300+ dự án hoàn thành thành công.',
     },
   ];
 
@@ -249,7 +254,7 @@ export default function AboutPage() {
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 <HolographicText>
-                  Hành trình 5 năm xây dựng và phát triển
+                  Hành trình 6 năm xây dựng và phát triển
                 </HolographicText>
               </h2>
               <p className="text-gray-600 mb-6 text-lg">
@@ -293,7 +298,7 @@ export default function AboutPage() {
                 className="rounded-lg shadow-xl"
               />
               <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-lg shadow-lg">
-                <div className="text-2xl font-bold text-blue-600">500+</div>
+                <div className="text-2xl font-bold text-blue-600">300+</div>
                 <div className="text-gray-600">Dự án thành công</div>
               </div>
             </div>

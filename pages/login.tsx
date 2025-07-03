@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Shield, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -9,6 +9,7 @@ import { localStorageUtil } from '@/utils/localStorage';
 
 const GoogleLoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const popupHandle = useRef<Window | null>(null);
 
   const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -45,79 +46,28 @@ const GoogleLoginPage = () => {
     }
   };
 
-  const listener = () => {
-    console.log('mounted 1111222');
-    const status = localStorageUtil.getAuthStatus();
-    const message = localStorageUtil.getAuthMessage();
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        event.origin !== window.location.origin ||
+        event.data?.type !== 'google-auth-status'
+      ) {
+        return;
+      }
 
-    if (status && message) {
+      const { status, message } = event.data;
+
       if (status === 'success') {
         toast.success(message);
         window.location.href = '/';
       } else {
         toast.error(message);
       }
+    };
 
-      localStorageUtil.clearAuthStatus();
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('message', listener);
-    return () => window.removeEventListener('message', listener);
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
-
-  // useEffect(() => {
-  //   console.log('Received Google ');
-  //   const listener = async (event: MessageEvent) => {
-  //     console.log('Received Google 132423 ');
-  //     if (event.origin !== window.location.origin) return;
-
-  //     const { type, payload } = event.data;
-
-  //     if (type === 'google-auth-code') {
-  //       try {
-  //         const rawQuery = payload.rawQuery;
-  //         console.log('Received Google OAuth code:', rawQuery);
-
-  //         if (!rawQuery) {
-  //           toast.error('Không nhận được mã code từ Google');
-  //           return;
-  //         }
-
-  //         // Gửi mã code về server để lấy access token và thông tin user
-  //         const { data } = await api.get(
-  //           `/customer/auth/google/callback?code=${rawQuery}`
-  //         );
-
-  //         if (data?.token) {
-  //           localStorage.setItem('token', data.token);
-  //           toast.success('Đăng nhập Google thành công!');
-
-  //           // 👉 Thực hiện điều hướng (ví dụ về trang dashboard)
-  //           window.location.href = '/dashboard';
-  //         } else {
-  //           toast.error('Đăng nhập thất bại. Không nhận được token');
-  //         }
-  //       } catch (err) {
-  //         console.error(err);
-  //         toast.error('Xác thực Google thất bại, vui lòng thử lại');
-  //       } finally {
-  //         window.removeEventListener('message', listener);
-  //       }
-  //     }
-
-  //     if (type === 'google-auth-error') {
-  //       toast.error('Đăng nhập Google thất bại');
-  //       window.removeEventListener('message', listener);
-  //     }
-  //   };
-
-  //   window.addEventListener('message', listener);
-  //   return () => window.removeEventListener('message', listener);
-  // }, []);
-
-  // const { handleGoogleLogin } = useGoogleLogin();
 
   return (
     <div className=" pt-16 flex flex-col justify-between min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-blue-100">

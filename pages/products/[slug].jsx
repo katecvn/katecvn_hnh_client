@@ -74,7 +74,7 @@ const ProductDetailPage = () => {
       let images = [];
       if (data.imagesUrl) {
         try {
-          images = JSON.parse(JSON.parse(data.imagesUrl));
+          images = data.imagesUrl;
         } catch (e) {
           console.warn('Lỗi khi parse imagesUrl:', e);
         }
@@ -212,12 +212,12 @@ const ProductDetailPage = () => {
                       alt={product.name}
                       className="w-full h-full rounded-lg transform group-hover:scale-105 transition-transform duration-500 object-cover"
                     />
-                    {product.originalPrice && product.salePrice && (
+                    {product.originalPrice > 0 && product.salePrice > 0 && (
                       <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-semibold animate-pulse">
                         Giảm{' '}
                         {Math.round(
-                          ((product.originalPrice - product.salePrice) /
-                            product.originalPrice) *
+                          ((product?.originalPrice - product?.salePrice) /
+                            product?.originalPrice) *
                             100
                         )}
                         %

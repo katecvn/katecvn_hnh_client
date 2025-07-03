@@ -1,64 +1,50 @@
 'use client';
+import { useEffect } from 'react';
 import api from '@/utils/axios';
 import { localStorageUtil } from '@/utils/localStorage';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
 
 export default function GoogleCallbackPage() {
   useEffect(() => {
     const handleGoogleCallback = async () => {
-      const rawQuery = window.location.search.split('code=')[1];
+      const code = new URLSearchParams(window.location.search).get('code');
 
-      if (rawQuery) {
-        try {
-          const { data } = await api.get(
-            `/customer/auth/google/callback?code=${rawQuery}`
-          );
+      if (!code) {
+        sendStatus('failed', 'Không tìm thấy mã code từ Google.');
+        return;
+      }
 
-          if (data?.data.token) {
-            localStorageUtil.setToken(data?.data.token);
-            localStorageUtil.setUser(data?.data.userInformation);
-            localStorageUtil.setAuthStatus(
-              'success',
-              'Đăng nhập Google thành công.'
-            );
-          } else {
-            localStorageUtil.setAuthStatus(
-              'failed',
-              'Đăng nhập Google thất bại.'
-            );
-          }
-        } catch (error) {
-          localStorageUtil.setAuthStatus(
-            'failed',
-            'Đăng nhập Google thất bại.'
-          );
-        }
-
-        if (window.opener) {
-          window.opener.postMessage(
-            {
-              type: 'google-auth-status',
-              payload: {
-                status: localStorageUtil.getAuthStatus(),
-                message: localStorageUtil.getAuthMessage(),
-              },
-            },
-            window.location.origin
-          );
-        }
-
-        setTimeout(() => {
-          window.close();
-        }, 100);
-      } else {
-        localStorageUtil.setAuthStatus(
-          'failed',
-          'Không tìm thấy mã code từ Google.'
+      try {
+        const { data } = await api.get(
+          `/customer/auth/google/callback?code=${code}`
         );
 
-        window.close();
+        if (data?.data?.token) {
+          localStorageUtil.setToken(data.data.token);
+          localStorageUtil.setUser(data.data.userInformation);
+          sendStatus('success', 'Đăng nhập Google thành công.');
+        } else {
+          sendStatus('failed', 'Đăng nhập Google thất bại.');
+        }
+      } catch (error) {
+        sendStatus('failed', 'Đăng nhập Google thất bại.');
       }
+    };
+
+    const sendStatus = (status: 'success' | 'failed', message: string) => {
+      if (window.opener) {
+        window.opener.postMessage(
+          {
+            type: 'google-auth-status',
+            status,
+            message,
+          },
+          window.location.origin
+        );
+      }
+
+      setTimeout(() => {
+        window.close();
+      }, 100);
     };
 
     handleGoogleCallback();
