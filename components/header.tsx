@@ -87,7 +87,9 @@ export function Header() {
                   )}
                 >
                   <img
-                    src={`${isScrolled ? '/logo.png' : '/logo-white.png'}`}
+                    src={`${
+                      isScrolled ? '/logo-katec.svg' : '/logo-katec-white.svg'
+                    }`}
                     alt="Logo"
                     className="w-auto h-8 object-contain md:w-full"
                     style={{
@@ -123,7 +125,7 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
+            {navigation.map(item => (
               <Link key={item.name} href={item.href}>
                 <a
                   className={cn(
@@ -228,7 +230,7 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right">
               <div className="flex flex-col space-y-4 mt-8">
-                {navigation.map((item) => {
+                {navigation.map(item => {
                   const isActive = pathname === item.href;
                   return (
                     <Link key={item.name} href={item.href} legacyBehavior>
