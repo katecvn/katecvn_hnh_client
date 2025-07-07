@@ -130,6 +130,7 @@ export interface Comment {
   content: string;
   user: User;
   created_at: string;
+  parentId?: number | null;
 }
 
 export interface Post {

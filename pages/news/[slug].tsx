@@ -33,6 +33,7 @@ import { AnimatedSection } from '@/components/animated-section';
 import { HolographicText } from '@/components/tech-blue-animations';
 import { SupportSection } from '@/components/enhanced-support';
 import { ApiResponse, Comment, Post, PostsResponse } from '@/types/interface';
+import CommentsSection from '@/components/comment-card';
 
 const ArticleContent = memo(({ content }: { content: string }) => {
   return (
@@ -338,156 +339,11 @@ export default function ArticleDetailPage() {
                   </Card>
 
                   {/* Comments Section */}
-                  <Card className="mt-8 bg-white backdrop-blur-xl border border-gray-200 shadow-2xl">
-                    <CardHeader className="border-b border-gray-200 px-4 sm:px-6">
-                      <CardTitle className="flex items-center text-gray-900 text-2xl font-bold">
-                        <MessageCircle className="h-6 w-6 mr-3 text-blue-500" />
-                        Bình luận ({post.postComments?.length || 0})
-                        <TrendingUp className="h-5 w-5 ml-2 text-green-500" />
-                      </CardTitle>
-                    </CardHeader>
-
-                    <CardContent className="space-y-8 pt-8 px-4 sm:px-6">
-                      {/* List of Comments */}
-                      {Array.isArray(post.postComments) &&
-                      post.postComments.length > 0 ? (
-                        post.postComments.map(
-                          (comment: Comment, index: number) => (
-                            <div
-                              key={comment.id}
-                              className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-300"
-                              style={{ animationDelay: `${index * 0.1}s` }}
-                            >
-                              <Avatar className="ring-2 ring-purple-200 flex-shrink-0">
-                                <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold">
-                                  {comment.user.full_name.charAt(0)}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1">
-                                <div className="flex flex-wrap items-center gap-2 mb-2">
-                                  <span className="font-bold text-gray-900">
-                                    {comment.user.full_name}
-                                  </span>
-                                  <Badge
-                                    variant="outline"
-                                    className="border-purple-300 text-purple-700 text-xs font-medium"
-                                  >
-                                    Verified
-                                  </Badge>
-                                </div>
-                                <p className="text-gray-700 leading-relaxed">
-                                  {comment.content}
-                                </p>
-                                <div className="flex items-center gap-4 mt-3">
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-gray-600 hover:text-purple-600 p-0 h-auto font-medium"
-                                  >
-                                    <ThumbsUp className="h-3 w-3 mr-1" />
-                                    {Math.floor(Math.random() * 10) + 1}
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-gray-600 hover:text-purple-600 p-0 h-auto font-medium"
-                                  >
-                                    Trả lời
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          )
-                        )
-                      ) : (
-                        <div className="text-center">
-                          <div className="flex flex-col items-center space-y-4">
-                            <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
-                              <MessageCircle className="h-8 w-8 text-purple-400" />
-                            </div>
-                            <div className="space-y-2">
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Chưa có bình luận nào
-                              </h3>
-                              <p className="text-gray-600 max-w-md">
-                                Hãy là người đầu tiên chia sẻ suy nghĩ của bạn
-                                về bài viết này!
-                              </p>
-                            </div>
-                            <Button className="cursor-default bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl">
-                              <MessageCircle className="h-4 w-4 mr-2" />
-                              Viết bình luận đầu tiên
-                            </Button>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Comment Input Form */}
-                      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 sm:p-6 rounded-xl border border-blue-100">
-                        <div className="flex flex-col sm:flex-row gap-4">
-                          <Avatar className="ring-2 ring-blue-200 flex-shrink-0">
-                            <AvatarFallback className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold">
-                              K
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 space-y-4">
-                            <div className="relative">
-                              <textarea
-                                placeholder="Chia sẻ suy nghĩ của bạn về bài viết này..."
-                                className="w-full min-h-[100px] p-4 border border-gray-200 rounded-lg bg-white shadow-sm placeholder-gray-500 text-gray-900 resize-none focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-300"
-                                style={{ fontSize: '14px', lineHeight: '1.5' }}
-                              />
-
-                              <div className="absolute bottom-3 right-3 text-xs text-gray-400">
-                                0/500
-                              </div>
-                            </div>
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                              <div className="flex items-center gap-3">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-gray-600 hover:text-purple-600 p-2 h-auto"
-                                >
-                                  <Smile className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-gray-600 hover:text-purple-600 p-2 h-auto"
-                                >
-                                  <Image className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-gray-600 hover:text-purple-600 p-2 h-auto"
-                                >
-                                  <Link2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
-                                >
-                                  Hủy
-                                </Button>
-                                <Button
-                                  className="bg-gradient-to-r from-blue-500 to-blue-500 hover:from-blue-600 hover:to-blue-600 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                                  size="sm"
-                                >
-                                  <Send className="h-4 w-4 mr-2" />
-                                  Đăng bình luận
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <CommentsSection
+                    comments={post.postComments || []}
+                    postId={post.id}
+                    onCommentSubmitted={() => getArticleDetail(post.slug)} // fetch lại bài viết nếu cần
+                  />
                 </AnimatedSection>
               </div>
 
@@ -508,11 +364,11 @@ export default function ArticleDetailPage() {
                           <div className="flex items-center gap-4">
                             <Avatar className="h-16 w-16 ring-4 ring-blue-300">
                               <AvatarImage
-                                src={post.author.avatar_url}
-                                alt={post.author.full_name}
+                                src={post?.author?.avatar_url}
+                                alt={post?.author?.full_name}
                               />
                               <AvatarFallback className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xl font-bold">
-                                {post.author.full_name.charAt(0)}
+                                {post?.author?.full_name.charAt(0)}
                               </AvatarFallback>
                             </Avatar>
                             <div>

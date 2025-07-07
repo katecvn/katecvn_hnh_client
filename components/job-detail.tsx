@@ -285,7 +285,7 @@ export default function JobDetailPage({
               <h3 className="font-bold text-gray-900 mb-4">Về công ty</h3>
               <div className="text-center mb-4">
                 <img
-                  src="/logo.png"
+                  src="/logo-katec.svg"
                   alt="Logo"
                   className="w-auto h-8 object-contain md:w-full"
                   style={{

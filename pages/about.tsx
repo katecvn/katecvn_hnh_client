@@ -132,7 +132,7 @@ export default function AboutPage() {
       year: '2025',
       title: 'Đổi mới AI',
       description:
-        'Ra mắt nền tảng AI Analytics và đạt mốc 300+ dự án hoàn thành thành công.',
+        'Phát triển công nghệ: Ra mắt hệ thống webshop bán hàng cho Doanh nghiệp vừa và nhỏ, hoàn thành +300 dự án',
     },
   ];
 
