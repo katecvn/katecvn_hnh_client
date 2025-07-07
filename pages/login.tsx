@@ -141,7 +141,7 @@ const GoogleLoginPage = () => {
                     )}
                   >
                     <img
-                      src="/logo.png"
+                      src="/logo-katec.svg"
                       alt="Logo"
                       className="w-auto h-14 object-contain md:w-full"
                       style={{
