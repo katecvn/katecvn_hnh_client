@@ -38,7 +38,8 @@ const benefits = [
   {
     icon: <Heart className="h-6 w-6" />,
     title: 'Bảo hiểm toàn diện',
-    description: 'Bảo hiểm y tế, xã hội và tai nạn cho bản thân và gia đình',
+    description:
+      'Bảo hiểm xã hội, bảo hiểm y tế, bảo hiểm hưu trí và thất nghiệp ',
     gradientClass: 'bg-gradient-to-br from-teal-400 via-blue-200 to-purple-300',
   },
   {
