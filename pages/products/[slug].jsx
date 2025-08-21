@@ -529,15 +529,23 @@ const ProductDetailPage = () => {
 
             {activeTab === 'features' && (
               <div className="grid md:grid-cols-2 gap-6">
-                {features.map((feature, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl"
-                  >
-                    <Check className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
-                    <span className="text-gray-700 font-medium">{feature}</span>
+                {product.attributeValues.length > 0 ? (
+                  product.attributeValues.map((feature) => (
+                    <div
+                      key={feature.id}
+                      className="flex items-start gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl"
+                    >
+                      <Check className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+                      <span className="text-gray-700 font-medium">
+                        {feature.value}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-gray-400 font-medium">
+                    <p>Sản phẩm không có tính năng.</p>
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>
@@ -618,16 +626,18 @@ const ProductDetailPage = () => {
         <RatingDialog open={openRating} onOpenChange={setOpenRating} />
 
         {/* Related Products */}
-        <div className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <HolographicText>Sản phẩm liên quan</HolographicText>
-          </h2>
-          <div className=" pt-3 grid md:grid-cols-3 gap-8">
-            {relatedProducts.slice(0, 3).map((item, index) => (
-              <ProductCard key={item.id} product={item} index={index} />
-            ))}
+        {relatedProducts.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <HolographicText>Sản phẩm liên quan</HolographicText>
+            </h2>
+            <div className=" pt-3 grid md:grid-cols-3 gap-8">
+              {relatedProducts.slice(0, 3).map((item, index) => (
+                <ProductCard key={item.id} product={item} index={index} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Support Section */}
