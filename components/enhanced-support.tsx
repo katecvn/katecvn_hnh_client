@@ -1,214 +1,466 @@
-import { Shield } from 'lucide-react';
-import { AnimatedSection } from './animated-section';
-import { Badge } from './ui/badge';
-import { HolographicText } from './tech-blue-animations';
-import { Button } from './ui/button';
-import { WithClassName } from '@/types/interface';
+import { memo, useEffect, useState } from 'react';
+import {
+  CategoriesProSidebar,
+  NewsSidebar,
+  ProductSidebar,
+} from './sidebar-menu';
+import api from '@/utils/axios';
+import {
+  ArticleContentProps,
+  CategoryPro,
+  NavItem,
+  News,
+  Product,
+  ProductCardData,
+  ProductCardsProps,
+} from '@/types/interface';
+import Link from 'next/link';
+import Image from 'next/image';
+import {
+  ArrowRight,
+  Calendar,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  UserCircle,
+} from 'lucide-react';
+import { DateBadge } from './ui/date-badge';
+import ShareButtons from './share-buttons';
+import { ProductsSlider } from './keen-sliders';
+import { useRouter } from 'next/router';
 
-const services = [
-  {
-    title: 'Hotline 24/7',
-    iconColor: 'bg-blue-100',
-    iconClass: 'text-blue-600',
-    iconPath:
-      'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
-    description:
-      'Gọi ngay khi cần hỗ trợ khẩn cấp. Đội ngũ kỹ thuật viên sẵn sàng giải quyết vấn đề của bạn.',
-    highlights: [
-      { label: '0932 927 007 - Hỗ trợ kỹ thuật', color: 'bg-green-500' },
-      { label: '0889 88 1010 - Tư vấn bán hàng', color: 'bg-blue-500' },
-    ],
-  },
-
-  {
-    title: 'Remote Support',
-    iconColor: 'bg-green-100',
-    iconClass: 'text-green-600',
-    iconPath: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
-    description:
-      'Hỗ trợ từ xa qua TeamViewer, AnyDesk để giải quyết vấn đề nhanh chóng.',
-    highlights: [
-      { label: 'Truy cập an toàn, bảo mật', color: 'bg-green-500' },
-      { label: 'Không cần cài đặt phần mềm', color: 'bg-blue-500' },
-      { label: 'Ghi lại quá trình sửa chữa', color: 'bg-purple-500' },
-    ],
-  },
-  {
-    title: 'Tài liệu & Đào tạo',
-    iconColor: 'bg-orange-100',
-    iconClass: 'text-orange-600',
-    iconPath:
-      'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
-    description:
-      'Tài liệu hướng dẫn chi tiết, video tutorial và khóa đào tạo trực tuyến miễn phí.',
-    highlights: [
-      { label: 'Hướng dẫn sử dụng chi tiết', color: 'bg-green-500' },
-      { label: 'Video tutorial HD', color: 'bg-blue-500' },
-      { label: 'Khóa đào tạo trực tuyến', color: 'bg-purple-500' },
-    ],
-  },
-  {
-    title: 'Bảo trì & Nâng cấp',
-    iconColor: 'bg-purple-100',
-    iconClass: 'text-purple-600',
-    iconPath:
-      'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z',
-    description:
-      'Dịch vụ bảo trì định kỳ, cập nhật phiên bản mới và tối ưu hóa hiệu suất hệ thống.',
-    highlights: [
-      { label: 'Bảo trì định kỳ hàng tháng', color: 'bg-green-500' },
-      { label: 'Cập nhật tính năng mới', color: 'bg-blue-500' },
-      { label: 'Tối ưu hiệu suất', color: 'bg-purple-500' },
-    ],
-  },
-];
-
-interface HighlightItem {
-  color: string;
-  label: string;
-}
-
-interface ServiceCardProps {
-  title: string;
-  iconColor: string;
-  iconClass: string;
-  iconPath: string;
-  description: string;
-  highlights: HighlightItem[];
-}
-
-const ServiceCard: React.FC<ServiceCardProps> = ({
-  title,
-  iconColor,
-  iconClass,
-  iconPath,
-  description,
-  highlights,
-}) => {
-  return (
-    <div className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+export const ArticleContent = ({
+  showHeader = true,
+  post,
+}: ArticleContentProps) => {
+  const Content = memo(({ content }: { content: string }) => {
+    return (
       <div
-        className={`w-16 h-16 ${iconColor} rounded-full flex items-center justify-center mb-6`}
-      >
-        <svg
-          className={`w-8 h-8 ${iconClass}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d={iconPath}
-          />
-        </svg>
-      </div>
-      <h3 className="text-xl font-semibold mb-4">{title}</h3>
-      <p className="text-gray-600 mb-4">{description}</p>
-      <div className="space-y-2">
-        {highlights.map((item: any, idx: number) => (
-          <p className="flex items-center text-sm" key={idx}>
-            <span className={`w-2 h-2 ${item.color} rounded-full mr-2`}></span>
-            {typeof item.label === 'string' ? (
-              <span>{item.label}</span>
-            ) : (
-              item.label
-            )}
-          </p>
+        className={`prose prose-base sm:prose-lg lg:prose-xl max-w-none 
+        break-words whitespace-normal
+        prose-headings:text-gray-900 prose-headings:font-bold
+        prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-lg prose-p:text-justify
+        prose-a:text-blue-600 prose-a:no-underline hover:prose-a:text-blue-500 prose-a:font-medium
+        prose-strong:text-gray-900 prose-strong:font-bold
+        prose-img:rounded-xl prose-img:shadow-lg prose-img:max-w-full prose-img:h-auto
+        prose-blockquote:border-l-blue-500 prose-blockquote:bg-blue-50 prose-blockquote:rounded-r-lg prose-blockquote:text-gray-700
+        prose-code:bg-gray-100 prose-code:text-blue-700 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-semibold
+        [&_pre]:overflow-x-auto [&_code]:whitespace-pre [&_table]:overflow-x-auto [&_table]:block`}
+        style={{ textAlign: 'justify' }}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    );
+  });
+
+  return (
+    <div className="bg-white rounded border border-gray-100 shadow-md p-4 mb-5">
+      {showHeader && (
+        <div>
+          <div className="text-left">
+            <h1 className="text-neutral-gray-800 text-3xl font-bold mb-2">
+              {post.title}
+            </h1>
+
+            <div className="w-10 h-1 bg-gray-200 mb-3"></div>
+
+            <div className="sm:text-sm text-xs font-sans text-neutral-gray-400 flex gap-2">
+              <span className="flex gap-1">
+                <CalendarDays className="w-4 h-4" />
+                <time dateTime={post.published_at}>
+                  {new Date(post.published_at).toLocaleDateString('vi-VN', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                  ,
+                </time>
+              </span>
+
+              <span className="flex gap-1">
+                <UserCircle className="w-4 h-4" />
+                <span className="font-medium uppercase">
+                  {post?.author?.full_name}
+                </span>
+              </span>
+            </div>
+          </div>
+          <div className="relative mt-4">
+            <Image
+              src={post.thumbnail ?? '/placeholder.png'}
+              alt={post.title}
+              width={1020}
+              height={567}
+              className="rounded-lg object-cover"
+              priority
+            />
+
+            <DateBadge date={post.published_at} />
+          </div>
+        </div>
+      )}
+      <Content content={post.content} />
+
+      {showHeader && (
+        <ShareButtons
+          url={`/tin-tuc/${post.slug}`}
+          title={post.title}
+          media={post.thumbnail}
+        />
+      )}
+    </div>
+  );
+};
+
+export const PressSection = () => {
+  const pressItems = [
+    {
+      href: 'https://hanoionline.vn/vung-rau-thanh-tri-doi-moi-de-thanh-cong-107946.htm',
+      img: '/press/Nong-trai-thuc-pham-HNH.jpg', // tải ảnh này về /public/press
+      alt: 'Vùng rau Thanh Trì đổi mới để thành công',
+      text: (
+        <>
+          <p>Vùng rau Thanh Trì</p>
+          <p>Đổi mới để thành công</p>
+        </>
+      ),
+    },
+    {
+      href: 'https://vietnam.vnanet.vn/vietnamese/long-form/hnh-gop-phan-nang-tam-gia-tri-nong-san-thuc-pham-viet-315698.html',
+      img: '/press/Le-ky-ket-hop-dong.jpg',
+      alt: 'Lễ ký kết hợp đồng liên kết sản xuất - tiêu thụ sản phẩm',
+      text: (
+        <p>
+          HNH góp phần nâng tầm giá trị <br /> Nông sản thực phẩm Việt
+        </p>
+      ),
+    },
+    {
+      href: 'https://vietnam.vnanet.vn/vietnamese/tin-tuc/phat-trien-lien-ket-chuoi-gia-tri-trong-san-xuat-nong-nghiep-tai-huyen-thanh-tri-315562.html',
+      img: '/press/HNH-Foodfarm.jpg',
+      alt: 'HNH Foodfarm',
+      text: (
+        <p>
+          Phát triển liên kết chuỗi giá trị trong sản xuất nông nghiệp tại huyện
+          Thanh Trì
+        </p>
+      ),
+    },
+  ];
+  return (
+    <section className="pb-8">
+      <h3 className="flex items-center justify-center mt-4 mb-8 gap-4 text-center text-xl font-bold text-neutral-gray-700">
+        <span className="flex-1 border-t-2 border-orange-500"></span>
+        <span>BÁO CHÍ NÓI GÌ VỀ CHÚNG TÔI</span>
+        <span className="flex-1 border-t-2 border-orange-500"></span>
+      </h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {pressItems.map((item, idx) => (
+          <div
+            key={idx}
+            className="group relative rounded overflow-hidden shadow-lg hover:shadow-xl transition"
+          >
+            <Link href={item.href} target="_blank" rel="noopener noreferrer">
+              <a>
+                <div className="relative w-full h-64">
+                  <Image
+                    src={item.img}
+                    alt={item.alt}
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition" />
+                <div className="absolute bottom-0 w-full text-[0.9rem] text-center text-white p-4">
+                  {item.text}
+                </div>
+              </a>
+            </Link>
+          </div>
         ))}
+      </div>
+    </section>
+  );
+};
+
+interface PostNavProps {
+  prev?: { title: string; href: string };
+  next?: { title: string; href: string };
+}
+
+export const PostNavigation = ({ prev, next }: PostNavProps) => {
+  return (
+    <nav role="navigation" className="border-t border-b py-4">
+      <div className="flex items-center justify-between gap-6">
+        {/* Previous */}
+        {prev ? (
+          <Link href={prev.href}>
+            <a className="flex items-center text-gray-800 hover:text-green-600">
+              <ChevronLeft className="h-5 w-5" />
+              <span className="ml-1 line-clamp-1">{prev.title}</span>
+            </a>
+          </Link>
+        ) : (
+          <div />
+        )}
+
+        {/* Next */}
+        {next ? (
+          <Link href={next.href}>
+            <a className="flex items-center text-right text-gray-800 hover:text-green-600">
+              <span className="mr-1 line-clamp-1 ">{next.title}</span>
+              <ChevronRight className="h-5 w-5" />
+            </a>
+          </Link>
+        ) : (
+          <div />
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export const ProductByCategoty = ({
+  category,
+  products,
+}: ProductCardsProps) => {
+  return (
+    <section className="mb-6">
+      {products.length > 0 && (
+        <>
+          <div className="flex items-center justify-between border-b pb-4 mb-4">
+            <h3 className="flex items-center gap-2 px-3 py-2  bg-green-cyan-500 text-lg rounded-lg font-semibold text-white">
+              {category}
+            </h3>
+
+            <Link href="/product-category/trai-cay-tao-hinh/">
+              <a className=" flex items-center group text-lime-green hover:underline text-sm font-medium">
+                <span className="mr-1 group-hover:underline">Xem tất cả</span>{' '}
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </Link>
+          </div>
+
+          <ProductsSlider products={products} />
+        </>
+      )}
+    </section>
+  );
+};
+
+interface ProductTabsProps {
+  description: string;
+}
+
+export const ProductTabs = ({ description }: ProductTabsProps) => {
+  const [activeTab, setActiveTab] = useState<'description' | 'reviews'>(
+    'description'
+  );
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  return (
+    <div className="mx-auto mt-6 p-5 shadow-md rounded border border-gray-200">
+      {/* Tab Header */}
+      <ul className="flex border-b text-sm font-medium uppercase space-x-6">
+        <li
+          className={`cursor-pointer pb-2 ${
+            activeTab === 'description'
+              ? 'border-b-2 border-orange-500 text-orange-600'
+              : 'text-gray-600 hover:text-orange-500'
+          }`}
+          onClick={() => setActiveTab('description')}
+        >
+          Mô tả
+        </li>
+        <li
+          className={`cursor-pointer pb-2 ${
+            activeTab === 'reviews'
+              ? 'border-b-2 border-orange-500 text-orange-600'
+              : 'text-gray-600 hover:text-orange-500'
+          }`}
+          onClick={() => setActiveTab('reviews')}
+        >
+          Đánh giá (0)
+        </li>
+      </ul>
+
+      {/* Tab Panels */}
+      <div className="mt-4 ">
+        {activeTab === 'description' && (
+          <div
+            className="my-4 prose prose-base sm:prose-lg lg:prose-xl max-w-none"
+            style={{ textAlign: 'justify' }}
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        )}
+
+        {activeTab === 'reviews' && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Đánh giá</h3>
+            <p className="text-gray-600 mb-6">Chưa có đánh giá nào.</p>
+
+            <form className="space-y-4 rounded px-6 py-5 border-2 border-green-cyan-500">
+              <div>
+                <label className="block text-base font-medium mb-2">
+                  Đánh giá của bạn *
+                </label>
+                <div className="flex space-x-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHover(star)}
+                      onMouseLeave={() => setHover(0)}
+                      className="focus:outline-none"
+                    >
+                      <Star
+                        size={28}
+                        className={`${
+                          star <= (hover || rating)
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'fill-gray-200 text-gray-200'
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                {/* Input ẩn để submit form */}
+                <input type="hidden" name="rating" value={rating} required />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="comment"
+                  className="block text-base font-medium"
+                >
+                  Nội dung đánh giá *
+                </label>
+                <textarea
+                  id="comment"
+                  rows={4}
+                  required
+                  className="mt-1 w-full border border-gray-300 rounded-md p-2"
+                ></textarea>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="author"
+                    className="block text-base font-medium"
+                  >
+                    Tên *
+                  </label>
+                  <input
+                    type="text"
+                    id="author"
+                    required
+                    className="mt-1 w-full border border-gray-300 rounded-md p-2"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-base font-medium"
+                  >
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    required
+                    className="mt-1 w-full border border-gray-300 rounded-md p-2"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  id="save-info"
+                  type="checkbox"
+                  className="peer h-4 w-4 text-orange-500 border-gray-300 rounded"
+                />
+                <label
+                  htmlFor="save-info"
+                  className="text-sm text-gray-400 peer-checked:text-black"
+                >
+                  Lưu tên của tôi, email, và trang web trong trình duyệt này cho
+                  lần bình luận kế tiếp của tôi.
+                </label>
+              </div>
+
+              <div className="flex items-center  justify-end">
+                <button
+                  type="submit"
+                  className="uppercase font-semibold bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600"
+                >
+                  Gửi đi
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export const SupportSection = ({ className }: WithClassName) => {
+interface CheckoutStepsProps {
+  currentStep: number; // 1 = Giỏ hàng, 2 = Thông tin, 3 = Hoàn tất
+}
+
+const steps = [
+  { id: 1, label: 'Giỏ hàng', url: '/gio-hang' },
+  { id: 2, label: 'Thông tin thanh toán', url: '/thanh-toan' },
+  { id: 3, label: 'Hoàn tất đơn hàng', url: '' },
+];
+
+export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
+  const router = useRouter();
+  const handleTurnPage = (isActive: boolean, url: string) => {
+    if (isActive && url) router.push(url);
+  };
   return (
-    <AnimatedSection
-      className={`py-20 ${className ? className : 'bg-gray-50'}`}
-    >
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-16">
-          <Badge
-            variant="outline"
-            className="mb-4 border-blue-500 text-blue-600"
-          >
-            <Shield className="h-4 w-4 mr-2" />
-            Hỗ trợ khách hàng
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <HolographicText>Chúng tôi luôn bên cạnh bạn</HolographicText>
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Đội ngũ chuyên gia của chúng tôi sẵn sàng hỗ trợ bạn 24/7, từ triển
-            khai đến vận hành và bảo trì hệ thống
-          </p>
-        </div>
+    <div className="mb-6 flex items-center justify-center space-x-8 text-sm font-semibold uppercase">
+      {/* Bước 1: Giỏ hàng */}
+      {steps.map((step, idx) => {
+        const isActive = step.id <= currentStep;
+        const isLast = idx === steps.length - 1;
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((item, idx) => (
-            <ServiceCard key={idx} {...item} />
-          ))}
-        </div>
-
-        {/* Contact Support CTA */}
-        <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">Cần hỗ trợ ngay?</h3>
-            <p className="mb-6 opacity-90">
-              Đội ngũ chuyên gia của chúng tôi sẵn sàng hỗ trợ bạn 24/7
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                variant="secondary"
-                size="lg"
-                className="bg-white text-blue-600 hover:bg-gray-100"
-                onClick={() => {
-                  window.location.href = `tel:0889881010`;
-                }}
+        return (
+          <>
+            <div className="cursor-pointer flex items-center space-x-2">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full ${
+                  isActive
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-300 text-gray-600'
+                }`}
               >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                Gọi ngay: 0889 88 1010
-              </Button>
-              <Button
-                variant="secondary"
-                size="lg"
-                className="bg-white text-purple-600 hover:bg-gray-100"
-                onClick={() => {
-                  window.open('https://zalo.me/0889881010', '_blank');
-                }}
+                {step.id}
+              </div>
+              <span
+                onClick={() => handleTurnPage(isActive, step.url)}
+                className={isActive ? 'text-green-600' : 'text-gray-400'}
               >
-                <svg
-                  className="w-5 h-5 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                  />
-                </svg>
-                Chat với chuyên gia
-              </Button>
+                {step.label}
+              </span>
             </div>
-          </div>
-        </div>
-      </div>
-    </AnimatedSection>
+            {!isLast && (
+              <div
+                className={`flex-1 h-0.5  ${
+                  isActive ? 'bg-green-600' : 'bg-gray-300'
+                }`}
+              ></div>
+            )}
+          </>
+        );
+      })}
+    </div>
   );
-};
+}

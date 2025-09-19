@@ -11,9 +11,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Comment } from '@/types/interface';
+import { Comment, UserInfo } from '@/types/interface';
 import { memo, useEffect, useState } from 'react';
-import { localStorageUtil, UserInfo } from '@/utils/localStorage';
+import { localStorageUtil } from '@/utils/localStorage';
 import { toast } from 'sonner';
 import api from '@/utils/axios';
 
@@ -187,10 +187,9 @@ export default function CommentsSection({
   return (
     <Card className="mt-8">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl">
-          <MessageCircle className="h-6 w-6 text-blue-500" />
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <MessageCircle className="h-6 w-6 text-green-cyan-500" />
           Bình luận ({comments.length})
-          <TrendingUp className="h-5 w-5 text-green-500" />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">

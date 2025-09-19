@@ -1,310 +1,183 @@
 'use client';
 
-import { useState, useEffect, MouseEvent } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, LogIn } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import ContactDialog from './dialog-contact';
-import { useRouter } from 'next/router';
-import { localStorageUtil, UserInfo } from '@/utils/localStorage';
-import UserAccountHeader from './account';
-import { toast } from 'sonner';
+
 import api from '@/utils/axios';
+import TopBar from './topbar';
+import Masthead from './masthead';
+import { CategoryPro, NavItem } from '@/types/interface';
+import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export function Header() {
-  const router = useRouter();
-  const pathname = router.pathname;
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [openContact, setOpenContact] = useState(false);
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const [token, setToken] = useState('');
-
-  useEffect(() => {
-    const storedToken = localStorageUtil.getToken();
-    const storedUser = localStorageUtil.getUser();
-    setToken(storedToken ?? '');
-    setUserInfo(storedUser);
-  }, []);
+  const [navigationMenu, setNavigationMenu] = useState<NavItem[]>([]);
+  const [categories, setCategories] = useState<CategoryPro[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 200);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navigation = [
-    { name: 'Trang chủ', href: '/' },
-    { name: 'Sản phẩm', href: '/products' },
-    { name: 'Tin tức', href: '/news' },
-    { name: 'Về chúng tôi', href: '/about' },
-    { name: 'Tuyển dụng', href: '/careers' },
-    { name: 'Liên hệ', href: '/contact' },
-  ];
+  useEffect(() => {
+    const fetchNavigationMenu = async (): Promise<void> => {
+      setLoading(true);
+      setError(null);
+      const requests = [];
 
-  const logoutHandler = async (e: MouseEvent<HTMLButtonElement>) => {
-    try {
-      // Gọi API đăng xuất
-      await api.get('/logout', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toast.success('Đăng xuất thành công!');
-      localStorageUtil.clearAll();
-      setUserInfo(null);
-    } catch (error) {
-      let message = 'Đã xảy ra lỗi khi đăng xuất.';
-      toast.error(message);
-    }
-  };
+      requests.push(api.get('/navigation/public/shows')); // index 0
+      requests.push(api.get('/category/public/shows-tree'));
+
+      try {
+        const [navRes, categoryRes] = await Promise.all(requests);
+
+        const menuItems = navRes.data.data.filter(
+          (item: any) => item.parentId === null
+        );
+        setNavigationMenu(menuItems);
+        setCategories(categoryRes.data.data || []);
+      } catch (error: any) {
+        const message =
+          error.response?.data?.message ||
+          error.message ||
+          'Không thể tải dữ liệu trang tin tức';
+        setError(message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNavigationMenu();
+  }, []);
 
   return (
-    <header
-      className={cn(
-        'fixed top-0 w-full z-50 transition-all duration-300',
-        isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-tech-blue-200'
-          : 'bg-blue-800/90 backdrop-blur-sm border-b border-gray-700/50'
-      )}
-    >
-      <div className="container mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center space-x-2">
-            <a className="flex items-center gap-3">
-              {/* Enhanced Text Logo */}
-              <div className="relative group flex justify-center md:justify-start">
-                <span
-                  className={cn(
-                    'text-3xl font-black tracking-tight relative transition-all duration-500',
-                    'group-hover:from-sky-300 group-hover:via-purple-400 group-hover:to-blue-500',
-                    isScrolled ? 'opacity-90 scale-95' : 'opacity-100 scale-100'
-                  )}
-                >
-                  <img
-                    src={`${
-                      isScrolled ? '/logo-katec.svg' : '/logo-katec-white.svg'
-                    }`}
-                    alt="Logo"
-                    className="w-auto h-8 object-contain md:w-full"
-                    style={{
-                      maxWidth: '100%',
-                      height: '32px',
-                      display: 'block',
-                    }}
-                    loading="eager"
-                    decoding="sync"
-                  />
-                  {/* Underline accent */}
-                  <div
-                    className={cn(
-                      'absolute -bottom-2 left-0 h-1 transition-all duration-500 w-0 group-hover:w-full',
-                      isScrolled
-                        ? 'bg-gradient-to-r from-blue-900 via-sky-400 to-cyan-600'
-                        : 'bg-white'
-                    )}
-                  ></div>
-                  {/* Floating dot accent */}
-                  <div
-                    className={cn(
-                      'absolute -top-1 -right-2 w-2 h-2 rounded-full opacity-0 group-hover:opacity-100 animate-bounce transition-opacity duration-300',
-                      isScrolled
-                        ? 'bg-gradient-to-br from-sky-400 to-purple-500'
-                        : 'bg-white'
-                    )}
-                  ></div>
-                </span>
-              </div>
-            </a>
-          </Link>
+    <header className="fixed top-0 w-full z-50 bg-green-cyan-500 transition-all duration-300 font-sans">
+      <div
+        className={cn(
+          'transition-all duration-500 ',
+          isScrolled ? 'max-h-0 opacity-0' : 'max-h-[200px] opacity-100'
+        )}
+      >
+        <TopBar />
+        <Masthead navigation={navigationMenu} />
+      </div>
 
+      <div className="container hidden md:block transition-all duration-500">
+        <div className="flex items-center justify-between">
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map(item => (
-              <Link key={item.name} href={item.href}>
-                <a
-                  className={cn(
-                    'text-sm font-medium transition-colors hover:text-tech-blue-300',
-                    isScrolled ? 'text-blue-700' : 'text-white'
-                  )}
+          <nav className="md:flex items-center space-x-8 ">
+            {navigationMenu.map((item) => (
+              <div key={item.id} className="relative group">
+                <Link
+                  href={item.url === '/san-pham' ? `${item.url}` : item.url}
                 >
-                  {item.name}
-                </a>
-              </Link>
+                  <a className="flex items-center text-[0.9rem] leading-[1.4rem] text-white font-bold uppercase py-[10px]">
+                    {item.title}
+                    {item.children.length > 0 && (
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    )}
+                  </a>
+                </Link>
+
+                {/* cấp 1: dropdown */}
+                {item.url === '/san-pham' && categories.length > 0 && (
+                  <div
+                    className="absolute text-base  left-0 top-full hidden group-hover:block bg-white shadow-md min-w-[260px] z-50
+                    border border-gray-300 before:content-[''] before:absolute before:top-[-6px] before:left-6 
+                    before:w-3 before:h-3 before:bg-white before:rotate-45 "
+                  >
+                    {categories.map((cat) => (
+                      <div key={cat.id} className="relative group/item">
+                        <div
+                          className={cn(
+                            ' block px-4 py-2  hover:bg-lime-green hover:text-white',
+                            cat.subCategories.length > 0
+                              ? 'text-gray-800'
+                              : 'text-gray-600'
+                          )}
+                        >
+                          <div className="flex items-center justify-between">
+                            <Link href={`/san-pham?danh_muc=${cat.id}`}>
+                              {cat.name}
+                            </Link>
+
+                            {cat.subCategories &&
+                              cat.subCategories.length > 0 && (
+                                <ChevronRight className="h-4 w-4 p-0 m-0" />
+                              )}
+                          </div>
+                        </div>
+
+                        {/* cấp 2: submenu (nếu có con tiếp) */}
+                        {cat.subCategories.length > 0 && (
+                          <div className="absolute left-full top-0 hidden group-hover/item:block bg-white shadow-md min-w-[260px] z-50">
+                            {cat.subCategories.map((sub) => (
+                              <Link
+                                key={sub.id}
+                                href={`/san-pham?danh_muc=${sub.id}`}
+                              >
+                                <a className="block px-4 py-2 text-gray-800  hover:bg-lime-green hover:text-white">
+                                  {sub.name}
+                                </a>
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center space-x-4">
-            {userInfo ? (
-              <UserAccountHeader
-                userInfo={userInfo}
-                onUpdateUser={(updatedInfo: any) => {}}
-                onLogout={logoutHandler}
-              />
-            ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.push('/login')}
-                className={cn(
-                  'relative group transition-all duration-500 gap-2 px-4 py-2 rounded-full overflow-hidden',
-                  'hover:scale-[1.02] hover:shadow-lg transform-gpu',
-                  isScrolled
-                    ? 'text-tech-blue-700 hover:text-white border border-tech-blue-200 hover:border-tech-blue-400'
-                    : 'text-white/90 hover:text-blue-800 border border-white/20 hover:border-white/40'
-                )}
-              >
-                {/* Background gradient overlay */}
-                <div
-                  className={cn(
-                    'absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500',
-                    isScrolled
-                      ? 'from-tech-blue-500 via-tech-blue-600 to-tech-blue-700'
-                      : 'from-white/10 via-white/20 to-white/30'
-                  )}
-                ></div>
+          <form
+            action="/"
+            method="get"
+            className=" relative text-white w-full max-w-[440px] text-[0.8rem]"
+          >
+            <label htmlFor="search" className="sr-only">
+              Tìm kiếm
+            </label>
 
-                {/* Shine effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+            {/* Input */}
+            <input
+              type="search"
+              id="search"
+              name="s"
+              placeholder="Tìm kiếm..."
+              className="w-full rounded-full bg-[#ffffff33] border border-green-200/20 placeholder-white/80 px-2 py-1  focus:outline-none"
+            />
 
-                {/* Content */}
-                <div className="relative z-10 flex items-center gap-2">
-                  <LogIn
-                    className={cn(
-                      'h-4 w-4 transition-all duration-300',
-                      'group-hover:rotate-12 group-hover:scale-110'
-                    )}
-                  />
-                  <span className="font-medium text-sm">Đăng nhập</span>
-                </div>
-
-                {/* Subtle glow */}
-                <div
-                  className={cn(
-                    'absolute -inset-1 rounded-full opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-sm',
-                    isScrolled
-                      ? 'bg-gradient-to-r from-tech-blue-400 to-tech-blue-600'
-                      : 'bg-white'
-                  )}
-                ></div>
-              </Button>
-            )}
-
-            {/* Nút Tư vấn miễn phí */}
-            <Button
-              variant={isScrolled ? 'outline' : 'secondary'}
-              size="sm"
-              onClick={() => setOpenContact(true)}
-              className={cn(
-                'transition-all duration-300',
-                isScrolled
-                  ? 'border-tech-blue-500 text-tech-blue-600 hover:bg-tech-blue-500 hover:text-white'
-                  : 'bg-tech-blue-500 text-white hover:bg-tech-blue-600'
-              )}
+            {/* Nút icon kính lúp */}
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full  "
             >
-              Tư vấn miễn phí
-            </Button>
-          </div>
-
-          {/* Mobile Navigation */}
-
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger className="md:hidden">
-              <Button
-                variant="ghost"
-                size="sm"
-                className={cn(isScrolled ? 'text-tech-blue-900' : 'text-white')}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
               >
-                <Menu
-                  className={cn(
-                    'h-8 w-8',
-                    isScrolled ? 'text-tech-blue-900' : 'text-white'
-                  )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1010.5 18a7.5 7.5 0 006.15-3.35z"
                 />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <div className="flex flex-col space-y-4 mt-8">
-                {navigation.map(item => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link key={item.name} href={item.href} legacyBehavior>
-                      <a
-                        onClick={() => setIsOpen(false)}
-                        className={`relative group text-lg font-medium transition-colors duration-200 ease-in-out ${
-                          isActive
-                            ? 'text-tech-blue-600'
-                            : 'text-tech-blue-700 hover:text-tech-blue-500'
-                        }`}
-                      >
-                        <span className="relative z-10">{item.name}</span>
-                        <span
-                          className={`absolute bottom-0 left-0 h-[2px] bg-tech-blue-500 transition-all duration-300 ${
-                            isActive ? 'w-full' : 'w-0 group-hover:w-full'
-                          }`}
-                        ></span>
-                      </a>
-                    </Link>
-                  );
-                })}
-
-                <div className="pt-4 border-t border-tech-blue-200 space-y-3">
-                  {/* Nút Đăng nhập cho mobile - Enhanced */}
-                  <Link href="/login" onClick={() => setIsOpen(false)}>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        'w-full relative group overflow-hidden rounded-xl transition-all duration-500',
-                        'border-2 border-tech-blue-300 text-tech-blue-700 hover:text-blue-800',
-                        'hover:scale-[1.02] hover:shadow-lg transform-gpu'
-                      )}
-                    >
-                      {/* Background gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-tech-blue-500 via-tech-blue-600 to-tech-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                      {/* Shine effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-
-                      {/* Content */}
-                      <div className="relative z-10 flex items-center justify-center gap-3 py-1">
-                        <LogIn className="h-5 w-5 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
-                        <span className="font-semibold">Đăng nhập</span>
-                      </div>
-
-                      {/* Floating particles effect */}
-                      <div className="absolute top-2 right-3 w-1 h-1 bg-tech-blue-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping transition-opacity duration-300"></div>
-                      <div className="absolute bottom-2 left-4 w-0.5 h-0.5 bg-tech-blue-300 rounded-full opacity-0 group-hover:opacity-100 animate-pulse delay-150 transition-opacity duration-300"></div>
-                    </Button>
-                  </Link>
-
-                  {/* Nút Tư vấn miễn phí cho mobile */}
-                  <Button
-                    className="w-full bg-tech-blue-500 hover:bg-tech-blue-600 transition-all duration-300 shadow-md hover:shadow-lg"
-                    onClick={() => {
-                      setOpenContact(true);
-                      setIsOpen(false);
-                    }}
-                  >
-                    Tư vấn miễn phí
-                  </Button>
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
-      {/* Form Contact */}
-      <ContactDialog
-        title="Đăng ký tư vấn miễn phí"
-        des="Vui lòng để lại thông tin của bạn. Chúng tôi sẽ liên hệ tư vấn hoàn toàn miễn phí trong thời gian sớm nhất."
-        open={openContact}
-        onOpenChange={setOpenContact}
-      />
     </header>
   );
 }

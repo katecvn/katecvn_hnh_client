@@ -6,7 +6,10 @@ import Head from 'next/head';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ThemeProvider } from '@/components/theme-provider';
-import { ChatWidget } from '@/components/chat-widget';
+import {
+  QuickContact,
+  ScrollToTop,
+} from '@/components/floating-contact-widget';
 
 export default function ClientLayout({
   children,
@@ -29,9 +32,12 @@ export default function ClientLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main>{children}</main>
+          <main className="px-0 pt-[8rem] sm:pt-[13.75rem] md:pt-[16.75rem] lg:pt-[15.25rem]">
+            {children}
+          </main>
           <Footer />
-          <ChatWidget />
+          <QuickContact />
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </>

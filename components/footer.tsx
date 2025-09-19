@@ -2,252 +2,231 @@
 
 import Link from 'next/link';
 import {
-  Code2,
-  Mail,
-  Phone,
   MapPin,
   Facebook,
   Youtube,
-  Clock,
   MessageCircle,
   FileAxis3D,
-  Clock12,
-  ClockAlert,
-  ClockArrowDown,
+  User,
+  Phone,
+  Headset,
+  Mail,
+  Locate,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import api from '@/utils/axios';
 import { CompanyContentItem } from '@/types/interface';
 
-interface CompanyInfo {
+type CompanySection = {
   content: CompanyContentItem[];
-}
+};
 
 export function Footer() {
-  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
+  const [companyInfo, setCompanyInfo] = useState<CompanySection | null>(null);
+  const [footerInfo, setFooterInfo] = useState<CompanySection | null>(null);
 
+  // Fetch data
   useEffect(() => {
-    const fetchCompanyInfo = async (): Promise<void> => {
+    const fetchData = async () => {
       try {
-        const response = await api.get(
-          '/page-section/public/shows?sectionType=infoCompany'
-        );
-        const { data } = response.data;
-        if (data && data.length > 0) {
-          setCompanyInfo(data[0]);
-        }
-      } catch (error) {
-        console.error('Error fetching company info:', error);
+        const [infoRes, footerRes] = await Promise.all([
+          api.get('/page-section/public/shows?sectionType=infoCompany'),
+          api.get('/page-section/public/shows?sectionType=footer'),
+        ]);
+        setCompanyInfo(infoRes.data.data[0]);
+        setFooterInfo(footerRes.data.data[0]);
+      } catch (err) {
+        console.error('Error fetching footer data:', err);
       }
     };
-
-    fetchCompanyInfo();
+    fetchData();
   }, []);
 
-  const getContentValue = (key: string): string => {
-    return (
-      companyInfo?.content?.find((item: CompanyContentItem) => item.key === key)
-        ?.value || ''
-    );
-  };
+  // Helpers
+  const getValue = (key: string) =>
+    companyInfo?.content?.find((i) => i.key === key)?.value || '';
 
-  const getContentUrl = (key: string): string => {
-    return (
-      companyInfo?.content?.find((item: CompanyContentItem) => item.key === key)
-        ?.url || ''
-    );
-  };
+  const getUrl = (key: string) =>
+    companyInfo?.content?.find((item: CompanyContentItem) => item.key === key)
+      ?.url || '';
+
+  const getFooterUrl = (key: string) =>
+    footerInfo?.content?.find((i) => i.key === key)?.url || '';
+  const getPolicy = (key: string) =>
+    footerInfo?.content?.filter((i) => i.key === key) || [];
 
   return (
-    <footer className="relative text-white bg-[url('/footer-bg.png')] bg-cover bg-center bg-no-repeat">
-      <div className="absolute inset-0 bg-sky-800 opacity-40 pointer-events-none z-0"></div>
-      <div className="container mx-auto px-4 lg:px-6 py-12 relative z-10">
-        {/* Top row with proper grid layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8">
-          {/* Company Info - spans 4 columns */}
-          <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center space-x-2">
-              <span className="text-xl font-bold">
-                {getContentValue('name')}
-              </span>
-            </div>
-            <div className="space-y-3 text-sm text-gray-300">
-              <div className="flex items-start space-x-2">
-                <MapPin className="h-6 w-6 text-blue-400" />
-                <span>{getContentValue('address')}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-blue-400" />
+    <footer className="bg-green-cyan-500 text-white font-sans">
+      <div className="container mx-auto px-4 lg:px-6 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Company Info */}
+          <div className="lg:col-span-5 space-y-3">
+            <h2 className="text-xl font-bold uppercase">{getValue('name')}</h2>
+            <ul className="space-y-2 text-base text-gray-100">
+              <li className="flex items-start gap-2">
+                <MapPin className="h-5 w-5 text-green-cyan-100" />
+                <span>Địa chỉ: {getValue('address')}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <FileAxis3D className="h-4 w-4 text-green-cyan-100" />
+                <span>
+                  MST: {getValue('mst')} - {getValue('date_mst')}
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Locate className="h-4 w-4 text-green-cyan-100" />
+                <span>Nơi cấp: {getValue('pleace_mst')}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <User className="h-4 w-4 text-green-cyan-100" />
+                <span>Giám đốc: {getValue('ceo')}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-green-cyan-100" />
+                <span>Hotline:</span>
                 <a
-                  href={`tel:${getContentValue('number_phone')}`}
-                  className="hover:text-white"
+                  href={`tel:${getValue('hotline_1')}`}
+                  className="hover:underline"
                 >
-                  {getContentValue('number_phone')}
+                  {getValue('hotline_1')}
                 </a>
                 <span>-</span>
-                <a href={`tel:0849 88 1010`} className="hover:text-white">
-                  0849 88 1010
-                </a>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-blue-400" />
                 <a
-                  href={`mailto:${getContentValue('email')}`}
-                  className="hover:text-white"
+                  href={`tel:${getValue('hotline_2')}`}
+                  className="hover:underline"
                 >
-                  {getContentValue('email')}
+                  {getValue('hotline_2')}
                 </a>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <FileAxis3D className="h-4 w-4 text-blue-400" />
-                <span>MST: 1801633969</span>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Clock className="h-4 w-4 text-blue-400" />
-                <span>{getContentValue('working_parttime')}</span>
-              </div>
-            </div>
+              </li>
+              <li className="flex items-center gap-2">
+                <Headset className="h-4 w-4 text-green-cyan-100" />
+                <a
+                  href={`tel:${getValue('number_phone')}`}
+                  className="hover:underline"
+                >
+                  Máy bàn: {getValue('number_phone')}
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-green-cyan-100" />
+                <a
+                  href={`mailto:${getValue('email')}`}
+                  className="hover:underline"
+                >
+                  Email: {getValue('email')}
+                </a>
+              </li>
+            </ul>
           </div>
 
-          <div className="lg:col-span-8 space-y-4">
-            <div className="grid lg:grid-cols-12 gap-8">
-              {/* Quick Links - spans 2 columns */}
-              <div className="lg:col-span-3 space-y-4">
-                <h3 className="text-lg font-semibold">Liên kết nhanh</h3>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  {[
-                    { href: '/about', label: 'Về chúng tôi' },
-                    { href: '/products', label: 'Sản phẩm' },
-                    { href: '/news', label: 'Tin tức' },
-                    { href: '/careers', label: 'Tuyển dụng' },
-                  ].map(({ href, label }) => (
-                    <li key={href}>
-                      <Link
-                        href={href}
-                        className="hover:text-white 
-                      hover:underline underline-offset-3"
-                      >
-                        {label}
+          {/* Customer Support + Socials */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Support Links */}
+              <div>
+                <h3 className="text-xl font-bold uppercase mb-4">
+                  Hỗ trợ khách hàng
+                </h3>
+                <ul className="space-y-2 text-base text-gray-100 list-disc list-inside">
+                  {getPolicy('policy').map((item) => (
+                    <li key={item.url}>
+                      <Link href={item.url ?? '/'} className="hover:underline">
+                        {item.title}
                       </Link>
                     </li>
                   ))}
                 </ul>
+                <Link
+                  href="http://online.gov.vn/Website/chi-tiet-128743"
+                  target="_blank"
+                >
+                  <img
+                    src="/logoSaleNoti.png"
+                    alt="Đăng ký bộ công thương"
+                    className="mt-4 w-48"
+                  />
+                </Link>
               </div>
 
-              {/* Customer Guidance - spans 2 columns */}
-              <div className="lg:col-span-4 space-y-4">
-                <h3 className="text-lg font-semibold">Hướng dẫn khách hàng</h3>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  {[
-                    { href: '/privacy', label: 'Chính sách bảo mật thông tin' },
-                    {
-                      href: '/terms1',
-                      label: 'Chính sách cài đặt và hướng dẫn sử dụng',
-                    },
-                    { href: '/terms2', label: 'Chính sách thanh toán' },
-                    { href: '/terms3', label: 'Chính sách hoàn tiền' },
-                    { href: '/terms4', label: 'Chính sách bảo hành' },
-                    { href: '/terms5', label: 'Điều khoản sử dụng phần mềm' },
-                  ].map(({ href, label }) => (
-                    <li key={href}>
-                      <Link
-                        href={href}
-                        className="hover:text-white 
-                      hover:underline underline-offset-3"
-                      >
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Social Media & Map Section - spans 4 columns */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">
+              {/* Socials + Map */}
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-xl font-bold uppercase mb-4">
                     Kết nối với chúng tôi
                   </h3>
                   <div className="flex space-x-3">
-                    {getContentUrl('facebook') && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-300 hover:text-blue-700"
-                        asChild
-                      >
-                        <Link href={getContentUrl('facebook')} target="_blank">
-                          <Facebook className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                    {getUrl('facebook') && (
+                      <SocialButton
+                        href={getUrl('facebook')}
+                        icon={<Facebook className="h-4 w-4" />}
+                      />
                     )}
-                    {getContentUrl('messenger') && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-300 hover:text-green-700"
-                        asChild
-                      >
-                        <Link href={getContentUrl('messenger')} target="_blank">
-                          <MessageCircle className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                    {getUrl('messenger') && (
+                      <SocialButton
+                        href={getUrl('messenger')}
+                        icon={<MessageCircle className="h-4 w-4" />}
+                      />
                     )}
-                    {getContentUrl('youtube') && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-300 hover:text-red-700"
-                        asChild
-                      >
-                        <Link href={getContentUrl('youtube')} target="_blank">
-                          <Youtube className="h-4 w-4" />
-                        </Link>
-                      </Button>
+                    {getUrl('youtube') && (
+                      <SocialButton
+                        href={getUrl('youtube')}
+                        icon={<Youtube className="h-4 w-4" />}
+                      />
                     )}
                   </div>
                 </div>
 
-                {/* Map Section */}
-                <div className="w-full">
-                  <div className="w-full h-36 rounded-lg overflow-hidden border border-gray-700">
-                    {getContentValue('address') ? (
-                      <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14221.100915639166!2d105.75392600000002!3d10.041018!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a0886c3ecc3e01%3A0x5a84e770728f1669!2zMTg5IMSQLiBQaGFuIEh1eSBDaMO6LCBQaMaw4budbmcgQW4gS2jDoW5oLCBOaW5oIEtp4buBdSwgQ-G6p24gVGjGoSA5MDAwMDAsIFZp4buHdCBOYW0!5e1!3m2!1svi!2sus!4v1748829783103!5m2!1svi!2sus"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        className="rounded-lg"
-                        title="Google Maps Location"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-800 flex items-center justify-center text-gray-400">
-                        <div className="text-center">
-                          <MapPin className="h-8 w-8 mx-auto mb-2" />
-                          <p className="text-sm">Bản đồ sẽ hiển thị tại đây</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                <div className="w-full h-48 rounded overflow-hidden border border-gray-700">
+                  {getFooterUrl('map') ? (
+                    <iframe
+                      src={getFooterUrl('map')}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="rounded"
+                      title="Google Maps Location"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-gray-300">
+                      <MapPin className="h-6 w-6 mb-2" />
+                      <p>Bản đồ sẽ hiển thị tại đây</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Copyright */}
-        <div className="border-t border-gray-400 mt-8 pt-8 text-center text-sm text-gray-400">
-          © {new Date().getFullYear()} {getContentValue('name')}. Tất cả các
-          quyền được bảo lưu.
-        </div>
+      {/* Bottom Bar */}
+      <div className="bg-green-cyan-700 py-4 text-center text-sm">
+        <p>Copyright 2023 © thucphamhnh.com</p>
+        <p>
+          Giấy phép kinh doanh số 0106966763 do Sở Kế Hoạch và Đầu Tư Thành Phố
+          Hà Nội cấp ngày 31/8/2013
+        </p>
       </div>
     </footer>
+  );
+}
+
+/* Reusable social button */
+function SocialButton({ href, icon }: { href: string; icon: React.ReactNode }) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-8 w-8 text-gray-100 hover:bg-white hover:text-green-600 rounded-full border"
+      asChild
+    >
+      <Link href={href} target="_blank">
+        {icon}
+      </Link>
+    </Button>
   );
 }

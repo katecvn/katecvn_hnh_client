@@ -1,77 +1,240 @@
-// ========== Applicant Form ==========
-export interface FormData {
-  fullName: string;
-  email: string;
-  phone: string;
-  experience: string;
-  currentPosition: string;
-  expectedSalary: string;
-  coverLetter: string;
-  portfolio: string;
-  cv: File | null;
-}
-
-export type FormCareerErrors = Partial<Record<keyof FormData, string>>;
-
-export interface ApplicationFormSectionProps {
-  selectedPosition: Pick<
-    JobPosition,
-    'title' | 'department' | 'location' | 'type' | 'experience' | 'deadline'
-  >;
-  formData: FormData;
-  errors: FormCareerErrors;
-  isSubmitting: boolean;
-  handleInputChange: (field: keyof FormData, value: string) => void;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  setIsOpen: (open: boolean) => void;
-}
-
-// ========== Job Postings ==========
-export interface JobData {
+// ========== Navigation ==========
+export interface NavItem {
+  id: number;
   title: string;
-  department: string;
-  location: string;
-  type: string;
-  experience: string;
-  featured?: boolean;
-  description: string;
-  requirements: string[];
-  salary: string;
-  deadline: Date;
+  url: string;
+  parentId: number | null;
+  parent: NavItem | null;
+  position: number;
+  status: 'active' | 'inactive'; // nếu chỉ có 2 trạng thái
+  children: NavItem[];
+  createdAt: string; // ISO date string
+  createdBy: number;
+  updatedAt: string; // ISO date string
+  updatedBy: number;
+  deletedAt: string | null;
 }
 
-export interface JobPosition extends JobData {
-  gradient: string;
-  icon: React.ElementType;
+export type MastheadProps = {
+  navigation: NavItem[];
+};
+
+interface WithChildren {
+  children: React.ReactNode;
 }
 
-export interface Position extends JobData {
-  id?: string | number;
-  icon: React.ElementType;
+export interface WithClassName {
+  className?: string;
 }
 
-export interface JobDetailPageProps {
-  jobData: JobData;
-  setIsDetailOpen: (open: boolean) => void;
-  onApply: (jobData: JobPosition) => void;
+// ========== News ==========
+
+export interface Topic {
+  id: number;
+  name: string;
+  slug: string;
 }
 
-export interface PositionCardProps {
-  position: Position;
-  index: number;
-  isHovered: boolean;
-  onHover: (index: number) => void;
-  onLeave: () => void;
-  onApply: (position: JobPosition) => void;
-  onViewDetail: (position: JobPosition) => void;
+export interface News {
+  id: number;
+  title: string;
+  slug: string;
+  short_description: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
+  thumbnail: string;
+  status: 'published' | 'draft' | string;
+  author_id: number;
+  author: Author;
+  topics: Topic[];
+  created_at: string;
+  updated_at: string;
+  published_at: string;
+  deletedAt: string | null;
 }
 
-export interface SubmissionSuccessProps {
-  position: JobPosition;
+export interface ListNewsProps {
+  listnews: News[];
 }
 
-// ========== Reusable Content ==========
+// Text effects
+export interface TextProps extends WithChildren, WithClassName {}
+
+// Product Card
+export interface ProductCardData {
+  id: string;
+  name: string;
+  slug: string;
+  image: string;
+  category: string;
+  categoryId: number;
+  unit: string;
+  stock: number;
+  price: string;
+  originalPrice?: string;
+}
+
+export interface ProductCardsProps {
+  products: ProductCardData[];
+  category?: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
+
+interface Variant {
+  id: number;
+  productId: number;
+  sku: string;
+  stock: number;
+  unit: string;
+  salePrice: string;
+  originalPrice: string;
+  createdAt: string;
+  updatedAt: string | null;
+}
+
+export interface Product {
+  id: number;
+  name: string;
+  sku: string;
+  slug: string;
+  brand: string | null;
+  brandId: number | null;
+  category: Category;
+  categoryId: number;
+  content?: string;
+  imagesUrl: string[];
+  isFeatured: number;
+  optionMappings: any[];
+  originalPrice: string;
+  salePrice: string;
+  productGroup: string | null;
+  productGroupId: number | null;
+  sentBccuCount: number;
+  seoDescription: string;
+  seoKeywords: string;
+  seoTitle: string;
+  specificationValues: any[];
+  status: 'active' | 'inactive'; //
+  stock: number;
+  unit: string;
+  variants: Variant[];
+}
+
+interface ParentCategory {
+  id: number;
+  name: string;
+  slug: string;
+  thumbnail: string;
+  iconUrl: string | null;
+}
+
+interface SubCategory {
+  id: number;
+  name: string;
+  slug: string;
+  thumbnail: string;
+  iconUrl: string | null;
+}
+
+export interface CategoryPro {
+  id: number;
+  parentId: number | null;
+  level: number;
+  name: string;
+  slug: string;
+  thumbnail: string;
+  iconUrl: string | null;
+  productCount: number;
+  parent: ParentCategory | null;
+  subCategories: SubCategory[];
+  specifications: any[];
+}
+
+export interface FetchOptions {
+  page?: number;
+  limit?: number;
+  categoryId?: string | null;
+}
+
+export interface PaginationProps {
+  keyword?: string;
+  pagination?: {
+    totalItems?: number | 0;
+    totalPages?: number | 1;
+    currentPage?: number | 1;
+  };
+  onPageChange: (options: {
+    page: number;
+    limit: number;
+    categoryId?: string | null;
+  }) => void;
+  itemsPerPage?: number;
+  selectedCategory?: string | null;
+}
+
+// ========== Post / Blog ==========
+export interface Topic {
+  id: number;
+  name: string;
+}
+
+export interface Author {
+  id: number;
+  full_name: string;
+  email: string;
+  avatar_url?: string;
+}
+
+export interface User {
+  id: number;
+  full_name: string;
+  email: string;
+}
+
+export interface Comment {
+  id: number;
+  content: string;
+  user: User;
+  created_at: string;
+  parentId?: number | null;
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  short_description?: string;
+  thumbnail?: string;
+  published_at: string;
+  topics?: Topic[];
+  author?: Author;
+  postComments?: Comment[];
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
+}
+
+export interface PostsResponse {
+  posts: Post[];
+  total: number;
+}
+
+export interface ArticleContentProps {
+  col?: number;
+  showHeader?: boolean;
+  post: Post;
+}
+
+// boooo  ========== Reusable Content ==========
 export interface BaseContentItem {
   features?: string[];
   imageUrl?: string;
@@ -87,9 +250,11 @@ export interface GeneralContentItem extends BaseContentItem {
   icon?: string;
   title?: string;
   description?: string;
+  imageUrl?: string;
 }
 
 export interface CompanyContentItem {
+  title?: string;
   key: string;
   value: string;
   url?: string;
@@ -156,155 +321,6 @@ export interface PostsResponse {
   total: number;
 }
 
-// ========== Testimonial ==========
-export interface Testimonial {
-  content: FeedbackContentItem[];
-}
-
-export interface TestimonialSliderProps {
-  feedbacks: Testimonial[];
-}
-
-// ========== UI Components ==========
-export interface AnimatedSectionProps {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}
-
-export interface ContactDialogProps {
-  title: string;
-  des: string;
-  product?: any;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-//=======Enhanced Animation=========
-// Tiện ích chung
-interface WithChildren {
-  children: React.ReactNode;
-}
-
-export interface WithClassName {
-  className?: string;
-}
-
-// Text effects
-export interface GradientTextProps extends WithChildren, WithClassName {}
-
-export interface GlitchTextProps extends WithChildren, WithClassName {}
-
-export interface TypewriterProps extends WithClassName {
-  texts: string[];
-  speed?: number;
-}
-
-// UI effects
-export interface ParallaxProps extends WithChildren, WithClassName {
-  speed?: number;
-}
-
-export interface MagneticButtonProps extends WithChildren, WithClassName {
-  strength?: number;
-}
-
-export interface RevealProps extends WithChildren, WithClassName {
-  direction?: 'up' | 'down' | 'left' | 'right';
-  delay?: number;
-  skipAnimation?: boolean;
-}
-
-//=======Enhanced Card=========
-// Tiện ích chung
-interface WithDelay {
-  delay?: number;
-}
-
-interface WithIcon {
-  icon: React.ReactNode;
-}
-
-interface WithBadge {
-  badge?: string;
-}
-
-interface WithTitleDescription {
-  title: string;
-  description: string;
-}
-
-// Enhanced Card
-export interface EnhancedCardProps
-  extends WithTitleDescription,
-    WithIcon,
-    WithDelay,
-    WithBadge {
-  color: string;
-  features?: string[];
-  onClick?: () => void;
-}
-
-// Stats Card
-export interface StatsCardProps extends WithDelay, WithIcon {
-  value: string;
-  label: string;
-  trend?: number;
-}
-
-// Feature Card
-export interface FeatureCardProps
-  extends WithTitleDescription,
-    WithIcon,
-    WithDelay {
-  features: string[];
-}
-
-// Product Card
-export interface ProductCardData extends WithBadge {
-  id: string;
-  name: string;
-  slug: string;
-  image: string;
-  description: string;
-  category: string;
-  stock: number;
-  color?: string;
-}
-
-export interface ProductCardProps extends WithDelay {
-  product: ProductCardData;
-  index: number;
-}
-
-// Tech Product Card
-export interface TechProductCardProps extends WithDelay {
-  title: string;
-  description: string;
-  image: string;
-  badge: string;
-  badgeColor: string;
-  link: string;
-}
-
-//=======Enhanced Support=========
-
-// Highlight cho service
-export interface HighlightItem {
-  label: string;
-  color: string;
-}
-
-// Card dịch vụ
-export interface ServiceCardProps {
-  title: string;
-  description: string;
-  iconPath: string;
-  iconClass: string; // Tailwind hoặc CSS class
-  iconColor: string; // Ví dụ: text-blue-500
-  highlights: HighlightItem[];
-}
-
 //Card news
 interface Article {
   id?: string;
@@ -347,4 +363,26 @@ export interface ParticleEffectProps {
 export interface RatingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+//localStorageUtil
+export interface UserInfo {
+  id: number;
+  full_name: string;
+  email: string;
+  avatar_url: string | null;
+  code: string | null;
+  gender: string | null;
+  phone_number: string | null;
+  roles: string[];
+}
+
+export interface CartItem {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  unit?: string | null;
+  slug: string;
+  quantity: number;
 }

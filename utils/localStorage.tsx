@@ -1,22 +1,14 @@
 // utils/localStorage.ts
 
+import { CartItem, UserInfo } from '@/types/interface';
+
 const TOKEN_KEY = 'token';
 const USER_KEY = 'userInfo';
 const AUTH_STATUS_KEY = 'auth_status';
 const AUTH_MESSAGE_KEY = 'auth_message'; // new
+const CART_KEY = 'cartItems';
 
 export type AuthStatus = 'success' | 'failed' | null;
-
-export interface UserInfo {
-  id: number;
-  full_name: string;
-  email: string;
-  avatar_url: string | null;
-  code: string | null;
-  gender: string | null;
-  phone_number: string | null;
-  roles: string[];
-}
 
 export const localStorageUtil = {
   // Token
@@ -112,6 +104,56 @@ export const localStorageUtil = {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(AUTH_STATUS_KEY);
       localStorage.removeItem(AUTH_MESSAGE_KEY);
+    }
+  },
+
+  // Cart
+  getCart(): CartItem[] {
+    if (typeof window !== 'undefined') {
+      const raw = localStorage.getItem(CART_KEY);
+      try {
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  },
+
+  setCart(cart: CartItem[]) {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
+  },
+
+  addToCart(item: CartItem) {
+    if (typeof window !== 'undefined') {
+      const cart = this.getCart();
+      const existing = cart.find((c) => c.id === item.id);
+      if (existing) {
+        existing.quantity += item.quantity;
+      } else {
+        cart.push(item);
+      }
+      this.setCart(cart);
+
+      window.dispatchEvent(new Event('cartUpdated'));
+    }
+  },
+
+  removeFromCart(id: string) {
+    if (typeof window !== 'undefined') {
+      const cart = this.getCart().filter((c) => c.id !== id);
+      this.setCart(cart);
+
+      window.dispatchEvent(new Event('cartUpdated'));
+    }
+  },
+
+  clearCart() {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(CART_KEY);
+      window.dispatchEvent(new Event('cartUpdated'));
     }
   },
 };
