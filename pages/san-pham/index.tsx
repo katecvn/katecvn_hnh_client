@@ -1,7 +1,7 @@
 import { ProductCard } from '@/components/enhanced-cards';
 import { Pagination } from '@/components/pagination';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
-import { Product, ProductCardData } from '@/types/interface';
+import { CategoryPro, Product, ProductCardData } from '@/types/interface';
 import api from '@/utils/axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,17 @@ import {
   CategoriesProSidebar,
   ProductSidebar,
 } from '@/components/sidebar-menu';
+import { transformProducts } from '@/utils/format';
+import { TitleCategory } from '@/components/enhanced-title';
+import {
+  LoadingProductsSkeleton,
+  SectionLoader,
+} from '@/components/loading-error';
+
+type CategoryInfo = {
+  name: string;
+  id: string | number | null;
+};
 
 export default function ProductPage() {
   const MAX_LENGHT_LIMIT = 12;
@@ -16,7 +27,7 @@ export default function ProductPage() {
   const [error, setError] = useState(null);
 
   const [products, setProducts] = useState<ProductCardData[]>([]);
-
+  const [category, setCategory] = useState<CategoryInfo | null>(null);
   const [pagination, setPagination] = useState({
     totalItems: 0,
     totalPages: 1,
@@ -31,10 +42,10 @@ export default function ProductPage() {
   const [orderBy, setOrderBy] = useState(query.orderby || 'menu_order');
 
   useEffect(() => {
-    getPostsData();
+    fetchAllHomeData();
   }, [router.query]);
 
-  const getPostsData = async (
+  const fetchAllHomeData = async (
     options = {
       page: 1,
       limit: MAX_LENGHT_LIMIT,
@@ -45,43 +56,29 @@ export default function ProductPage() {
     setError(null);
 
     const { page, limit } = options;
-
+    const requests = [];
+    let productUrl = `/product/public/shows?page=${page}&limit=${limit}`;
+    if (categoryId) {
+      productUrl += `&categoryId=${categoryId}`;
+    }
+    requests.push(api.get(productUrl));
+    requests.push(api.get(`/category/public/shows`));
     try {
-      let productUrl = `/product/public/shows?page=${page}&limit=${limit}`;
-      if (categoryId) {
-        productUrl += `&categoryId=${categoryId}`;
-      }
-      const productRes = await api.get(productUrl);
-      const productData = productRes.data.data;
-      const transformedProducts = productData.products.map(
-        (product: Product) => {
-          let image =
-            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop';
-          try {
-            image = product.imagesUrl[0] || image;
-          } catch (error) {
-            console.log(error);
-          }
+      const [productRes, categoryRes] = await Promise.all(requests);
 
-          return {
-            id: product.id,
-            name: product.name,
-            category: product.category?.name || 'Sản phẩm',
-            categoryId: product.categoryId,
-            slug: product.slug,
-            unit: product.unit,
-            price: product.salePrice
-              ? `${parseInt(product.salePrice).toLocaleString('vi-VN')} VNĐ`
-              : 'Liên hệ để biết giá',
-            originalPrice: product.originalPrice,
-            image,
-            stock: product.stock,
-          };
-        }
+      const products = transformProducts(productRes.data?.data?.products ?? []);
+      setProducts(products);
+      const itemCategory = categoryRes.data.data.categories.find(
+        (cat: CategoryPro) => cat.id === categoryId
       );
-
-      setProducts(transformedProducts);
-
+      if (itemCategory) {
+        setCategory({
+          id: itemCategory.id,
+          name: itemCategory.name,
+        });
+      } else {
+        setCategory(null);
+      }
       setPagination({
         totalItems: productRes.data.data.totalItems || 0,
         totalPages: productRes.data.data.totalPages || 1,
@@ -100,7 +97,7 @@ export default function ProductPage() {
 
   const handlePostPageChange = (options: any) => {
     const { page, limit, categoryId } = options;
-    getPostsData({ page, limit, categoryId });
+    fetchAllHomeData({ page, limit, categoryId });
     const section = document.getElementById('postId');
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
@@ -121,9 +118,17 @@ export default function ProductPage() {
     });
   };
 
+  const lastLabel = categoryId
+    ? category?.name ?? 'Đang tải…'
+    : 'Tất cả sản phẩm';
+
+  const lastHref =
+    categoryId && category ? `/san-pham?danh_muc=${category.id}` : '/san-pham';
+
   const breadcrumbItems = [
     { label: 'Trang chủ', href: '/' },
     { label: 'Sản phẩm', href: '/san-pham' },
+    { label: lastLabel, href: lastHref },
   ];
 
   const sortOptions = [
@@ -145,7 +150,8 @@ export default function ProductPage() {
         </aside>
 
         <article id="list-news" className="col-span-3">
-          <div className="mb-6 flex justify-end">
+          <div className="mb-6 flex justify-between">
+            <TitleCategory category={lastLabel} />
             <form className="flex items-center space-x-2" method="get">
               <label htmlFor="orderby" className="sr-only">
                 Sắp xếp sản phẩm
@@ -155,7 +161,7 @@ export default function ProductPage() {
                 name="orderby"
                 value={orderBy}
                 onChange={handleChange}
-                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-green-500 focus:ring focus:ring-green-cyan-200"
+                className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-green-500 focus:ring focus:ring-green-cyan-500/40"
                 aria-label="Sắp xếp sản phẩm"
               >
                 {sortOptions.map((opt) => (
@@ -166,29 +172,37 @@ export default function ProductPage() {
               </select>
             </form>
           </div>
-          {products.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-stretch">
-              {products.map((item, index) => (
-                <div key={item.id} className="h-full">
-                  <ProductCard product={item} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-center text-neutral-gray-500">
-              Không tìm thấy sản phẩm nào khớp với lựa chọn của bạn.
-            </p>
-          )}
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingProductsSkeleton}
+            errorTitle="tải sản phẩm"
+          >
+            {products.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-stretch">
+                {products.map((item, index) => (
+                  <div key={item.id} className="h-full">
+                    <ProductCard product={item} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-neutral-gray-500">
+                Không tìm thấy sản phẩm nào khớp với lựa chọn của bạn.
+              </p>
+            )}
 
-          {products.length > 0 && (
-            <Pagination
-              keyword="bài viết"
-              pagination={pagination}
-              onPageChange={handlePostPageChange}
-              itemsPerPage={MAX_LENGHT_LIMIT}
-              selectedCategory={null}
-            />
-          )}
+            {products.length > 0 && (
+              <Pagination
+                keyword="bài viết"
+                pagination={pagination}
+                onPageChange={handlePostPageChange}
+                itemsPerPage={MAX_LENGHT_LIMIT}
+                selectedCategory={null}
+              />
+            )}
+          </SectionLoader>
         </article>
       </div>
     </section>

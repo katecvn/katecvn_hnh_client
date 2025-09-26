@@ -26,6 +26,11 @@ import {
 import { CategoriesProSidebar } from '@/components/sidebar-menu';
 import { ProductSmallCard } from '@/components/enhanced-cards';
 import { ProductByCategoty } from '@/components/enhanced-support';
+import { transformProducts } from '@/utils/format';
+import {
+  LoadingProductsSkeleton,
+  SectionLoader,
+} from '@/components/loading-error';
 
 type ContentItem = GeneralContentItem;
 type SectionItem = BaseSectionItem<ContentItem>;
@@ -50,10 +55,9 @@ const poliShip = [
 ];
 
 export default function HomePage() {
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [products, setProducts] = useState<ProductCardData[]>([]);
   const [banners, setBanners] = useState<SectionItem[]>([]);
   const [partners, setPartners] = useState<SectionItem[]>([]);
   const [news, setNews] = useState<News[]>([]);
@@ -97,35 +101,9 @@ export default function HomePage() {
         categoryRes,
       ] = await Promise.all(requests);
 
-      const productData = productRes.data.data;
-      const transformedProducts = productData.products.map(
-        (product: Product) => {
-          let image =
-            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop';
-          try {
-            image = product.imagesUrl[0] || image;
-          } catch (error) {
-            console.log(error);
-          }
+      const products = transformProducts(productRes.data?.data?.products ?? []);
+      setProducts(products);
 
-          return {
-            id: product.id,
-            name: product.name,
-            category: product.category?.name || 'Sản phẩm',
-            categoryId: product.categoryId,
-            slug: product.slug,
-            unit: product.unit,
-            price: product.salePrice
-              ? `${parseInt(product.salePrice).toLocaleString('vi-VN')} VNĐ`
-              : 'Liên hệ để biết giá',
-            originalPrice: product.originalPrice,
-            image,
-            stock: product.stock,
-          };
-        }
-      );
-
-      setProducts(transformedProducts);
       const categories = categoryRes.data.data.filter(
         (cat: CategoryPro) => cat.subCategories.length > 0
       );
@@ -171,11 +149,11 @@ export default function HomePage() {
   return (
     <div className="container">
       <div className="p-4 grid grid-cols-4 gap-6">
-        <aside className="col-span-1 ">
+        <aside className="col-span-1">
           <CategoriesProSidebar />
           <RecentNewsSlider posts={news} />
           <CertificateSlider />
-          <div className="space-y-4 mt-4 mx-2">
+          <div className="space-y-4 mt-5 mx-2">
             {products.length > 0 &&
               products
                 .slice(0, 6)
@@ -195,16 +173,23 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-
-          {categorybyProduct
-            .slice(0, categorybyProduct.length - 1)
-            .map((cat) => (
-              <ProductByCategoty
-                category={cat.name}
-                products={filterProductsByCategory(cat, products) || []}
-              />
-            ))}
-
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingProductsSkeleton}
+            errorTitle="tải sản phẩm"
+          >
+            {categorybyProduct
+              .slice(0, categorybyProduct.length - 1)
+              .map((cat) => (
+                <ProductByCategoty
+                  id={cat.id}
+                  category={cat.name}
+                  products={filterProductsByCategory(cat, products) || []}
+                />
+              ))}
+          </SectionLoader>
           <div className="w-full mb-6">
             <div className="relative w-full aspect-[7/1]">
               <Image
@@ -217,15 +202,22 @@ export default function HomePage() {
               />
             </div>
           </div>
-
-          <ProductByCategoty
-            category={categorybyProduct[categorybyProduct.length - 1]?.name}
-            products={filterProductsByCategory(
-              categorybyProduct[categorybyProduct.length - 1],
-              products
-            )}
-          />
-
+          <SectionLoader
+            loading={loading}
+            error={error}
+            onRetry={() => fetchAllHomeData()}
+            loadingComponent={LoadingProductsSkeleton}
+            errorTitle="Không thể tải sản phẩm"
+          >
+            <ProductByCategoty
+              id={categorybyProduct[categorybyProduct.length - 1]?.id}
+              category={categorybyProduct[categorybyProduct.length - 1]?.name}
+              products={filterProductsByCategory(
+                categorybyProduct[categorybyProduct.length - 1],
+                products
+              )}
+            />
+          </SectionLoader>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-4">
             {poliShip.map((item) => (
               <div key={item.id} className="relative w-full aspect-[7/2]">

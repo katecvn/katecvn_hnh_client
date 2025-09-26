@@ -131,8 +131,10 @@ export function Footer() {
                 <ul className="space-y-2 text-base text-gray-100 list-disc list-inside">
                   {getPolicy('policy').map((item) => (
                     <li key={item.url}>
-                      <Link href={item.url ?? '/'} className="hover:underline">
-                        {item.title}
+                      <Link href={item.url ?? '/'}>
+                        <span className="hover:underline hover:underline-offset-2">
+                          {item.title}
+                        </span>
                       </Link>
                     </li>
                   ))}
@@ -205,7 +207,7 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="bg-green-cyan-700 py-4 text-center text-sm">
-        <p>Copyright 2023 © thucphamhnh.com</p>
+        <p>Copyright 2025 © thucphamhnh.com</p>
         <p>
           Giấy phép kinh doanh số 0106966763 do Sở Kế Hoạch và Đầu Tư Thành Phố
           Hà Nội cấp ngày 31/8/2013

@@ -32,7 +32,7 @@ export default function ClientLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main className="px-0 pt-[8rem] sm:pt-[13.75rem] md:pt-[16.75rem] lg:pt-[15.25rem]">
+          <main className="px-0 pt-[8rem] sm:pt-[13.75rem] md:pt-[16.75rem] lg:pt-[15.5rem] bg-gradient-to-br from-green-50 via-white to-lime-50/80">
             {children}
           </main>
           <Footer />

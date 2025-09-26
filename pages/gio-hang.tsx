@@ -2,6 +2,7 @@ import { CheckoutSteps } from '@/components/enhanced-support';
 
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { useCart } from '@/hooks/use-cart';
+import { PriceVND } from '@/utils/format';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -15,7 +16,7 @@ export default function CartPage() {
   };
 
   const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * 1000 * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 
@@ -42,18 +43,13 @@ export default function CartPage() {
                   <th className="p-3 text-center">Giá</th>
                   <th className="p-3 text-center">Số lượng</th>
                   <th className="p-3 text-center">Tạm tính</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {cartItems.map((item) => (
                   <tr key={item.id} className="border-b">
                     <td className="p-3 flex items-center space-x-3">
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="border border-red-500 rounded-full px-2 py-1 text-red-500 hover:text-red-700 text-xs font-bold"
-                      >
-                        X
-                      </button>
                       <img
                         src={item.image}
                         alt={item.name}
@@ -66,10 +62,14 @@ export default function CartPage() {
                       </Link>
                     </td>
                     <td className="p-3 text-center">
-                      {formatCurrency(item.price * 1000)}
+                      <PriceVND
+                        value={item.price}
+                        className="font-semibold"
+                        symbolClassName="text-[0.9rem] align-baseline"
+                      />
                     </td>
                     <td className="p-3 text-center">
-                      <div className="flex justify-center text-base border border-gray-300 bg-gray-50 overflow-hidden">
+                      <div className="flex justify-center rounded-lg text-base border border-gray-300 bg-gray-100 overflow-hidden">
                         <button
                           onClick={() =>
                             updateQuantity(
@@ -77,7 +77,7 @@ export default function CartPage() {
                               Math.max(1, item.quantity - 1)
                             )
                           }
-                          className="px-2 py-1 text-lg hover:bg-gray-100"
+                          className="px-2 py-0.5 text-lg hover:text-green-cyan-500 hover:font-bold"
                         >
                           -
                         </button>
@@ -90,20 +90,32 @@ export default function CartPage() {
                               Math.max(1, Number(e.target.value))
                             )
                           }
-                          className="w-12 text-center border-l border-r outline-none"
+                          className="w-12 text-sm text-center border-l border-r outline-none"
                         />
                         <button
                           onClick={() =>
                             updateQuantity(item.id, item.quantity + 1)
                           }
-                          className="px-2 py-1 text-lg hover:bg-gray-100"
+                          className="px-2 py-0.5 text-lg hover:text-green-cyan-500 hover:font-bold"
                         >
                           +
                         </button>
                       </div>
                     </td>
-                    <td className="p-3 text-orange-400 text-base md:text-lg  text-center font-semibold">
-                      {formatCurrency(item.price * 1000 * item.quantity)}
+                    <td className="p-3 text-center">
+                      <PriceVND
+                        value={item.price * item.quantity}
+                        className="text-orange-400 text-base md:text-lg font-semibold"
+                        symbolClassName="text-lg align-baseline"
+                      />
+                    </td>
+                    <td className="p-3 text-center">
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="border border-red-500 rounded-full px-2 py-1 text-red-500 hover:text-red-700 text-xs font-bold"
+                      >
+                        X
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -117,23 +129,29 @@ export default function CartPage() {
               Tổng cộng giỏ hàng
             </h2>
 
-            <div className="flex justify-between mb-2">
+            <div className="flex justify-between items-end mb-2">
               <span>Tạm tính</span>
-              <span className="font-bold text-orange-400 text-base md:text-md">
-                {formatCurrency(subtotal)}
-              </span>
+              <PriceVND
+                value={subtotal}
+                className="text-orange-400 text-base md:text-lg font-semibold"
+                symbolClassName="text-lg align-baseline"
+              />
             </div>
-            <div className="flex justify-between  mb-2">
+            <div className="flex justify-between items-end mb-2">
               <span>Vận chuyển</span>
-              <span className="font-bold text-orange-400 text-base md:text-md">
-                1 VNĐ
-              </span>
+              <PriceVND
+                value={1}
+                className="text-orange-400 text-base md:text-lg font-semibold"
+                symbolClassName="text-lg align-baseline"
+              />
             </div>
-            <div className="flex justify-between font-bold border-t pt-2">
+            <div className="flex justify-between items-end border-t pt-2">
               <span>Tổng thanh toán</span>
-              <span className=" text-green-cyan-500 text-base md:text-lg">
-                {formatCurrency(subtotal + 1)}
-              </span>
+              <PriceVND
+                value={subtotal + 1}
+                className="text-orange-400 text-base md:text-lg font-semibold"
+                symbolClassName="text-lg align-baseline"
+              />
             </div>
 
             {/* Coupon */}

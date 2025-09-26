@@ -19,7 +19,7 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 200);
+      setIsScrolled(window.scrollY > 120);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -57,28 +57,39 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 w-full z-50 bg-green-cyan-500 transition-all duration-300 font-sans">
+    <header
+      className={cn(
+        'fixed top-0 w-full z-50 bg-green-cyan-500 transition-all duration-300 font-sans',
+        isScrolled
+          ? ' backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.35)] border-b border-gray-300/50'
+          : ' backdrop-blur-sm border-b border-gray-700/50'
+      )}
+    >
       <div
         className={cn(
           'transition-all duration-500 ',
-          isScrolled ? 'max-h-0 opacity-0' : 'max-h-[200px] opacity-100'
+          isScrolled ? 'max-h-0 opacity-0' : 'max-h-[220px] opacity-100'
         )}
       >
         <TopBar />
         <Masthead navigation={navigationMenu} />
       </div>
 
-      <div className="container hidden md:block transition-all duration-500">
+      <div
+        className={cn(
+          'container text-white hidden md:block transition-all duration-500'
+        )}
+      >
         <div className="flex items-center justify-between">
           {/* Desktop Navigation */}
-          <nav className="md:flex items-center space-x-8 ">
+          <nav className="md:flex items-center space-x-6 ">
             {navigationMenu.map((item) => (
               <div key={item.id} className="relative group">
                 <Link
                   href={item.url === '/san-pham' ? `${item.url}` : item.url}
                 >
-                  <a className="flex items-center text-[0.9rem] leading-[1.4rem] text-white font-bold uppercase py-[10px]">
-                    {item.title}
+                  <a className="flex items-center text-[0.9rem] leading-[1.4rem] hover:text-lime-300 font-bold uppercase py-[10px]">
+                    <span className="center-expand px-1">{item.title}</span>
                     {item.children.length > 0 && (
                       <ChevronDown className="ml-1 h-4 w-4" />
                     )}
@@ -88,15 +99,15 @@ export function Header() {
                 {/* cấp 1: dropdown */}
                 {item.url === '/san-pham' && categories.length > 0 && (
                   <div
-                    className="absolute text-base  left-0 top-full hidden group-hover:block bg-white shadow-md min-w-[260px] z-50
+                    className="absolute  text-base rounded-sm p-1 left-0 top-full hidden group-hover:block bg-white shadow-md min-w-[260px] z-50
                     border border-gray-300 before:content-[''] before:absolute before:top-[-6px] before:left-6 
                     before:w-3 before:h-3 before:bg-white before:rotate-45 "
                   >
                     {categories.map((cat) => (
-                      <div key={cat.id} className="relative group/item">
+                      <div key={cat.id} className={cn('relative group/item ')}>
                         <div
                           className={cn(
-                            ' block px-4 py-2  hover:bg-lime-green hover:text-white',
+                            ' block p-2 pl-3 rounded-sm hover:bg-lime-200/30 hover:text-green-700',
                             cat.subCategories.length > 0
                               ? 'text-gray-800'
                               : 'text-gray-600'
@@ -116,13 +127,16 @@ export function Header() {
 
                         {/* cấp 2: submenu (nếu có con tiếp) */}
                         {cat.subCategories.length > 0 && (
-                          <div className="absolute left-full top-0 hidden group-hover/item:block bg-white shadow-md min-w-[260px] z-50">
+                          <div
+                            className="absolute p-1 overflow-hidden rounded-sm left-full top-0 hidden group-hover/item:block
+                           bg-white shadow-menu min-w-[260px] z-50"
+                          >
                             {cat.subCategories.map((sub) => (
                               <Link
                                 key={sub.id}
                                 href={`/san-pham?danh_muc=${sub.id}`}
                               >
-                                <a className="block px-4 py-2 text-gray-800  hover:bg-lime-green hover:text-white">
+                                <a className="block p-2 pl-3 text-gray-800 rounded-sm hover:bg-lime-200/30 hover:text-green-700">
                                   {sub.name}
                                 </a>
                               </Link>

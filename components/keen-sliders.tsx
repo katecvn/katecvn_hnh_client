@@ -64,7 +64,7 @@ export function RecentNewsSlider({ posts }: { posts: News[] }) {
   );
 
   return (
-    <div className="shadow-sliders rounded border border-gray-100 bg-white p-2 mt-4 mb-0">
+    <div className="shadow-sliders rounded border border-gray-100 bg-white p-2 mt-5 mb-0">
       <h2 className="font-sans text-lg text-green-cyan-500 font-semibold mb-4">
         TIN TỨC GẦN ĐÂY
       </h2>
@@ -72,7 +72,7 @@ export function RecentNewsSlider({ posts }: { posts: News[] }) {
       <div ref={sliderRef} className="keen-slider">
         {posts.map((item) => (
           <div key={item.id} className="keen-slider__slide relative group">
-            <Link href={item.slug} legacyBehavior>
+            <Link href={`/tin-tuc/${item.slug}`} legacyBehavior>
               <a className="block">
                 <div className="overflow-hidden rounded">
                   <Image
@@ -117,7 +117,7 @@ export function RecentNewsSlider({ posts }: { posts: News[] }) {
 /* ---------------- Certificate ---------------- */
 export function CertificateSlider() {
   return (
-    <div className="shadow-sliders rounded border border-gray-100 bg-white p-2 mt-4 mb-0">
+    <div className="shadow-sliders rounded border border-gray-100 bg-white p-2 mt-5 mb-0">
       <h2 className="font-sans text-lg text-green-cyan-500 font-semibold mb-4">
         GIẤY CHỨNG NHẬN
       </h2>
@@ -251,17 +251,17 @@ export function NewsSlider({ posts }: { posts: News[] }) {
   );
 
   return (
-    <div className="container mx-auto my-8">
+    <div className="container mx-auto mt-8 mb-3">
       <TitleHome children="TIN CẬP NHẬT" />
       <div ref={sliderRef} className="keen-slider">
         {posts.map((post) => (
           <div
             key={post.id}
-            className="keen-slider__slide group mb-1 bg-white rounded shadow border border-gray-200 hover:shadow-lg transition-shadow"
+            className="keen-slider__slide group mb-5 bg-white rounded shadow border border-gray-200 hover:shadow-lg transition-shadow"
           >
-            <Link href={post.slug} legacyBehavior>
+            <Link href={`/tin-tuc/${post.slug}`} legacyBehavior>
               <a>
-                <div className="relative w-full h-36">
+                <div className="relative w-full h-36 cursor-pointer">
                   <Image
                     src={post.thumbnail}
                     alt={post.title}
@@ -306,15 +306,15 @@ export function HelpShoppingSlider({ posts }: { posts: News[] }) {
   );
 
   return (
-    <div className="container mx-auto my-8">
+    <div className="container mx-auto mt-8 pt-2">
       <TitleHome children="HƯỚNG DẪN MUA HÀNG" />
       <div ref={sliderRef} className="keen-slider">
         {posts.map((post) => (
           <div
             key={post.id}
-            className="keen-slider__slide hover:scale-105 mb-1 bg-white rounded shadow border border-gray-200 hover:shadow-xl transition-all duration-300"
+            className="keen-slider__slide hover:scale-105 mb-8 bg-white rounded shadow border border-gray-200 hover:shadow-xl transition-all duration-300"
           >
-            <Link href={post.slug} legacyBehavior>
+            <Link href={`/huong-dan/${post.slug}`} legacyBehavior>
               <a>
                 <div className="relative w-full h-60 pt-2 px-4 overflow-hidden">
                   <img
@@ -359,7 +359,7 @@ export function PartnerSlider({ partners }: PartnerProps) {
   );
 
   return (
-    <div className="container mx-auto my-8">
+    <div className="container mx-auto mt-2 mb-8">
       <TitleHome children="ĐỐI TÁC CỦA CHÚNG TÔI" />
       <div ref={sliderRef} className="keen-slider">
         {partners.map((item, index) => (

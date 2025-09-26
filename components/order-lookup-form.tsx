@@ -12,7 +12,7 @@ export default function OrderLookupForm() {
   };
 
   return (
-    <div className="w-full mx-auto my-6 px-4 ">
+    <div className="w-full mx-auto mt-1 mb-6 px-4 ">
       <p className="font-semibold text-neutral-gray-900 mb-3 font-sans">
         Nhập điện thoại hoặc mã đơn để tra cứu đơn hàng
       </p>

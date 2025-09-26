@@ -18,10 +18,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   ArrowRight,
+  BadgeAlert,
   Calendar,
   CalendarDays,
+  ChartArea,
+  ChartNoAxesCombined,
   ChevronLeft,
   ChevronRight,
+  FileText,
+  Info,
+  PackageOpen,
   Star,
   UserCircle,
 } from 'lucide-react';
@@ -29,6 +35,7 @@ import { DateBadge } from './ui/date-badge';
 import ShareButtons from './share-buttons';
 import { ProductsSlider } from './keen-sliders';
 import { useRouter } from 'next/router';
+import { TitleCategory, TitleDetailProduct } from './enhanced-title';
 
 export const ArticleContent = ({
   showHeader = true,
@@ -223,21 +230,21 @@ export const PostNavigation = ({ prev, next }: PostNavProps) => {
 };
 
 export const ProductByCategoty = ({
+  id,
   category,
   products,
 }: ProductCardsProps) => {
   return (
-    <section className="mb-6">
+    <section className="pt-3 mb-6">
       {products.length > 0 && (
         <>
-          <div className="flex items-center justify-between border-b pb-4 mb-4">
-            <h3 className="flex items-center gap-2 px-3 py-2  bg-green-cyan-500 text-lg rounded-lg font-semibold text-white">
-              {category}
-            </h3>
+          <div className="flex items-center justify-between mb-4">
+            <TitleCategory category={category ?? ''} />
 
-            <Link href="/product-category/trai-cay-tao-hinh/">
-              <a className=" flex items-center group text-lime-green hover:underline text-sm font-medium">
-                <span className="mr-1 group-hover:underline">Xem tất cả</span>{' '}
+            <Link href={`/san-pham?danh_muc=${id}`}>
+              <a className=" flex items-center group text-gray-500 hover:underline text-sm font-medium">
+                <span className="mr-1 group-hover:underline">Xem thêm</span>{' '}
+                <strong className="text-gray-600">{category}</strong>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </Link>
@@ -250,161 +257,191 @@ export const ProductByCategoty = ({
   );
 };
 
+const TABS = [
+  {
+    id: 0,
+    key: 'description',
+    label: 'Mô tả sản phẩm',
+    icon: ChartNoAxesCombined,
+  },
+  { id: 1, key: 'infoProduct', label: 'Đặc điểm sản phẩm', icon: BadgeAlert },
+] as const;
+
+type TabKey = (typeof TABS)[number]['key'];
 interface ProductTabsProps {
   description: string;
+  specificationValues: any[];
 }
 
-export const ProductTabs = ({ description }: ProductTabsProps) => {
-  const [activeTab, setActiveTab] = useState<'description' | 'reviews'>(
-    'description'
-  );
+export const ProductTabs = ({
+  description,
+  specificationValues,
+}: ProductTabsProps) => {
+  const [activeTab, setActiveTab] = useState<TabKey>('description');
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 
   return (
-    <div className="mx-auto mt-6 p-5 shadow-md rounded border border-gray-200">
-      {/* Tab Header */}
-      <ul className="flex border-b text-sm font-medium uppercase space-x-6">
-        <li
-          className={`cursor-pointer pb-2 ${
-            activeTab === 'description'
-              ? 'border-b-2 border-orange-500 text-orange-600'
-              : 'text-gray-600 hover:text-orange-500'
-          }`}
-          onClick={() => setActiveTab('description')}
-        >
-          Mô tả
-        </li>
-        <li
-          className={`cursor-pointer pb-2 ${
-            activeTab === 'reviews'
-              ? 'border-b-2 border-orange-500 text-orange-600'
-              : 'text-gray-600 hover:text-orange-500'
-          }`}
-          onClick={() => setActiveTab('reviews')}
-        >
-          Đánh giá (0)
-        </li>
-      </ul>
+    <section className="mx-auto mt-12">
+      <TitleDetailProduct title="Chi tiết sản phẩm" />
+      <div className="mx-auto my-5  bg-white shadow-lg rounded border">
+        {/* Tab Header */}
+        <ul className="flex border-b text-sm font-medium">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <li
+                key={tab.id}
+                className={`cursor-pointer text-base flex items-center gap-2 pb-2 pt-4 px-8 ${
+                  activeTab === tab.key
+                    ? 'border-b-2 border-orange-500 bg-orange-50 font-semibold text-orange-500'
+                    : 'text-gray-600 hover:text-orange-400'
+                }`}
+                onClick={() => setActiveTab(tab.key)}
+              >
+                <Icon size={16} aria-hidden />
+                {tab.label}
+              </li>
+            );
+          })}
+        </ul>
 
-      {/* Tab Panels */}
-      <div className="mt-4 ">
-        {activeTab === 'description' && (
-          <div
-            className="my-4 prose prose-base sm:prose-lg lg:prose-xl max-w-none"
-            style={{ textAlign: 'justify' }}
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
-        )}
+        {/* Tab Panels */}
+        <div className="p-5">
+          {activeTab === 'description' && (
+            <div
+              className="my-4 prose prose-base sm:prose-lg lg:prose-xl max-w-none"
+              style={{ textAlign: 'justify' }}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          )}
 
-        {activeTab === 'reviews' && (
+          {activeTab === 'infoProduct' && (
+            <div className="flex items-center justify-center mx-6 my-4">
+              {specificationValues.length > 0 ? (
+                <table className="w-full">
+                  <tbody>
+                    {specificationValues.map((item) => (
+                      <tr className="border-b border-gray-200">
+                        <td className="py-2 px-5 font-semibold">
+                          {item.specification.name}
+                        </td>
+                        <td className="py-2 px-5">{item.value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p>123</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export const ReviewProduct = () => {
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  return (
+    <div className="mx-auto mt-12">
+      <TitleDetailProduct title="Đánh giá sản phẩm" />
+      <div className="mx-auto mt-4 p-5 bg-white shadow-xl rounded border">
+        <form className="space-y-4 rounded px-6 py-5 border-2 border-green-cyan-500">
           <div>
-            <h3 className="text-lg font-semibold mb-4">Đánh giá</h3>
-            <p className="text-gray-600 mb-6">Chưa có đánh giá nào.</p>
-
-            <form className="space-y-4 rounded px-6 py-5 border-2 border-green-cyan-500">
-              <div>
-                <label className="block text-base font-medium mb-2">
-                  Đánh giá của bạn *
-                </label>
-                <div className="flex space-x-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      onMouseEnter={() => setHover(star)}
-                      onMouseLeave={() => setHover(0)}
-                      className="focus:outline-none"
-                    >
-                      <Star
-                        size={28}
-                        className={`${
-                          star <= (hover || rating)
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'fill-gray-200 text-gray-200'
-                        }`}
-                      />
-                    </button>
-                  ))}
-                </div>
-
-                {/* Input ẩn để submit form */}
-                <input type="hidden" name="rating" value={rating} required />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="comment"
-                  className="block text-base font-medium"
-                >
-                  Nội dung đánh giá *
-                </label>
-                <textarea
-                  id="comment"
-                  rows={4}
-                  required
-                  className="mt-1 w-full border border-gray-300 rounded-md p-2"
-                ></textarea>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="author"
-                    className="block text-base font-medium"
-                  >
-                    Tên *
-                  </label>
-                  <input
-                    type="text"
-                    id="author"
-                    required
-                    className="mt-1 w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-base font-medium"
-                  >
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    required
-                    className="mt-1 w-full border border-gray-300 rounded-md p-2"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <input
-                  id="save-info"
-                  type="checkbox"
-                  className="peer h-4 w-4 text-orange-500 border-gray-300 rounded"
-                />
-                <label
-                  htmlFor="save-info"
-                  className="text-sm text-gray-400 peer-checked:text-black"
-                >
-                  Lưu tên của tôi, email, và trang web trong trình duyệt này cho
-                  lần bình luận kế tiếp của tôi.
-                </label>
-              </div>
-
-              <div className="flex items-center  justify-end">
+            <label className="block text-base font-medium mb-2">
+              Đánh giá của bạn *
+            </label>
+            <div className="flex space-x-2">
+              {[1, 2, 3, 4, 5].map((star) => (
                 <button
-                  type="submit"
-                  className="uppercase font-semibold bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600"
+                  key={star}
+                  type="button"
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHover(star)}
+                  onMouseLeave={() => setHover(0)}
+                  className="focus:outline-none"
                 >
-                  Gửi đi
+                  <Star
+                    size={28}
+                    className={`${
+                      star <= (hover || rating)
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : 'fill-gray-200 text-gray-200'
+                    }`}
+                  />
                 </button>
-              </div>
-            </form>
+              ))}
+            </div>
+
+            {/* Input ẩn để submit form */}
+            <input type="hidden" name="rating" value={rating} required />
           </div>
-        )}
+
+          <div>
+            <label htmlFor="comment" className="block text-base font-medium">
+              Nội dung đánh giá *
+            </label>
+            <textarea
+              id="comment"
+              rows={4}
+              required
+              className="mt-1 w-full border border-gray-300 rounded-md p-2"
+            ></textarea>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="author" className="block text-base font-medium">
+                Tên *
+              </label>
+              <input
+                type="text"
+                id="author"
+                required
+                className="mt-1 w-full border border-gray-300 rounded-md p-2"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-base font-medium">
+                Email *
+              </label>
+              <input
+                type="email"
+                id="email"
+                required
+                className="mt-1 w-full border border-gray-300 rounded-md p-2"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              id="save-info"
+              type="checkbox"
+              className="peer h-4 w-4 text-orange-500 border-gray-300 rounded"
+            />
+            <label
+              htmlFor="save-info"
+              className="text-sm text-gray-400 peer-checked:text-black"
+            >
+              Lưu tên của tôi, email, và trang web trong trình duyệt này cho lần
+              bình luận kế tiếp của tôi.
+            </label>
+          </div>
+
+          <div className="flex items-center  justify-end">
+            <button
+              type="submit"
+              className="uppercase font-semibold bg-orange-500 text-white px-6 py-2 rounded hover:bg-orange-600"
+            >
+              Gửi đi
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

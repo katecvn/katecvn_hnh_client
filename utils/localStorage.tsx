@@ -35,6 +35,7 @@ export const localStorageUtil = {
   setUser(user: UserInfo) {
     if (typeof window !== 'undefined') {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
+      window.dispatchEvent(new Event('userUpdated'));
     }
   },
 
@@ -53,6 +54,7 @@ export const localStorageUtil = {
   removeUser() {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(USER_KEY);
+      window.dispatchEvent(new Event('userUpdated'));
     }
   },
 
@@ -61,6 +63,7 @@ export const localStorageUtil = {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
+      window.dispatchEvent(new Event('userUpdated'));
     }
   },
 

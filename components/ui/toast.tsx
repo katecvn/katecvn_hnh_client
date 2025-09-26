@@ -26,7 +26,16 @@ const ToastContext = createContext<ToastContextProps | undefined>(undefined);
 
 export const useToast = () => {
   const ctx = useContext(ToastContext);
-  if (!ctx) throw new Error('useToast must be used within ToastProvider');
+  if (!ctx) {
+    // fallback: không ném lỗi, chỉ cảnh báo
+    return {
+      showToast: ({ title }: { title: string }) => {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('useToast called without ToastProvider:', title);
+        }
+      },
+    } as ToastContextProps;
+  }
   return ctx;
 };
 

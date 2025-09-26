@@ -64,6 +64,7 @@ export interface TextProps extends WithChildren, WithClassName {}
 // Product Card
 export interface ProductCardData {
   id: string;
+  variantId: string;
   name: string;
   slug: string;
   image: string;
@@ -71,11 +72,12 @@ export interface ProductCardData {
   categoryId: number;
   unit: string;
   stock: number;
-  price: string;
-  originalPrice?: string;
+  salePrice: number;
+  originalPrice: number;
 }
 
 export interface ProductCardsProps {
+  id: number;
   products: ProductCardData[];
   category?: string;
 }
@@ -120,7 +122,7 @@ export interface Product {
   seoKeywords: string;
   seoTitle: string;
   specificationValues: any[];
-  status: 'active' | 'inactive'; //
+  status: 'active' | 'inactive';
   stock: number;
   unit: string;
   variants: Variant[];
@@ -379,6 +381,7 @@ export interface UserInfo {
 
 export interface CartItem {
   id: string;
+  variantId: string;
   name: string;
   image: string;
   price: number;
@@ -386,3 +389,54 @@ export interface CartItem {
   slug: string;
   quantity: number;
 }
+
+type OrderItem = {
+  id: number;
+  orderId: number;
+  productVariantId: number;
+  productSku: string;
+  productName: string;
+  productUnit?: string | null;
+  productVariant?: {
+    id: number;
+    productId: number;
+    sku: string;
+    stock: number;
+    unit?: string | null;
+    salePrice: string;
+  } | null;
+  originalPrice: string;
+  salePrice: string;
+  quantity: number;
+  totalPrice: string;
+};
+
+type ShippingItem = {
+  customerAddress: string;
+  customerName: string;
+  customerPhone: string;
+};
+
+export type Order = {
+  id: number;
+  code: string;
+  date: string;
+  customerId: number;
+  userId: number | null;
+  subTotal: number;
+  discountAmount: string;
+  totalAmount: number;
+  status: 'pending' | string;
+  paymentStatus: 'unpaid' | 'paid' | string;
+  note: string;
+  date: string;
+  customer?: {
+    id: number;
+    full_name: string;
+    email: string;
+    phone_number: string;
+    address?: string | null;
+  } | null;
+  orderItems: OrderItem[];
+  shippings: ShippingItem[];
+};
