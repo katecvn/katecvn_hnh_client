@@ -114,9 +114,11 @@ export function Header() {
                 {/* cấp 1: dropdown */}
                 {item.url === '/san-pham' && categories.length > 0 && (
                   <div
-                    className="absolute  text-base rounded-sm p-1 left-0 top-full hidden group-hover:block bg-white shadow-md min-w-[260px] z-50
+                    className="absolute  text-base rounded-sm p-1 left-0 top-full
+                     hidden group-hover:block bg-white shadow-md min-w-[260px] z-50
                     border border-gray-300 before:content-[''] before:absolute before:top-[-6px] before:left-6 
-                    before:w-3 before:h-3 before:bg-white before:rotate-45 "
+                    before:w-3 before:h-3 before:bg-white before:rotate-45 
+                    "
                   >
                     {categories.map((cat) => (
                       <div key={cat.id} className={cn('relative group/item ')}>
@@ -167,7 +169,7 @@ export function Header() {
           </nav>
 
           <form
-            action="/"
+            action="/san-pham"
             method="get"
             className=" relative text-white w-full max-w-[28px] min-[900px]:max-w-[240px] lg:max-w-[360px] xl:max-w-[440px] text-[0.8rem]"
           >
@@ -179,7 +181,7 @@ export function Header() {
             <input
               type="search"
               id="search"
-              name="s"
+              name="tu_khoa"
               placeholder="Tìm kiếm..."
               className="w-full rounded-full bg-[#ffffff33] border border-green-200/20 placeholder-white/80 px-2 py-1  focus:outline-none"
             />

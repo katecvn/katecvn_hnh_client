@@ -74,7 +74,7 @@ const SortDropdown = ({ orderBy, onChange, sortOptions }: any) => {
 export default function ProductPage() {
   const cols = useResponsiveCols({ lgCol: 4, mdCol: 4, smCol: 3, xsCol: 2 });
 
-  const MAX_LENGHT_LIMIT = cols * 4;
+  const MAX_LENGHT_LIMIT = cols * 5;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -88,8 +88,9 @@ export default function ProductPage() {
 
   const router = useRouter();
   const { query } = router;
-  const { danh_muc } = router.query;
+  const { danh_muc, tu_khoa } = router.query;
   const categoryId: number | null = danh_muc ? Number(danh_muc) : null;
+  const keyword = tu_khoa ? tu_khoa : '';
 
   const [orderBy, setOrderBy] = useState(query.orderby || 'menu_order');
 
@@ -113,20 +114,21 @@ export default function ProductPage() {
     if (categoryId) {
       productUrl += `&categoryId=${categoryId}`;
     }
+    if (keyword) {
+      productUrl += `&keyword=${keyword}`;
+    }
     requests.push(api.get(productUrl));
     requests.push(api.get(`/category/public/shows`));
     try {
       const [productRes, categoryRes] = await Promise.all(requests);
 
-      const products = transformProducts(productRes.data?.data?.products ?? []);
+      const productsRaw = transformProducts(
+        productRes.data?.data?.products ?? []
+      );
 
-      const sortedProducts = products.sort((a, b) => {
-        if ((a.stock ?? 0) > 0 && (b.stock ?? 0) <= 0) return -1; // a trước b
-        if ((a.stock ?? 0) <= 0 && (b.stock ?? 0) > 0) return 1; // b trước a
-        return 0; // giữ nguyên thứ tự nếu cùng trạng thái
-      });
+      const sorted = sortProducts(productsRaw, String(orderBy));
+      setProducts(sorted);
 
-      setProducts(sortedProducts);
       const itemCategory = categoryRes.data.data.categories.find(
         (cat: CategoryPro) => cat.id === categoryId
       );
@@ -154,6 +156,53 @@ export default function ProductPage() {
     }
   };
 
+  // helpers (đặt trong file này)
+  const getPrice = (p: ProductCardData) =>
+    (p.salePrice ?? 0) || (p.originalPrice ?? 0) || 0;
+
+  const getCreatedAt = (p: ProductCardData) =>
+    new Date((p as any).createdAt ?? (p as any).created_at ?? 0).getTime();
+
+  const getComparator = (orderBy: string) => {
+    switch (orderBy) {
+      case 'date': // mới → cũ
+        return (a: ProductCardData, b: ProductCardData) =>
+          getCreatedAt(b) - getCreatedAt(a);
+      case 'price': // thấp → cao
+        return (a: ProductCardData, b: ProductCardData) =>
+          getPrice(a) - getPrice(b);
+      case 'price-desc': // cao → thấp
+        return (a: ProductCardData, b: ProductCardData) =>
+          getPrice(b) - getPrice(a);
+      default: // giữ nguyên thứ tự API
+        return () => 0;
+    }
+  };
+
+  const sortProducts = (arr: ProductCardData[], orderBy: string) => {
+    const cmp = getComparator(orderBy);
+    return [...arr].sort((a, b) => {
+      const aIn = (a.stock ?? 0) > 0;
+      const bIn = (b.stock ?? 0) > 0;
+      if (aIn !== bIn) return aIn ? -1 : 1; // còn hàng lên trước
+      return cmp(a, b);
+    });
+  };
+
+  // bỏ handleChange kiểu event, dùng trực tiếp:
+  const onChangeOrder = (value: string) => {
+    setOrderBy(value);
+    // đồng bộ query param, không reload
+    const q = { ...router.query, orderby: value };
+    router.replace({ pathname: router.pathname, query: q }, undefined, {
+      shallow: true,
+    });
+  };
+
+  useEffect(() => {
+    setProducts((prev) => sortProducts(prev, String(orderBy)));
+  }, [orderBy]);
+
   const handlePostPageChange = (options: any) => {
     const { page, limit, categoryId } = options;
     fetchAllHomeData({ page, limit, categoryId });
@@ -161,20 +210,6 @@ export default function ProductPage() {
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setOrderBy(value);
-
-    router.push({
-      pathname: router.pathname,
-      query: {
-        ...query,
-        orderby: value,
-        paged: 1,
-      },
-    });
   };
 
   const lastLabel = categoryId
@@ -192,8 +227,6 @@ export default function ProductPage() {
 
   const sortOptions = [
     { value: 'menu_order', label: 'Sắp xếp mặc định' },
-    { value: 'popularity', label: 'Theo mức độ phổ biến' },
-    { value: 'rating', label: 'Theo xếp hạng trung bình' },
     { value: 'date', label: 'Theo mới nhất' },
     { value: 'price', label: 'Giá: thấp → cao' },
     { value: 'price-desc', label: 'Giá: cao → thấp' },
@@ -214,9 +247,7 @@ export default function ProductPage() {
 
             <SortDropdown
               orderBy={orderBy}
-              onChange={(value: string) =>
-                handleChange({ target: { value } } as any)
-              }
+              onChange={onChangeOrder}
               sortOptions={sortOptions}
             />
           </div>
