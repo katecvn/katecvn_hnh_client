@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 export default function NewsPage() {
-  const cols = useResponsiveCols({ lgCol: 4, mdCol: 4, smCol: 3, xsCol: 2 });
+  const cols = useResponsiveCols({ lgCol: 3, mdCol: 3, smCol: 2, xsCol: 2 });
 
   const MAX_LENGHT_LIMIT = cols * 4;
 

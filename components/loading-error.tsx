@@ -384,7 +384,7 @@ export const LoadingNewsSkeleton = () => {
 
 // Loading News Skeleton (for detailed solutions section)
 export const LoadingListNewsSkeleton = ({ number = 1 }: { number: number }) => {
-  const cols = useResponsiveCols({ lgCol: 4, mdCol: 4, smCol: 2, xsCol: 2 });
+  const cols = useResponsiveCols({ lgCol: 3, mdCol: 3, smCol: 2, xsCol: 2 });
   return (
     <div
       className="grid gap-4 lg:gap-6"
