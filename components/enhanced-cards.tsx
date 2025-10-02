@@ -630,17 +630,17 @@ type Topic = {
 
 export function NewsCard({ news, topic }: { news: News; topic: Topic }) {
   return (
-    <div className="h-full flex flex-col relative">
+    <div className="relative h-full flex flex-col">
       <Link href={`/${topic.href}/${news.slug}`} legacyBehavior>
-        <a className="block group bg-white shadow-lg hover:shadow-xl transition rounded overflow-hidden">
+        <a className="group bg-white shadow-lg hover:shadow-xl transition rounded overflow-hidden h-full flex flex-col">
           {/* Image */}
-          <div className="relative w-full aspect-[5/3] cursor-pointer">
+          <div className="relative w-full aspect-[5/3]">
             <Image
               src={news.thumbnail}
               alt={news.title}
               layout="fill"
               objectFit="cover"
-              className="transition-transform cursor-pointer group-hover:scale-105"
+              className="transition-transform group-hover:scale-105"
               priority
             />
           </div>
@@ -650,7 +650,7 @@ export function NewsCard({ news, topic }: { news: News; topic: Topic }) {
             <h5 className="font-semibold text-sm sm:text-base mb-2 line-clamp-2 group-hover:text-green-cyan-500">
               {news.title}
             </h5>
-            <div className="w-10 h-[2px] bg-gray-200 mb-2"></div>
+            <div className="w-10 h-[2px] bg-gray-200 mb-2" />
             <p className="text-[0.8rem] sm:text-sm text-gray-600 line-clamp-2">
               {news.short_description}
             </p>
@@ -658,6 +658,7 @@ export function NewsCard({ news, topic }: { news: News; topic: Topic }) {
         </a>
       </Link>
 
+      {/* Badge tuyệt đối, không ảnh hưởng chiều cao card */}
       <DateBadge date={news.created_at} />
     </div>
   );
