@@ -16,6 +16,7 @@ import { memo, useEffect, useState } from 'react';
 import { localStorageUtil } from '@/utils/localStorage';
 import { toast } from 'sonner';
 import api from '@/utils/axios';
+import { RequestLogin } from './request-login';
 
 interface CommentsSectionProps {
   comments: Comment[];
@@ -45,7 +46,7 @@ const ReplyInput = memo(function ReplyInput({
         placeholder={`Phản hồi ${replyingToName}...`}
         className="w-full p-3 border rounded"
       />
-      <div className="flex gap-2 mt-2">
+      <div className="flex justify-end gap-2 mt-2">
         <Button variant="outline" size="sm" onClick={onCancel}>
           Hủy
         </Button>
@@ -130,7 +131,7 @@ export default function CommentsSection({
   };
 
   const CommentItem = ({ comment }: { comment: Comment }) => (
-    <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-50 border rounded-xl">
+    <div className="flex flex-col sm:flex-row gap-4 text-[0.9rem] ">
       <Avatar className="ring-2 flex-shrink-0">
         <AvatarFallback
           className={`${getColor(comment.user.id)} text-white font-semibold`}
@@ -143,27 +144,22 @@ export default function CommentsSection({
           <span className="font-bold text-gray-900">
             {comment.user.full_name}
           </span>
-          <Badge variant="outline" className="text-purple-700 text-xs">
-            Verified
-          </Badge>
         </div>
         <p className="text-gray-700">{comment.content}</p>
-        <div className="flex gap-4 mt-2">
-          <Button variant="ghost" size="sm" className="p-0 text-gray-600">
-            <ThumbsUp className="h-3 w-3 mr-1" />
+        <div className="flex gap-4 ">
+          <div className="flex items-center p-0 text-gray-600 hover:text-blue-700">
+            <ThumbsUp className="h-4 w-4 mr-1" />
             {Math.floor(Math.random() * 10) + 1}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="p-0 text-gray-600"
+          </div>
+          <button
+            className="p-0 text-gray-600 hover:text-green-600 hover:underline"
             onClick={() => {
               setReplyTo(comment.id);
               setReplyContent('');
             }}
           >
             Trả lời
-          </Button>
+          </button>
         </div>
         {replyTo === comment.id ? (
           <ReplyInput
@@ -185,45 +181,50 @@ export default function CommentsSection({
   );
 
   return (
-    <Card className="mt-8">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <MessageCircle className="h-6 w-6 text-green-cyan-500" />
+    <Card className="mt-4 sm:mt-6 md:mt-8 rounded-sm shadow-lg">
+      <CardHeader className=" p-3 sm:p-4 md:p-6">
+        <CardTitle className="flex items-center gap-2 text-base md:text-lg">
+          <MessageCircle className="h-4 w-4 md:h-6 md:w-6 text-green-cyan-500" />
           Bình luận ({comments.length})
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className=" p-3 sm:p-4 md:p-6 pt-0">
         {comments
           .filter((c) => !c.parentId)
           .map((comment) => (
             <CommentItem key={comment.id} comment={comment} />
           ))}
 
-        <div className="border-t pt-6">
-          <div className="flex gap-4">
-            <Avatar className="ring-2">
-              <AvatarFallback className="bg-blue-500 text-white font-semibold">
-                {getInitials(userInfo?.full_name || 'K')}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-2">
-              <textarea
-                placeholder="Chia sẻ suy nghĩ..."
-                value={commentContent}
-                onChange={(e) => setCommentContent(e.target.value)}
-                className="w-full min-h-[100px] p-3 border rounded-lg"
-              />
-              <div className="flex justify-end">
-                <Button
-                  onClick={handleSubmitComment}
-                  disabled={!commentContent.trim()}
-                >
-                  <Send className="h-4 w-4 mr-2" />
-                  Gửi bình luận
-                </Button>
+        <div className="border-t border-gray-200">
+          {userInfo ? (
+            <div className="flex gap-2 md:gap-4 pt-3">
+              <Avatar className="ring-2">
+                <AvatarFallback className="bg-lime-600 text-white font-semibold">
+                  {getInitials(userInfo?.full_name || 'K')}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 space-y-2">
+                <textarea
+                  placeholder="Chia sẻ suy nghĩ..."
+                  value={commentContent}
+                  onChange={(e) => setCommentContent(e.target.value)}
+                  className="w-full min-h-[80px] md:min-h-[100px] text-sm md:text-base p-3 border rounded-lg"
+                />
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleSubmitComment}
+                    disabled={!commentContent.trim()}
+                    className="flex justify-center items-center text-sm md:text-base rounded-sm px-2 py-1 md:px-4 md:py-2 text-white bg-green-600 hover:bg-green-500 hover:scale-105"
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Gửi bình luận
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <RequestLogin message="tiếp tục bình luận" />
+          )}
         </div>
       </CardContent>
     </Card>

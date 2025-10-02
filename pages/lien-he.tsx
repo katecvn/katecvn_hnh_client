@@ -52,75 +52,77 @@ export default function NewsPage() {
       />
 
       {/* Company Info */}
-      <div className="pt-0 pb-8 bg-white">
+      <div className="pt-0 pb-6 md:pb-8">
         <div className="container mx-auto px-4">
           <div className="text-gray-800 leading-relaxed space-y-2">
-            <div className="text-center mb-6 font-sans">
+            <div className=" text-center mb-6 font-sans">
               <p className="text-green-cyan-500 text-lg md:text-2xl  font-bold uppercase">
                 CÔNG TY TNHH NÔNG TRẠI THỰC PHẨM HNH
               </p>
-              <p>
+              <p className="text-[0.8rem] md:text-sm">
                 Chúng tôi cung cấp thực phẩm sạch cho các trường học, bệnh viện,
                 khách sạn, siêu thị, bếp ăn tập thể…
               </p>
             </div>
-            <p>
-              <strong>Địa chỉ:</strong>{' '}
-              <span className=" hover:underline">{getValue('address')}</span>
-            </p>
-            <p>
-              <strong>Hotline:</strong>{' '}
-              <a
-                href={`tel:${getValue('hotline_2')}`}
-                className=" hover:underline"
-              >
-                {getValue('hotline_2')}
-              </a>
-            </p>
-            <p>
-              <strong>Máy bàn:</strong>{' '}
-              <a
-                href={`tel:${getValue('number_phone')}`}
-                className=" hover:underline"
-              >
-                {getValue('number_phone')}
-              </a>
-            </p>
-            <p>
-              <strong>Di động:</strong>{' '}
-              <a
-                href={`tel:${getValue('hotline_1')}`}
-                className=" hover:underline"
-              >
-                {getValue('hotline_1')}
-              </a>
-            </p>
-            <p>
-              <strong>Email:</strong>{' '}
-              <a
-                href={`mailto:${getValue('email')}`}
-                className=" hover:underline"
-              >
-                {getValue('email')}
-              </a>
-            </p>
-            <p>
-              <strong>Website:</strong>{' '}
-              <a
-                href={getValue('website')}
-                target="_blank"
-                rel="noopener noreferrer"
-                className=" hover:underline"
-              >
-                {getValue('website')}
-              </a>
-            </p>
+            <div className="text-sm md:text-base space-y-1 md:space-y-2">
+              <p>
+                <strong>Địa chỉ:</strong>{' '}
+                <span className=" hover:underline">{getValue('address')}</span>
+              </p>
+              <p>
+                <strong>Hotline:</strong>{' '}
+                <a
+                  href={`tel:${getValue('hotline_2')}`}
+                  className=" hover:underline"
+                >
+                  {getValue('hotline_2')}
+                </a>
+              </p>
+              <p>
+                <strong>Máy bàn:</strong>{' '}
+                <a
+                  href={`tel:${getValue('number_phone')}`}
+                  className=" hover:underline"
+                >
+                  {getValue('number_phone')}
+                </a>
+              </p>
+              <p>
+                <strong>Di động:</strong>{' '}
+                <a
+                  href={`tel:${getValue('hotline_1')}`}
+                  className=" hover:underline"
+                >
+                  {getValue('hotline_1')}
+                </a>
+              </p>
+              <p>
+                <strong>Email:</strong>{' '}
+                <a
+                  href={`mailto:${getValue('email')}`}
+                  className=" hover:underline"
+                >
+                  {getValue('email')}
+                </a>
+              </p>
+              <p>
+                <strong>Website:</strong>{' '}
+                <a
+                  href={getValue('website')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className=" hover:underline"
+                >
+                  {getValue('website')}
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Google Map */}
-      <div className="w-full h-[450px] mb-8">
+      <div className="w-full h-[250px] md:h-[450px] ">
         <iframe
           src={map}
           width="100%"

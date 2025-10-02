@@ -1,13 +1,22 @@
 import { NewsCard } from '@/components/enhanced-cards';
+import {
+  LoadingListNewsSkeleton,
+  LoadingNewsSkeleton,
+  SectionLoader,
+} from '@/components/loading-error';
 import { Pagination } from '@/components/pagination';
 import { CategoriesProSidebar, NewsSidebar } from '@/components/sidebar-menu';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
+import { useResponsiveCols } from '@/hooks/use-responsive-cols';
 import { News } from '@/types/interface';
 import api from '@/utils/axios';
 import { useEffect, useState } from 'react';
 
 export default function NewsPage() {
-  const MAX_LENGHT_LIMIT = 12;
+  const cols = useResponsiveCols({ lgCol: 4, mdCol: 4, smCol: 3, xsCol: 2 });
+
+  const MAX_LENGHT_LIMIT = cols * 4;
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,7 +30,7 @@ export default function NewsPage() {
 
   useEffect(() => {
     getPostsData();
-  }, []);
+  }, [MAX_LENGHT_LIMIT]);
 
   const getPostsData = async (
     options = { page: 1, limit: MAX_LENGHT_LIMIT, categorySlug: null }
@@ -71,40 +80,54 @@ export default function NewsPage() {
   return (
     <section className="container py-4">
       <Breadcrumb items={breadcrumbItems} />
-      <div className=" grid grid-cols-4 gap-6">
-        <aside className="col-span-1 space-y-5">
+      <div className=" grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <aside className="hidden lg:block col-span-1 space-y-5">
           <NewsSidebar />
           <CategoriesProSidebar />
         </aside>
 
-        <article id="list-news" className="col-span-3">
-          <div className="mb-6 text-center">
-            <h1 className="text-3xl font-bold text-green-cyan-500 mb-2">
-              Tin tức & Bài viết
+        <article id="list-news" className="col-span-1 lg:col-span-3">
+          <div className="mb-4 md:mb-6 text-center">
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-green-cyan-500 mb-1 md:mb-2">
+              Tin tức mới
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[0.8rem] md:text-base text-gray-600">
               Cập nhật những thông tin mới nhất từ HNH
             </p>
           </div>
-          {posts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-              {posts.map((item) => (
-                <div key={item.id} className="h-full">
-                  <NewsCard news={item} topic={breadcrumbItems[1]} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>Không có bài viết nào.</p>
-          )}
 
-          <Pagination
-            keyword="bài viết"
-            pagination={pagination}
-            onPageChange={handlePostPageChange}
-            itemsPerPage={MAX_LENGHT_LIMIT}
-            selectedCategory={null}
-          />
+          <SectionLoader
+            loading={loading}
+            error={error}
+            number={4}
+            onRetry={() => getPostsData()}
+            loadingComponent={LoadingListNewsSkeleton}
+            errorTitle="tải sản phẩm"
+          >
+            {posts.length > 0 ? (
+              <div
+                className="grid gap-4 xl:gap-6 items-stretch"
+                style={{
+                  gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+                }}
+              >
+                {posts.map((item) => (
+                  <div key={item.id} className="h-full">
+                    <NewsCard news={item} topic={breadcrumbItems[1]} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>Không có bài viết nào.</p>
+            )}
+            <Pagination
+              keyword="bài viết"
+              pagination={pagination}
+              onPageChange={handlePostPageChange}
+              itemsPerPage={MAX_LENGHT_LIMIT}
+              selectedCategory={null}
+            />
+          </SectionLoader>
         </article>
       </div>
     </section>

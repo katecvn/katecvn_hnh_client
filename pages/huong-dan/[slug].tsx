@@ -1,4 +1,8 @@
 import { ArticleContent, PostNavigation } from '@/components/enhanced-support';
+import {
+  LoadingArticleDetailSkeleton,
+  SectionLoader,
+} from '@/components/loading-error';
 import { CategoriesProSidebar, NewsSidebar } from '@/components/sidebar-menu';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
@@ -58,83 +62,54 @@ export default function NewsPage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen pt-16">
-        <div className="container px-4 md:px-6 py-20">
-          <div className="flex justify-center items-center min-h-[50vh]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Đang tải bài viết...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !post) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-purple-50">
-        <div className="container px-4 md:px-6 py-20">
-          <div className="flex flex-col justify-center items-center min-h-[50vh] text-center">
-            <div className="bg-white/90 backdrop-blur-lg rounded-3xl p-12 border border-red-200 shadow-2xl">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Oops! Có lỗi xảy ra
-              </h2>
-              <p className="text-gray-600 mb-8 text-lg">
-                {error?.message || 'Bài viết không tồn tại hoặc đã bị xóa'}
-              </p>
-              <Link href="/tin-tuc">
-                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 px-8 py-3 text-lg shadow-lg">
-                  <ArrowLeft className="mr-2 h-5 w-5" />
-                  Quay lại trang tin tức
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <section className="container py-4">
-      <Breadcrumb
-        items={[
-          { label: 'Trang chủ', href: '/' },
-          { label: 'Hướng dẫn', href: '/huong-dan' },
-          { label: post.title },
-        ]}
-      />
-      <div className=" grid grid-cols-4 gap-6">
-        <article className="col-span-3">
-          <ArticleContent post={post} />
-          <PostNavigation
-            prev={
-              prevNext.prev
-                ? {
-                    title: prevNext.prev.title,
-                    href: `/tin-tuc/${prevNext.prev.slug}`,
-                  }
-                : undefined
-            }
-            next={
-              prevNext.next
-                ? {
-                    title: prevNext.next.title,
-                    href: `/tin-tuc/${prevNext.next.slug}`,
-                  }
-                : undefined
-            }
-          />
-        </article>
+      <SectionLoader
+        loading={loading}
+        error={error}
+        onRetry={() => getArticleDetail(slug as string)}
+        loadingComponent={LoadingArticleDetailSkeleton}
+        errorTitle="tải hướng dẫn"
+      >
+        <Breadcrumb
+          items={[
+            { label: 'Trang chủ', href: '/' },
+            { label: 'Hướng dẫn', href: '/huong-dan' },
+            { label: post?.title ?? '' },
+          ]}
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <article className="col-span-1 lg:col-span-3 w-full">
+            {post && <ArticleContent post={post} />}
 
-        <aside className="col-span-1 space-y-5">
-          <NewsSidebar />
-          <CategoriesProSidebar />
-        </aside>
-      </div>
+            {post && (
+              <PostNavigation
+                prev={
+                  prevNext.prev
+                    ? {
+                        title: prevNext.prev.title,
+                        href: `/tin-tuc/${prevNext.prev.slug}`,
+                      }
+                    : undefined
+                }
+                next={
+                  prevNext.next
+                    ? {
+                        title: prevNext.next.title,
+                        href: `/tin-tuc/${prevNext.next.slug}`,
+                      }
+                    : undefined
+                }
+              />
+            )}
+          </article>
+
+          <aside className="hidden lg:block col-span-1 space-y-5">
+            <NewsSidebar />
+            <CategoriesProSidebar />
+          </aside>
+        </div>
+      </SectionLoader>
     </section>
   );
 }

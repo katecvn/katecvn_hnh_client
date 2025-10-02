@@ -7,7 +7,7 @@ import UserAccountHeader from './account';
 import { toast } from 'sonner';
 import api from '@/utils/axios';
 import { cn } from '@/lib/utils';
-import { GoogleLoginModal } from './modal';
+import { GoogleLoginModal } from './enhanced-modal';
 
 type TopBarProps = {
   address?: string;
@@ -65,8 +65,8 @@ export default function TopBar({
               className="inline-flex items-center gap-2 hover:text-white transition-colors"
               title={address}
             >
-              <MapPin className="h-4 w-4" />
-              <span className="text-[0.8rem]">{address}</span>
+              <MapPin className="h-5 w-5 min-[400px]:h-4 min-[400px]:w-4" />
+              <span className="text-[0.7rem] sm:text-[0.8rem]">{address}</span>
             </a>
 
             <a
@@ -75,7 +75,7 @@ export default function TopBar({
               title={hotline}
             >
               <Phone className="h-4 w-4" />
-              <span className="text-[0.8rem]">{hotline}</span>
+              <span className="text-[0.7rem] sm:text-[0.8rem]">{hotline}</span>
             </a>
           </div>
 

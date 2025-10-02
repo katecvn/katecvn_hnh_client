@@ -61,18 +61,33 @@ export function Header() {
       className={cn(
         'fixed top-0 w-full z-50 bg-green-cyan-500 transition-all duration-300 font-sans',
         isScrolled
-          ? ' backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.35)] border-b border-gray-300/50'
-          : ' backdrop-blur-sm border-b border-gray-700/50'
+          ? ' backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.25)] md:shadow-[0_10px_30px_rgba(0,0,0,0.35)] border-b border-green-100/50'
+          : ' backdrop-blur-sm border-b border-green-100/50'
       )}
     >
+      {/* TopBar: chỉ desktop mới có, và bị ẩn khi scroll */}
       <div
         className={cn(
-          'transition-all duration-500 ',
+          'transition-all duration-500',
           isScrolled ? 'max-h-0 opacity-0' : 'max-h-[220px] opacity-100'
         )}
       >
         <TopBar />
-        <Masthead navigation={navigationMenu} />
+      </div>
+
+      {/* Masthead cho mobile: luôn hiển thị, không bị ảnh hưởng scroll */}
+      <div className="block md:hidden">
+        <Masthead navigation={navigationMenu} categories={categories} />
+      </div>
+
+      {/* Masthead cho desktop: bị ẩn khi scroll */}
+      <div
+        className={cn(
+          'hidden md:block transition-all duration-500',
+          isScrolled ? 'max-h-0 opacity-0' : 'max-h-[220px] opacity-100'
+        )}
+      >
+        <Masthead navigation={navigationMenu} categories={categories} />
       </div>
 
       <div
@@ -89,7 +104,7 @@ export function Header() {
                   href={item.url === '/san-pham' ? `${item.url}` : item.url}
                 >
                   <a className="flex items-center text-[0.9rem] leading-[1.4rem] hover:text-lime-300 font-bold uppercase py-[10px]">
-                    <span className="center-expand px-1">{item.title}</span>
+                    <span className="center-expand">{item.title}</span>
                     {item.children.length > 0 && (
                       <ChevronDown className="ml-1 h-4 w-4" />
                     )}
@@ -154,7 +169,7 @@ export function Header() {
           <form
             action="/"
             method="get"
-            className=" relative text-white w-full max-w-[440px] text-[0.8rem]"
+            className=" relative text-white w-full max-w-[28px] min-[900px]:max-w-[240px] lg:max-w-[360px] xl:max-w-[440px] text-[0.8rem]"
           >
             <label htmlFor="search" className="sr-only">
               Tìm kiếm
@@ -172,7 +187,7 @@ export function Header() {
             {/* Nút icon kính lúp */}
             <button
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full  "
+              className="absolute  right-0 lg:right-2  top-1/2 -translate-y-1/2 flex h-7 w-7 items-center justify-center rounded-full  "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

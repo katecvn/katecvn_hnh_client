@@ -17,6 +17,7 @@ export interface NavItem {
 
 export type MastheadProps = {
   navigation: NavItem[];
+  categories?: CategoryPro[];
 };
 
 interface WithChildren {
@@ -117,7 +118,6 @@ export interface Product {
   salePrice: string;
   productGroup: string | null;
   productGroupId: number | null;
-  sentBccuCount: number;
   seoDescription: string;
   seoKeywords: string;
   seoTitle: string;
@@ -127,6 +127,39 @@ export interface Product {
   unit: string;
   variants: Variant[];
 }
+
+export type ReviewStatus = 'active' | 'inactive' | 'pending';
+export type AbleType = 'product' | 'post' | 'service';
+
+export interface ReviewUser {
+  id: number;
+  code: string | null;
+  full_name: string;
+  email: string;
+  phone_number: string;
+}
+
+export interface Review {
+  id: number;
+  ableType: AbleType;
+  ableId: number;
+  userId: number;
+  rating: number;
+  reviewText: string;
+  status: ReviewStatus;
+  createdAt: string;
+  user: ReviewUser;
+  product: string | null;
+  avgRating: number;
+}
+
+export type Reviews = Review[];
+
+export type ReviewStats = {
+  total: number;
+  average: number;
+  percents: number[];
+};
 
 interface ParentCategory {
   id: number;
@@ -420,7 +453,6 @@ type ShippingItem = {
 export type Order = {
   id: number;
   code: string;
-  date: string;
   customerId: number;
   userId: number | null;
   subTotal: number;

@@ -58,14 +58,16 @@ export function Footer() {
 
   return (
     <footer className="bg-green-cyan-500 text-white font-sans">
-      <div className="container mx-auto px-4 lg:px-6 py-12">
+      <div className="container mx-auto px-4 py-6 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-5 space-y-3">
-            <h2 className="text-xl font-bold uppercase">{getValue('name')}</h2>
-            <ul className="space-y-2 text-base text-gray-100">
+            <h2 className="text-base md:text-xl font-bold uppercase">
+              {getValue('name')}
+            </h2>
+            <ul className="space-y-2 text-sm md:text-base text-gray-100">
               <li className="flex items-start gap-2">
-                <MapPin className="h-5 w-5 text-green-cyan-100" />
+                <MapPin className="h-5 w-5  text-green-cyan-100" />
                 <span>Địa chỉ: {getValue('address')}</span>
               </li>
               <li className="flex items-center gap-2">
@@ -125,10 +127,10 @@ export function Footer() {
             <div className="grid md:grid-cols-2 gap-8">
               {/* Support Links */}
               <div>
-                <h3 className="text-xl font-bold uppercase mb-4">
+                <h3 className="text-base md:text-xl font-bold uppercase mb-4">
                   Hỗ trợ khách hàng
                 </h3>
-                <ul className="space-y-2 text-base text-gray-100 list-disc list-inside">
+                <ul className="space-y-2 text-sm md:text-base text-gray-100 list-disc list-inside">
                   {getPolicy('policy').map((item) => (
                     <li key={item.url}>
                       <Link href={item.url ?? '/'}>
@@ -146,7 +148,7 @@ export function Footer() {
                   <img
                     src="/logoSaleNoti.png"
                     alt="Đăng ký bộ công thương"
-                    className="mt-4 w-48"
+                    className="mt-4 w-40 sm:w-48"
                   />
                 </Link>
               </div>
@@ -154,32 +156,34 @@ export function Footer() {
               {/* Socials + Map */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-bold uppercase mb-4">
+                  <h3 className="text-base md:text-xl font-bold uppercase mb-4">
                     Kết nối với chúng tôi
                   </h3>
                   <div className="flex space-x-3">
                     {getUrl('facebook') && (
                       <SocialButton
                         href={getUrl('facebook')}
-                        icon={<Facebook className="h-4 w-4" />}
+                        icon={<Facebook className="h-3 w-3 md:h-4 md:w-4" />}
                       />
                     )}
                     {getUrl('messenger') && (
                       <SocialButton
                         href={getUrl('messenger')}
-                        icon={<MessageCircle className="h-4 w-4" />}
+                        icon={
+                          <MessageCircle className="h-3 w-3 md:h-4 md:w-4" />
+                        }
                       />
                     )}
                     {getUrl('youtube') && (
                       <SocialButton
                         href={getUrl('youtube')}
-                        icon={<Youtube className="h-4 w-4" />}
+                        icon={<Youtube className="h-3 w-3 md:h-4 md:w-4" />}
                       />
                     )}
                   </div>
                 </div>
 
-                <div className="w-full h-48 rounded overflow-hidden border border-gray-700">
+                <div className="w-full h-36 md:h-48 rounded overflow-hidden border border-gray-700">
                   {getFooterUrl('map') ? (
                     <iframe
                       src={getFooterUrl('map')}
@@ -206,7 +210,7 @@ export function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="bg-green-cyan-700 py-4 text-center text-sm">
+      <div className="bg-green-cyan-700 py-4 text-center text-xs md:text-sm">
         <p>Copyright 2025 © thucphamhnh.com</p>
         <p>
           Giấy phép kinh doanh số 0106966763 do Sở Kế Hoạch và Đầu Tư Thành Phố
@@ -223,7 +227,7 @@ function SocialButton({ href, icon }: { href: string; icon: React.ReactNode }) {
     <Button
       variant="ghost"
       size="icon"
-      className="h-8 w-8 text-gray-100 hover:bg-white hover:text-green-600 rounded-full border"
+      className="h-6 w-6 md:h-8 md:w-8 text-gray-100 hover:bg-white hover:text-green-600 rounded-full border"
       asChild
     >
       <Link href={href} target="_blank">

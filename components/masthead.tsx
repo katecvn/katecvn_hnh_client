@@ -43,7 +43,10 @@ const FEATURES = [
   },
 ];
 
-export default function Masthead({ navigation }: MastheadProps) {
+export default function Masthead({
+  navigation,
+  categories = [],
+}: MastheadProps) {
   const router = useRouter();
   const pathname = router.pathname;
 
@@ -53,6 +56,11 @@ export default function Masthead({ navigation }: MastheadProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [openItem, setOpenItem] = useState<number | null>(null);
+
+  useEffect(() => {
+    setMenuOpen(false);
+    setCartOpen(false);
+  }, [router.pathname]);
 
   const toggleItem = (id: number) => {
     setOpenItem(openItem === id ? null : id);
@@ -83,7 +91,6 @@ export default function Masthead({ navigation }: MastheadProps) {
 
   const handleTurnPage = (url: string) => {
     router.push(url);
-    setCartOpen(false);
   };
 
   return (
@@ -110,13 +117,9 @@ export default function Masthead({ navigation }: MastheadProps) {
         {/* Left: Logo + Mobile menu button */}
         <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
           <SheetTrigger className="md:hidden">
-            <Button
-              variant="orange"
-              size="icon"
-              className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 border-0 shadow-md hover:shadow-lg transition-all duration-300"
-            >
-              <Menu />
-            </Button>
+            <button className="px-2 border-0 shadow-md hover:shadow-lg transition-all duration-300">
+              <Menu className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
+            </button>
           </SheetTrigger>
           <SheetContent
             side="left"
@@ -164,30 +167,42 @@ export default function Masthead({ navigation }: MastheadProps) {
                       </div>
 
                       {/* Submenu */}
-                      {isOpen && item.children && (
-                        <div className="pl-3 animate-in slide-in-from-top-1 duration-200">
-                          {item.children.map((child) => (
-                            <div key={child.id}>
-                              <Link href={child.url} legacyBehavior>
-                                <a className="block py-2 font-sans font-semibold text-slate-700 hover:text-emerald-600 text-[0.8rem] uppercase transition-colors">
-                                  {child.title}
-                                </a>
-                              </Link>
-                              <div className="pl-2">
-                                {child.children?.map((sub) => (
-                                  <div key={sub.id}>
-                                    <Link href={sub.url} legacyBehavior>
-                                      <a className="block py-2 font-sans font-medium text-slate-500 hover:text-emerald-500 text-sm transition-colors">
-                                        {sub.title}
-                                      </a>
-                                    </Link>
-                                  </div>
-                                ))}
+                      {isOpen &&
+                        item.url === '/san-pham' &&
+                        categories.length > 0 &&
+                        item.children && (
+                          <div className="pl-3 animate-in slide-in-from-top-1 duration-200">
+                            {categories.map((cat) => (
+                              <div key={cat.id}>
+                                <Link
+                                  href={`/san-pham?danh_muc=${cat.id}`}
+                                  legacyBehavior
+                                >
+                                  <a className="block py-2 font-sans font-semibold text-slate-700 hover:text-emerald-600 text-[0.8rem] uppercase transition-colors">
+                                    {cat.name}
+                                  </a>
+                                </Link>
+                                <div className="pl-2">
+                                  {cat.subCategories?.map((sub) => (
+                                    <div key={sub.id}>
+                                      <Link
+                                        href={`/san-pham?danh_muc=${sub.id}`}
+                                        legacyBehavior
+                                      >
+                                        <a
+                                          onClick={() => setMenuOpen(!menuOpen)}
+                                          className="block py-2 font-sans font-medium text-slate-500 hover:text-emerald-500 text-sm transition-colors"
+                                        >
+                                          {sub.name}
+                                        </a>
+                                      </Link>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                            ))}
+                          </div>
+                        )}
                     </div>
                   </div>
                 );
@@ -196,10 +211,10 @@ export default function Masthead({ navigation }: MastheadProps) {
           </SheetContent>
         </Sheet>
 
-        <div className="flex items-center min-w-0 overflow-hidden w-full justify-center md:justify-start">
-          <div className="flex items-center justify-center py-1 h-full md:justify-start [@media(min-width:1200px)]:min-w-[390px]">
+        <div className="flex items-center gap-3 min-w-0 overflow-hidden w-full justify-center">
+          <div className="flex items-center justify-center md:justify-start py-1 h-full  xl:min-w-[390px]">
             <Link href="/" aria-label="Thực phẩm HNH" className="block group">
-              <div className="relative border-4 border-emerald-200/50 w-[70px] h-[70px] sm:w-[156px] sm:h-[156px] mx-auto rounded-full hover:scale-105 transition-all duration-300">
+              <div className="relative border-4 border-emerald-200/50 w-[56px] h-[56px] sm:w-[70px] sm:h-[70px] md:w-[124px] md:h-[124px] lg:w-[156px] lg:h-[156px] rounded-full hover:scale-105 transition-all duration-300">
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300"></div>
                 <Image
                   src="/logo.jpg"
@@ -215,7 +230,7 @@ export default function Masthead({ navigation }: MastheadProps) {
           {/* Desktop: feature strip (left side) */}
           <div className="hidden md:block font-brand text-[0.9rem]">
             <div
-              className="grid grid-cols-2 pt-2 gap-2 md:grid-cols-2 lg:grid-cols-2"
+              className="grid grid-cols-2 pt-2 gap-0 lg:gap-2 md:grid-cols-2 lg:grid-cols-2"
               style={{
                 color: '#0f172a',
                 lineHeight: '1.6rem',
@@ -225,7 +240,7 @@ export default function Masthead({ navigation }: MastheadProps) {
               {FEATURES.map((f, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2 group hover:scale-105 transition-all duration-300 p-1 rounded-lg "
+                  className="flex items-center gap-2 group hover:scale-105 transition-all duration-300 p-0 lg:p-1 rounded-lg "
                 >
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full blur-lg group-hover:blur-xl transition-all duration-300"></div>
@@ -264,11 +279,10 @@ export default function Masthead({ navigation }: MastheadProps) {
 
         {/* Right: Cart (desktop) + Mobile toggles */}
         <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-          {/* Desktop cart */}
-          <div className="relative hidden md:block">
+          <div className="relative ">
             <button
-              onClick={() => setCartOpen((v) => !v)}
-              className="flex items-center gap-1 px-4 py-2 rounded-full font-bold text-white transition-all duration-300 uppercase shadow-lg hover:shadow-xl transform hover:scale-105"
+              onClick={() => setCartOpen(!cartOpen)}
+              className="hidden lg:flex items-center gap-1 px-4 py-2 rounded-full font-bold text-white transition-all duration-300 uppercase shadow-lg hover:shadow-xl transform hover:scale-105"
               style={{
                 background: `linear-gradient(135deg, 
                   #fb8b3aff 0%, 
@@ -282,7 +296,6 @@ export default function Masthead({ navigation }: MastheadProps) {
             >
               <ShoppingBasket className="h-5 w-5" />
               <span className="text-[0.9rem]">Giỏ hàng /</span>
-
               <PriceVND
                 value={cartTotal}
                 className="text-lg font-bold"
@@ -295,12 +308,35 @@ export default function Masthead({ navigation }: MastheadProps) {
               )}
             </button>
 
+            <button
+              onClick={() => setCartOpen((v) => !v)}
+              className="block lg:hidden flex items-center gap-1 p-1 sm:p-2 rounded-full font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300  transform hover:scale-110"
+              style={{
+                background: `linear-gradient(135deg, 
+                  #fb8b3aff 0%, 
+                  #f8722bff 50%, 
+                  #f55a17ff 100%
+                )`,
+              }}
+              aria-label="Mở giỏ hàng"
+            >
+              <div className="relative">
+                <ShoppingBasket className="h-4 w-4 sm:h-5 sm:w-5" />
+
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-3 sm:-top-3  inline-flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-bold shadow-md">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+            </button>
+
             {cartOpen && (
               <div
                 ref={cartRef}
                 id="cart-dropdown"
                 role="menu"
-                className="absolute right-0 mt-3 w-80 rounded-xl border border-emerald-200/50 shadow-2xl z-[9999] backdrop-blur-sm animate-in slide-in-from-top-2 duration-200"
+                className="absolute right-0 mt-3 w-72 md:w-80 rounded-xl border border-emerald-200/50 shadow-2xl z-[9999] backdrop-blur-sm animate-in slide-in-from-top-2 duration-200"
                 style={{
                   background: `linear-gradient(135deg, 
                     #ffffff 0%, 
@@ -310,10 +346,10 @@ export default function Masthead({ navigation }: MastheadProps) {
                 }}
               >
                 {/* Arrow pointer */}
-                <div className="absolute -top-2 right-6 w-4 h-4 bg-white border-l border-t border-emerald-200/50 transform rotate-45"></div>
+                <div className="absolute -top-[7px] right-3 md:-top-2 md:right-6 w-3 h-3 md:w-4 md:h-4 bg-green-50 border-l border-t border-emerald-200/50 transform rotate-45"></div>
 
-                <div className="p-4">
-                  <h4 className="mb-2 text-emerald-800 text-center text-md font-bold uppercase">
+                <div className="p-2 md:p-4">
+                  <h4 className="mb-2 text-emerald-800 text-center text-sm md:text-báe font-bold uppercase">
                     Giỏ hàng
                   </h4>
                   <div className="w-full my-2 h-px bg-gradient-to-r from-transparent via-emerald-300 to-transparent" />
@@ -340,8 +376,11 @@ export default function Masthead({ navigation }: MastheadProps) {
                             className="w-12 h-12 object-cover rounded-lg ring-2 ring-emerald-200/50"
                           />
                           <div className="flex-1">
-                            <p className="text-[0.9rem] font-medium text-slate-800 line-clamp-1">
-                              {item.name} {item.unit && ' (' + item.unit + ')'}
+                            <p className="font-medium text-slate-800 line-clamp-1">
+                              <span className="text-[0.8rem] md:text-[0.9rem]">
+                                {item.name}{' '}
+                                {item.unit && ' (' + item.unit + ')'}
+                              </span>
                             </p>
                             <p className="text-xs text-slate-500">
                               <PriceVND
@@ -354,7 +393,7 @@ export default function Masthead({ navigation }: MastheadProps) {
                           </div>
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="border-2 border-red-400 hover:border-red-500 rounded-full w-6 h-6 flex items-center justify-center text-red-500 hover:text-red-600 hover:bg-red-50 text-xs font-bold transition-all duration-200"
+                            className="border-2 border-red-400 hover:border-red-500 rounded-full w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-red-500 hover:text-red-600 hover:bg-red-50 text-xs font-bold transition-all duration-200"
                           >
                             ✕
                           </button>
@@ -363,7 +402,7 @@ export default function Masthead({ navigation }: MastheadProps) {
                     </ul>
                   )}
 
-                  <div className=" text-slate-600 text-center text-sm bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg my-3">
+                  <div className=" text-slate-600 text-center text-sm bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg my-2 md:my-3">
                     <strong>
                       Tổng tiền:{' '}
                       <PriceVND
@@ -375,15 +414,15 @@ export default function Masthead({ navigation }: MastheadProps) {
                   </div>
 
                   {cart.length > 0 && (
-                    <div className="space-y-3">
+                    <div className="mx-2 space-y-2 md:space-y-3">
                       <button
-                        className="uppercase w-full border-2 border-emerald-400 hover:border-emerald-500 hover:text-emerald-600 text-emerald-500 text-sm font-semibold py-3 rounded-lg transition-all duration-300 hover:bg-emerald-50"
+                        className="uppercase w-full border-2 border-emerald-400 hover:border-emerald-500 hover:text-emerald-600 text-emerald-500 text-[0.8rem] md:text-sm font-semibold py-2 md:py-3 rounded-lg transition-all duration-300 hover:bg-emerald-50"
                         onClick={() => handleTurnPage('/gio-hang')}
                       >
                         Xem giỏ hàng
                       </button>
                       <button
-                        className="uppercase w-full text-white text-sm font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                        className="uppercase w-full text-white text-[0.8rem] md:text-sm font-semibold py-2 md:py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                         style={{
                           background: `linear-gradient(135deg, 
                             #059669 0%, 
@@ -401,30 +440,6 @@ export default function Masthead({ navigation }: MastheadProps) {
               </div>
             )}
           </div>
-
-          {/* Mobile cart button */}
-          <button
-            onClick={() => setCartOpen(true)}
-            className="flex items-center gap-1 p-2 rounded-full font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 md:hidden transform hover:scale-110"
-            style={{
-              background: `linear-gradient(135deg, 
-                  #fb8b3aff 0%, 
-                  #f8722bff 50%, 
-                  #f55a17ff 100%
-                )`,
-            }}
-            aria-label="Mở giỏ hàng"
-          >
-            <div className="relative">
-              <ShoppingBasket className="h-5 w-5" />
-
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-500 text-white text-[10px] font-bold shadow-md animate-pulse">
-                  {cartCount}
-                </span>
-              )}
-            </div>
-          </button>
         </div>
       </div>
 
@@ -432,66 +447,6 @@ export default function Masthead({ navigation }: MastheadProps) {
       <div className="mx-auto max-w-7xl px-4">
         <div className="h-px w-full bg-gradient-to-r from-transparent via-emerald-300 to-transparent opacity-60" />
       </div>
-
-      {/* Off-canvas MOBILE CART */}
-      {cartOpen && (
-        <div
-          className="fixed inset-0 z-50 md:hidden"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setCartOpen(false)}
-          />
-          <aside
-            className="absolute right-0 top-0 h-full w-80 max-w-[85%] shadow-2xl animate-in slide-in-from-right duration-300"
-            style={{
-              background: `linear-gradient(180deg, 
-                #ffffff 0%, 
-                #f0fdfa 50%, 
-                #ecfdf5 100%
-              )`,
-            }}
-          >
-            <div className="p-4">
-              <div className="mb-4 flex items-center justify-between">
-                <span className="text-sm font-bold uppercase text-emerald-800">
-                  Giỏ hàng
-                </span>
-                <button
-                  onClick={() => setCartOpen(false)}
-                  aria-label="Đóng giỏ hàng"
-                  className="rounded-full border-2 border-emerald-200 hover:border-emerald-300 p-2 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 transition-all duration-200"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="h-5 w-5"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 11-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="rounded-xl border border-emerald-200/50 bg-white/50 backdrop-blur-sm p-4">
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center">
-                    <ShoppingBasket className="w-8 h-8 text-emerald-400" />
-                  </div>
-                  <p className="text-sm text-slate-500">
-                    Chưa có sản phẩm trong giỏ hàng.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-      )}
     </div>
   );
 }

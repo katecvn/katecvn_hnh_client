@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { GoogleLoginModal } from './modal';
+import { GoogleLoginModal } from './enhanced-modal';
 import { useState } from 'react';
 
 export const RequestLogin = ({ message }: { message: string }) => {

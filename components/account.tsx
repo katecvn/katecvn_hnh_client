@@ -32,40 +32,38 @@ const UserAccountHeader = ({ userInfo, onLogout }: UserAccountHeaderProps) => {
     <div className="relative">
       {/* Header với thông tin user */}
       <div className="bg-transparent group">
-        <div className="flex items-center justify-between ">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full flex items-center justify-center  overflow-hidden bg-white/20 ">
-              {userInfo?.avatar_url ? (
-                <img
-                  src={userInfo.avatar_url}
-                  alt="Avatar"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <User size={16} className="group-hover:text-white" />
-              )}
-            </div>
-            <button
-              onClick={() => setShowAccountMenu(!showAccountMenu)}
-              className="text-sm font-medium transition-colors group-hover:text-white flex items-center gap-2  "
-            >
-              Xin chào, <strong>{userInfo?.full_name || 'Người dùng'}</strong>
-              <ChevronDown
-                size={16}
-                className={`transition-transform duration-200 ${
-                  showAccountMenu ? 'rotate-180' : ''
-                }`}
+        <button
+          onClick={() => setShowAccountMenu(!showAccountMenu)}
+          className="text-sm font-medium transition-colors group-hover:text-white flex items-center gap-2  "
+        >
+          <div className="w-6 h-6 rounded-full flex items-center justify-center  overflow-hidden bg-white/20 ">
+            {userInfo?.avatar_url ? (
+              <img
+                src={userInfo.avatar_url}
+                alt="Avatar"
+                className="w-full h-full object-cover"
               />
-            </button>
+            ) : (
+              <User size={16} className="group-hover:text-white" />
+            )}
           </div>
-        </div>
+          <span className="hidden lg:block">
+            Xin chào, <strong>{userInfo?.full_name || 'Người dùng'}</strong>
+          </span>
+          <ChevronDown
+            size={16}
+            className={`transition-transform duration-200 ${
+              showAccountMenu ? 'rotate-180' : ''
+            }`}
+          />
+        </button>
       </div>
 
       {/* Menu tài khoản dropdown */}
       {showAccountMenu && (
         <div
-          className="absolute left-0 top-10 -mt-2 w-48 text-sm bg-white rounded-md shadow-2xl border border-gray-300 
-                    before:content-[''] before:absolute before:top-[-6px] before:left-10 
+          className="absolute right-0 lg:left-0 top-10 -mt-2 w-36 text-sm bg-white rounded-md shadow-2xl border border-gray-300 
+                    before:content-[''] before:absolute before:top-[-6px] before:right-7 lg:before:left-3
                     before:w-3 before:h-3 before:bg-white before:rotate-45 z-50"
         >
           <div>

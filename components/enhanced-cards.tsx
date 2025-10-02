@@ -104,7 +104,7 @@ export function ProductSmallCard({ product }: { product: ProductCardData }) {
     <div
       ref={cardRef}
       key={product.id}
-      className={`group relative flex gap-3 font-sans block group border border-neutral-gray-100 hover:border-2 hover:border-green-cyan-400/50 rounded-lg p-2 bg-white hover:shadow-md transition-all duration-300 ${
+      className={`group relative flex gap-3 mb-4 font-sans block group border border-neutral-gray-100 hover:border-2 hover:border-green-cyan-400/50 rounded-lg p-2 bg-white hover:shadow-md transition-all duration-300 ${
         isAdding
           ? 'scale-[0.98] shadow-lg border-green-cyan-400 bg-green-50'
           : 'hover:scale-105'
@@ -277,6 +277,9 @@ export function ProductCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const { cart, updateQuantity, removeItem } = useCart();
 
+  // Kiểm tra sản phẩm có còn hàng không
+  const isOutOfStock = product.stock === 0;
+
   const createFlyingAnimation = (event: React.MouseEvent) => {
     const button = event.currentTarget as HTMLButtonElement;
     const card = cardRef.current;
@@ -332,6 +335,8 @@ export function ProductCard({
   };
 
   const handleAddToCart = async (event: React.MouseEvent) => {
+    if (isOutOfStock) return;
+
     setIsAdding(true);
 
     // Tạo hiệu ứng bay
@@ -362,6 +367,8 @@ export function ProductCard({
   const qty = existingItem?.quantity ?? 0;
 
   const handleIncrease = (e: React.MouseEvent) => {
+    if (isOutOfStock) return;
+
     createFlyingAnimation(e);
     localStorageUtil.addToCart({
       id: product.id,
@@ -393,7 +400,7 @@ export function ProductCard({
       ref={cardRef}
       className={`group relative font-sans shadow-lg block group border border-neutral-gray-100 hover:border-2 hover:border-green-cyan-400/50 rounded-sm bg-white hover:shadow-lg transition-all duration-300 ${
         isAdding ? 'scale-[0.98] shadow-2xl' : ''
-      }`}
+      } ${isOutOfStock ? 'opacity-90' : ''}`}
     >
       {/* Discount badge */}
       {product.originalPrice > 0 &&
@@ -412,45 +419,36 @@ export function ProductCard({
         )}
 
       {/* Product Image */}
-      <div className="flex items-center justify-center">
-        <div className="relative w-full aspect-[1/1] overflow-hidden ">
+      <div className="flex items-center justify-center relative">
+        <div className="relative w-full aspect-[1/1] rounded-t-sm overflow-hidden">
           <Link href={`/san-pham/${product.slug}`}>
             <Image
               src={product.image}
               alt={product.name}
               layout="fill"
               objectFit="cover"
-              className={`product-image rounded-t-sm object-cover cursor-pointer  transition-all duration-300 ${
-                isAdding ? 'scale-105 brightness-110 ' : ' rounded-t-sm'
+              className={`product-image rounded-t-sm object-cover cursor-pointer transition-all duration-300 ${
+                isAdding ? 'scale-105 brightness-110' : 'rounded-t-sm'
               }`}
             />
           </Link>
-        </div>
-      </div>
 
-      {/* Rating */}
-      <div className="flex items-center gap-1 px-3 py-2">
-        <div className="flex items-center">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`w-3 h-3 ${
-                i < Math.floor(4)
-                  ? 'fill-yellow-500 text-yellow-500'
-                  : 'text-gray-200'
-              }`}
-            />
-          ))}
+          {isOutOfStock && (
+            <div className="absolute font-sans rounded-t inset-0 bg-black/60 flex items-center justify-center font-semibold text-white/90 text-sm md:text-base">
+              HẾT HÀNG
+            </div>
+          )}
         </div>
-        <span className="text-xs text-gray-500 ml-1">
-          {4.8} ({50} đánh giá)
-        </span>
       </div>
 
       {/* Product Info */}
-      <div className="px-3 pb-4">
+      <div className="p-4">
         <Link href={`/san-pham/${product.slug}`}>
-          <a className="text-center cursor-pointer text-[0.9rem] font-medium text-green-cyan-500 line-clamp-1">
+          <a
+            className={`text-center cursor-pointer text-[0.9rem] font-medium ${
+              isOutOfStock ? 'text-gray-600' : 'text-green-cyan-500'
+            } line-clamp-1`}
+          >
             <span className="font-semibold">{product.name}</span>
             {product.unit && (
               <span className="text-xs text-neutral-gray-800">
@@ -461,34 +459,66 @@ export function ProductCard({
         </Link>
 
         {/* Price */}
-        <p
-          className={`${
-            product.originalPrice <= product.salePrice && 'text-center'
-          } m-0`}
-        >
-          {product.originalPrice > 0 &&
-            product.originalPrice > product.salePrice && (
-              <PriceVND
-                value={product.originalPrice}
-                className="line-through text-[0.8rem] text-gray-400 mr-2"
-                symbolClassName="text-[0.7rem] align-baseline"
-              />
-            )}
+        {!isOutOfStock && (
+          <p
+            className={`${
+              product.originalPrice <= product.salePrice && 'text-center'
+            } m-0`}
+          >
+            {product.originalPrice > 0 &&
+              product.originalPrice > product.salePrice && (
+                <PriceVND
+                  value={product.originalPrice}
+                  className="line-through text-[0.8rem] text-gray-400 mr-2"
+                  symbolClassName="text-[0.7rem] align-baseline"
+                />
+              )}
 
-          <PriceVND
-            value={product.salePrice}
-            className="font-bold text-orange-400 text-[1.2rem]"
-            symbolClassName="text-base align-baseline"
-          />
-        </p>
+            <PriceVND
+              value={product.salePrice}
+              className="font-bold text-orange-400 text-[1.2rem]"
+              symbolClassName="text-base align-baseline"
+            />
+          </p>
+        )}
 
-        {/* Add to Cart Button */}
         {isShoppingCart &&
-          (!existingItem ? (
+          (isOutOfStock ? (
+            <div className="mt-2 relative">
+              <p className="text-center text-[0.65rem] text-gray-500 mt-2 mb-2 font-medium">
+                Sản phẩm sẽ sớm có hàng trở lại
+              </p>
+              <button
+                className="w-full gap-2 rounded text-white/90 text-xs font-bold py-2 
+                  bg-gradient-to-r from-black/60 via-black/70 to-black/60 
+                  cursor-not-allowed relative overflow-hidden
+                  border-2 border-gray-300"
+                disabled
+              >
+                <span className="flex items-center justify-center gap-2 relative z-10">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  TẠM HẾT HÀNG
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
+              </button>
+            </div>
+          ) : !existingItem ? (
             <button
               className={`relative overflow-hidden flex items-center justify-center 
               bg-gradient-to-r from-green-cyan-400 via-green-cyan-500 to-green-cyan-400
-               mt-2 w-full gap-1 rounded text-white text-[0.7rem] font-semibold py-2 
+               mt-2 w-full gap-1 text-white text-xs font-semibold py-2 
                rounded-xs transition-all duration-300 transform ${
                  isAdding
                    ? 'scale-95 shadow-lg'
@@ -617,11 +647,11 @@ export function NewsCard({ news, topic }: { news: News; topic: Topic }) {
 
           {/* Content */}
           <div className="flex-1 p-4 flex flex-col">
-            <h5 className="font-semibold text-base mb-2 line-clamp-2 group-hover:text-green-cyan-500">
+            <h5 className="font-semibold text-sm sm:text-base mb-2 line-clamp-2 group-hover:text-green-cyan-500">
               {news.title}
             </h5>
             <div className="w-10 h-[2px] bg-gray-200 mb-2"></div>
-            <p className="text-sm text-gray-600 line-clamp-2">
+            <p className="text-[0.8rem] sm:text-sm text-gray-600 line-clamp-2">
               {news.short_description}
             </p>
           </div>

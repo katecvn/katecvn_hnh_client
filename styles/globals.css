@@ -185,7 +185,7 @@ body {
 /* COMPONENTS LAYER */
 @layer components {
   .container {
-    @apply mx-auto px-4;
+    @apply mx-auto px-3 sm:px-4;
     max-width: 1250px;
   }
 

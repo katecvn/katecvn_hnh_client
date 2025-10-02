@@ -4,8 +4,8 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
-    <nav className="mb-6 px-3 ">
-      <div className="flex flex-wrap items-center space-x-2 text-sm">
+    <nav className="mb-4 md:mb-6 px-3 ">
+      <div className="flex flex-wrap items-center space-x-2 text-[0.8rem] md:text-sm">
         {items.map((item, index) => (
           <span key={index} className="flex items-center space-x-2">
             {item.href ? (

@@ -14,6 +14,12 @@ import {
 import Image from 'next/image';
 import api from '@/utils/axios';
 import { PriceVND, transformProducts } from '@/utils/format';
+import {
+  LoadingCategoriesSkeleton,
+  LoadingNewsListSkeleton,
+  LoadingProductListSkeleton,
+  SectionLoader,
+} from './loading-error';
 
 export const CategoriesProSidebar = () => {
   const [loading, setLoading] = useState(true);
@@ -52,65 +58,73 @@ export const CategoriesProSidebar = () => {
         <Menu />
         <span>Danh mục sản phẩm</span>
       </div>
-
-      <ul className="divide-y bg-white border border-neutral-gray-200 rounded">
-        {categories.map((cat) => (
-          <li key={cat.id} className="relative">
-            <div className="flex items-center justify-between text-gray-800 text-base px-3 py-2 hover:bg-lime-200/30 hover:text-green-700">
-              {cat.subCategories && cat.subCategories.length > 0 ? (
-                <button
-                  onClick={() => toggle(cat.id)}
-                  className="flex-1  text-left  cursor-pointer"
-                >
-                  {cat.name}
-                </button>
-              ) : (
-                <Link href={`/san-pham?danh_muc=${cat.id}`}>
-                  <a className="flex-1 ">{cat.name}</a>
-                </Link>
-              )}
-
-              {cat.subCategories && cat.subCategories.length > 0 && (
-                <div className="flex items-center gap-1">
-                  <div
-                    className="inline-flex h-5 w-6 items-center justify-center rounded-full 
-                                  bg-gradient-to-r from-green-300/50 to-lime-300/50 text-green-700 text-xs font-semibold "
-                  >
-                    {cat.subCategories.length}
-                  </div>
+      <SectionLoader
+        loading={loading}
+        error={error}
+        number={8}
+        onRetry={() => fetchAllHomeData()}
+        loadingComponent={LoadingCategoriesSkeleton}
+        errorTitle="tải danh mục sản phẩm"
+      >
+        <ul className="divide-y bg-white border border-neutral-gray-200 rounded">
+          {categories.map((cat) => (
+            <li key={cat.id} className="relative">
+              <div className="flex items-center justify-between text-gray-800 text-base px-3 py-2 hover:bg-lime-200/30 hover:text-green-700">
+                {cat.subCategories && cat.subCategories.length > 0 ? (
                   <button
                     onClick={() => toggle(cat.id)}
-                    className="text-gray-600"
+                    className="flex-1  text-left  cursor-pointer"
                   >
-                    <ChevronDown
-                      className={`h-4 w-4 transform transition-transform ${
-                        open === cat.id ? 'rotate-180' : ''
-                      }`}
-                    />
+                    {cat.name}
                   </button>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <Link href={`/san-pham?danh_muc=${cat.id}`}>
+                    <a className="flex-1 ">{cat.name}</a>
+                  </Link>
+                )}
 
-            {cat.subCategories &&
-              cat.subCategories.length > 0 &&
-              open === cat.id && (
-                <ul className="px-3 bg-lime-50/50">
-                  {cat.subCategories.map((sub) => (
-                    <li
-                      key={sub.id}
-                      className="py-2 px-3 hover:rounded-sm hover:bg-lime-200/30 text-neutral-gray-600 hover:text-green-700"
+                {cat.subCategories && cat.subCategories.length > 0 && (
+                  <div className="flex items-center gap-1">
+                    <div
+                      className="inline-flex h-5 w-6 items-center justify-center rounded-full 
+                                  bg-gradient-to-r from-green-300/50 to-lime-300/50 text-green-700 text-xs font-semibold "
                     >
-                      <Link href={`/san-pham?danh_muc=${sub.id}`}>
-                        <a className="text-[0.9rem] ">{sub.name}</a>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-          </li>
-        ))}
-      </ul>
+                      {cat.subCategories.length}
+                    </div>
+                    <button
+                      onClick={() => toggle(cat.id)}
+                      className="text-gray-600"
+                    >
+                      <ChevronDown
+                        className={`h-4 w-4 transform transition-transform ${
+                          open === cat.id ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {cat.subCategories &&
+                cat.subCategories.length > 0 &&
+                open === cat.id && (
+                  <ul className="px-3 bg-lime-50/50">
+                    {cat.subCategories.map((sub) => (
+                      <li
+                        key={sub.id}
+                        className="py-2 px-3 hover:rounded-sm hover:bg-lime-200/30 text-neutral-gray-600 hover:text-green-700"
+                      >
+                        <Link href={`/san-pham?danh_muc=${sub.id}`}>
+                          <a className="text-[0.9rem] ">{sub.name}</a>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+            </li>
+          ))}
+        </ul>
+      </SectionLoader>
     </div>
   );
 };
@@ -155,36 +169,44 @@ export const NewsSidebar = () => {
         <Menu />
         <span>Tin tức mới</span>
       </div>
+      <SectionLoader
+        loading={loading}
+        error={error}
+        number={5}
+        onRetry={() => fetchAllHomeData()}
+        loadingComponent={LoadingNewsListSkeleton}
+        errorTitle="tải danh mục sản phẩm"
+      >
+        <ul className="divide-y bg-white border border-neutral-gray-200 rounded font-sans">
+          {newPosts.map((item) => (
+            <li key={item.id} className="p-3 group">
+              <div className="flex gap-3">
+                <div className="flex flex-1 items-center justify-center">
+                  <div className="relative w-full aspect-[3/2]">
+                    <Link href={item.slug}>
+                      <Image
+                        src={item.thumbnail}
+                        alt={item.title}
+                        layout="fill"
+                        objectFit="cover"
+                        className="object-cover rounded group-hover:scale-105 transition-transform"
+                      />
+                    </Link>
+                  </div>
+                </div>
 
-      <ul className="divide-y bg-white border border-neutral-gray-200 rounded font-sans">
-        {newPosts.map((item) => (
-          <li key={item.id} className="p-3 group">
-            <div className="flex gap-3">
-              <div className="flex flex-1 items-center justify-center">
-                <div className="relative w-full aspect-[3/2]">
-                  <Link href={item.slug}>
-                    <Image
-                      src={item.thumbnail}
-                      alt={item.title}
-                      layout="fill"
-                      objectFit="cover"
-                      className="object-cover rounded group-hover:scale-105 transition-transform"
-                    />
+                <div className="flex-[2]  text-left">
+                  <Link href={`/tin-tuc/${item.slug}`}>
+                    <span className="text-[0.9rem] font-medium text-neutral-gray-800 group-hover:text-green-cyan-500 line-clamp-3">
+                      {item.title}
+                    </span>
                   </Link>
                 </div>
               </div>
-
-              <div className="flex-[2]  text-left">
-                <Link href={`/tin-tuc/${item.slug}`}>
-                  <span className="text-[0.9rem] font-medium text-neutral-gray-800 group-hover:text-green-cyan-500 line-clamp-3">
-                    {item.title}
-                  </span>
-                </Link>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      </SectionLoader>
     </div>
   );
 };
@@ -207,12 +229,13 @@ export const ProductSidebar = () => {
 
     const { page, limit } = options;
 
-    const { data } = await api.get(
-      `/product/public/shows?page=${page}&limit=${limit}`
-    ); // index 0
+    const { data } = await api.get(`/product/public/shows?page=${page}`); // index 0
 
     try {
-      const products = transformProducts(data?.data?.products ?? []);
+      const products = transformProducts(data?.data?.products ?? [])
+        .filter((p) => (p.stock ?? 0) > 0)
+        .slice(0, 5);
+
       setProducts(products);
     } catch (error: any) {
       const message =
@@ -230,54 +253,62 @@ export const ProductSidebar = () => {
         <Menu />
         <span>Sản phẩm mới</span>
       </div>
+      <SectionLoader
+        loading={loading}
+        error={error}
+        number={5}
+        onRetry={() => fetchAllHomeData()}
+        loadingComponent={LoadingProductListSkeleton}
+        errorTitle="tải sản phẩm"
+      >
+        <ul className="divide-y bg-white border border-neutral-gray-200 rounded font-sans">
+          {products.map((item) => (
+            <li key={item.id} className="p-3 group">
+              <div className="flex gap-3">
+                <div className="flex flex-1 items-center justify-center">
+                  <div className="relative w-full aspect-[3/2]">
+                    <Link href={`/san-pham/${item.slug}`}>
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="object-cover rounded group-hover:scale-105 transition-transform"
+                      />
+                    </Link>
+                  </div>
+                </div>
 
-      <ul className="divide-y bg-white border border-neutral-gray-200 rounded font-sans">
-        {products.map((item) => (
-          <li key={item.id} className="p-3 group">
-            <div className="flex gap-3">
-              <div className="flex flex-1 items-center justify-center">
-                <div className="relative w-full aspect-[3/2]">
+                <div className="flex-[2]  text-left">
                   <Link href={`/san-pham/${item.slug}`}>
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="object-cover rounded group-hover:scale-105 transition-transform"
-                    />
+                    <a className="text-[0.9rem] font-medium text-neutral-gray-800 group-hover:text-green-cyan-500 line-clamp-2">
+                      <span>{item.name}</span>
+                      {item.unit && <span>{' (' + item.unit + ')'}</span>}
+                    </a>
                   </Link>
+                  {/* Giá */}
+                  <p className="m-0 text-center">
+                    {item.originalPrice > 0 &&
+                      item.originalPrice > item.salePrice && (
+                        <PriceVND
+                          value={item.originalPrice}
+                          className="line-through text-[0.8rem] text-gray-400 mr-1"
+                          symbolClassName="text-[0.7rem] align-baseline"
+                        />
+                      )}
+
+                    <PriceVND
+                      value={item.salePrice}
+                      className="font-bold text-orange-400 text-[1.1rem]"
+                      symbolClassName="text-[0.9rem] align-baseline"
+                    />
+                  </p>
                 </div>
               </div>
-
-              <div className="flex-[2]  text-left">
-                <Link href={`/san-pham/${item.slug}`}>
-                  <a className="text-[0.9rem] font-medium text-neutral-gray-800 group-hover:text-green-cyan-500 line-clamp-3">
-                    <span>{item.name}</span>
-                    {item.unit && <span>{' (' + item.unit + ')'}</span>}
-                  </a>
-                </Link>
-                {/* Giá */}
-                <p className="m-0 text-center">
-                  {item.originalPrice > 0 &&
-                    item.originalPrice > item.salePrice && (
-                      <PriceVND
-                        value={item.originalPrice}
-                        className="line-through text-[0.8rem] text-gray-400 mr-1"
-                        symbolClassName="text-[0.7rem] align-baseline"
-                      />
-                    )}
-
-                  <PriceVND
-                    value={item.salePrice}
-                    className="font-bold text-orange-400 text-[1.1rem]"
-                    symbolClassName="text-[0.9rem] align-baseline"
-                  />
-                </p>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      </SectionLoader>
     </div>
   );
 };

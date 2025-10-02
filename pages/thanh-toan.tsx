@@ -145,7 +145,7 @@ export default function PaymentPage() {
   };
 
   return (
-    <div className="container py-4 mb-6">
+    <div className="container py-4 ">
       <Breadcrumb
         items={[
           { label: 'Trang chủ', href: '/' },
@@ -158,7 +158,7 @@ export default function PaymentPage() {
         {/* Coupon */}
         {userInfo ? (
           <div>
-            <p className="font-sans text-base mb-3">
+            <p className="font-sans text-sm md:text-base">
               Bạn có mã ưu đãi?{' '}
               <button
                 onClick={() => setAddCoupon(!addCoupon)}
@@ -185,17 +185,17 @@ export default function PaymentPage() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 text-[0.8rem] md:text-base">
               {/* Left: Billing form */}
-              <div className="lg:col-span-3 bg-white border-t-2 border-gray-300 shadow py-5 px-8 rounded-b">
-                <h2 className="text-lg text-neutral-gray-600 font-bold mb-4 uppercase">
+              <div className="lg:col-span-3 bg-white border-t-2 border-gray-300 shadow py-3 px-4 sm:py-5 sm:px-8 rounded-b">
+                <h2 className="text-base md:text-lg text-neutral-gray-500 font-bold mb-4 uppercase">
                   Thông tin thanh toán
                 </h2>
-                <form className="space-y-4">
+                <form className="space-y-4 text-sm md:text-base text-neutral-gray-800">
                   {/* Tên & Họ */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold mb-1">
+                      <label className="block font-semibold mb-1">
                         Họ <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -214,7 +214,7 @@ export default function PaymentPage() {
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold mb-1">
+                      <label className="block font-semibold mb-1">
                         Tên <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -236,7 +236,7 @@ export default function PaymentPage() {
 
                   {/* Địa chỉ */}
                   <div>
-                    <label className="block text-sm font-semibold mb-1">
+                    <label className="block font-semibold mb-1">
                       Địa chỉ <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -257,7 +257,7 @@ export default function PaymentPage() {
 
                   {/* Ngày giao hàng */}
                   <div>
-                    <label className="block text-sm font-semibold mb-1">
+                    <label className="block font-semibold mb-1">
                       Ngày giao hàng <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -280,7 +280,7 @@ export default function PaymentPage() {
                   <div className="grid grid-cols-2 gap-4">
                     {/* Số điện thoại */}
                     <div>
-                      <label className="block text-sm font-semibold mb-1">
+                      <label className="block font-semibold mb-1">
                         Số điện thoại <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -301,9 +301,7 @@ export default function PaymentPage() {
 
                     {/* Email */}
                     <div>
-                      <label className="block text-sm font-semibold mb-1">
-                        Email
-                      </label>
+                      <label className="block font-semibold mb-1">Email</label>
                       <input
                         type="email"
                         value={email}
@@ -322,7 +320,7 @@ export default function PaymentPage() {
 
                   {/* Ghi chú */}
                   <div>
-                    <label className="block text-sm font-semibold mb-1">
+                    <label className="block font-semibold mb-1">
                       Ghi chú đơn hàng
                     </label>
                     <textarea
@@ -337,15 +335,15 @@ export default function PaymentPage() {
 
               {/* Right: Order Summary */}
               <div className="lg:col-span-2 ">
-                <section className="bg-white border-2 border-lime-green py-5 px-8 rounded">
-                  <h2 className="text-lg font-bold mb-4 text-neutral-gray-600 uppercase">
+                <section className="bg-white border-2 border-lime-green py-3 px-4 sm:py-5 sm:px-8 rounded">
+                  <h2 className="text-base md:text-lg font-bold mb-4 text-neutral-gray-600 uppercase">
                     Đơn hàng của bạn
                   </h2>
-                  <table className="w-full text-[0.9rem] mb-4">
+                  <table className="w-full text-sm md:text-base mb-4">
                     <thead>
                       <tr className="border-b-2 text-neutral-gray-800 uppercase">
-                        <th className="text-left py-2">Sản phẩm</th>
-                        <th className="text-right py-2">Tạm tính</th>
+                        <th className="text-left pb-2">Sản phẩm</th>
+                        <th className="text-right pb-2">Tạm tính</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -353,12 +351,13 @@ export default function PaymentPage() {
                         <tr
                           key={item.variantId ?? item.id}
                           className="border-b"
+                          style={{ width: '70%' }}
                         >
                           <td className="py-2 text-neutral-gray-600">
                             {item.name} {item.unit && ' (' + item.unit + ') '}{' '}
                             <strong>× {item.quantity}</strong>
                           </td>
-                          <td className="text-right">
+                          <td className="text-right" style={{ width: '30%' }}>
                             <PriceVND
                               value={item.price}
                               className="text-orange-400 font-semibold text-base md:text-lg"
@@ -381,7 +380,7 @@ export default function PaymentPage() {
                       </tr>
                       <tr>
                         <td className="py-2 font-semibold">Vận chuyển</td>
-                        <td className="text-right text-[0.8rem]">
+                        <td className="text-right text-[0.7rem] sm:text-[0.8rem]">
                           <span>Đồng giá: </span>
                           <PriceVND
                             value={1}
@@ -416,7 +415,7 @@ export default function PaymentPage() {
 
                   {/* Điều khoản */}
                   <div className="mb-4">
-                    <label className="flex items-start space-x-2 text-sm">
+                    <label className="flex items-start space-x-2 ">
                       <input
                         type="checkbox"
                         checked={agree}

@@ -63,14 +63,14 @@ export default function OrderDetailPage() {
       <section>
         <CheckoutSteps currentStep={3} />
         {userInfo ? (
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
             {/* Left: Order details */}
-            <div className="lg:col-span-3 border rounded shadow-md py-5 px-8">
+            <div className="md:col-span-3 border rounded shadow-md py-3 px-4 sm:py-5 sm:px-8 md:py-3 md:px-4 lg:py-5 lg:px-8">
               <section>
                 <h2 className="text-lg md:text-2xl text-neutral-gray-600 uppercase font-semibold mb-4">
                   Chi tiết đơn hàng
                 </h2>
-                <table className="w-full text-sm">
+                <table className="w-full text-sm md:text-base">
                   <thead>
                     <tr className="border-b-2 border-gray-200 text-left">
                       <th className="p-1">SẢN PHẨM</th>
@@ -153,7 +153,7 @@ export default function OrderDetailPage() {
                   <h2 className="text-base md:text-lg text-neutral-gray-600 uppercase font-bold mb-2">
                     Địa chỉ giao hàng
                   </h2>
-                  <address className="not-italic text-gray-700 space-y-1">
+                  <address className="not-italic text-gray-700 space-y-1 text-sm md:text-base">
                     <p>
                       <strong>Tên khách hàng: </strong>
                       {order?.shippings[0]?.customerName}
@@ -174,15 +174,15 @@ export default function OrderDetailPage() {
             </div>
 
             {/* Right: Order summary */}
-            <div className="lg:col-span-2">
-              <div className="border border-orange-200 bg-orange-50 rounded shadow-md py-5 px-8">
-                <p className="text-green-600 text-lg font-sans font-semibold mb-4">
+            <div className="md:col-span-2">
+              <div className="border border-orange-200 bg-orange-50 rounded shadow-md py-3 px-4 sm:py-5 sm:px-8 md:py-3 md:px-4 lg:py-5 lg:px-8">
+                <p className="text-green-600 text-base md:text-lg font-sans font-semibold mb-4">
                   <CheckCircle className="inline-block w-6 h-6 mr-2 align-middle text-green-600" />
                   <strong className="align-middle">
                     Cảm ơn bạn. Đơn hàng của bạn đã được nhận.
                   </strong>
                 </p>
-                <ul className="space-y-3 text-base list-disc list-inside">
+                <ul className="space-y-3 text-sm md:text-base list-disc list-inside">
                   <li>
                     Mã đơn hàng: <strong>{order?.code}</strong>
                   </li>

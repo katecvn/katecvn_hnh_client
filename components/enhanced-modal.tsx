@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, Shield, CheckCircle } from 'lucide-react';
+import { ArrowRight, Shield, CheckCircle, Star, Send } from 'lucide-react';
 
 import api from '@/utils/axios';
 import {
@@ -13,6 +13,9 @@ import {
 } from './ui/dialog';
 import { toast } from 'sonner';
 import { useToast } from './ui/toast';
+import { Input } from 'postcss';
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
 
 export interface DialogProps {
   open: boolean;
@@ -176,6 +179,93 @@ export const GoogleLoginModal = ({ open, onOpenChange }: DialogProps) => {
             </span>
           </div>
         </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export const RatingDialog = ({ open, onOpenChange }: DialogProps) => {
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const [content, setContent] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!rating || !content) {
+      toast.warning('Vui lòng điền đầy đủ thông tin và chọn số sao');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // gọi API nếu có
+      toast.success('Cảm ơn bạn đã đánh giá!');
+      setRating(0);
+      setContent('');
+    } catch (err) {
+      toast.error('Không thể gửi đánh giá');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Chia sẻ trải nghiệm của bạn</DialogTitle>
+          <DialogDescription>
+            Đánh giá của bạn giúp chúng tôi cải thiện dịch vụ tốt hơn
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+          <div>
+            <label className="block font-medium mb-2 text-gray-700">
+              Đánh giá của bạn <span className="text-red-500">*</span>
+            </label>
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={`w-6 h-6 cursor-pointer ${
+                    (hoverRating || rating) >= star
+                      ? 'fill-yellow-400 text-yellow-400'
+                      : 'text-gray-300'
+                  }`}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  onClick={() => setRating(star)}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-medium mb-2 text-gray-700">
+              Nội dung đánh giá <span className="text-red-500">*</span>
+            </label>
+            <Textarea
+              rows={5}
+              placeholder="Bạn nghĩ gì về sản phẩm này?"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </div>
+
+          {/* Gửi */}
+          <div>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="bg-gradient-to-r from-emerald-400 via-green-500 to-lime-500 text-white w-full transform hover:scale-105 transition-all duration-300"
+            >
+              {loading ? 'Đang gửi...' : 'Gửi đánh giá'}
+              {!loading && <Send className="ml-2 w-4 h-4" />}
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
